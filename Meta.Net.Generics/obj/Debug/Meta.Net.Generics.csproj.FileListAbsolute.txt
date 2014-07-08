@@ -1,0 +1,5 @@
+C:\Projects\Meta.Net\Meta.Net.Generics\bin\Debug\Meta.Net.Generics.dll
+C:\Projects\Meta.Net\Meta.Net.Generics\bin\Debug\Meta.Net.Generics.pdb
+C:\Projects\Meta.Net\Meta.Net.Generics\obj\Debug\Meta.Net.Generics.csprojResolveAssemblyReference.cache
+C:\Projects\Meta.Net\Meta.Net.Generics\obj\Debug\Meta.Net.Generics.dll
+C:\Projects\Meta.Net\Meta.Net.Generics\obj\Debug\Meta.Net.Generics.pdb

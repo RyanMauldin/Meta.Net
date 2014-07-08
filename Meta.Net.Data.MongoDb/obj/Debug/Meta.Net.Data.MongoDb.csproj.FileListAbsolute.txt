@@ -1,0 +1,15 @@
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.Data.MongoDb.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.Data.MongoDb.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.Data.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\PerCederberg.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.Generics.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Newtonsoft.Json.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.Data.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\PerCederberg.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Meta.Net.Generics.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\bin\Debug\Newtonsoft.Json.xml
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\obj\Debug\Meta.Net.Data.MongoDb.csprojResolveAssemblyReference.cache
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\obj\Debug\Meta.Net.Data.MongoDb.dll
+C:\Projects\Meta.Net\Meta.Net.Data.MongoDb\obj\Debug\Meta.Net.Data.MongoDb.pdb

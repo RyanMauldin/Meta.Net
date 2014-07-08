@@ -1,0 +1,15 @@
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.Data.SqlServer.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.Data.SqlServer.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.Data.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\PerCederberg.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.Generics.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Newtonsoft.Json.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.Data.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\PerCederberg.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Meta.Net.Generics.pdb
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\bin\Debug\Newtonsoft.Json.xml
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\obj\Debug\Meta.Net.Data.SqlServer.csprojResolveAssemblyReference.cache
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\obj\Debug\Meta.Net.Data.SqlServer.dll
+C:\Projects\Meta.Net\Meta.Net.Data.SqlServer\obj\Debug\Meta.Net.Data.SqlServer.pdb

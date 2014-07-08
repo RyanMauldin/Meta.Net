@@ -1,0 +1,5 @@
+C:\Projects\Meta.Net\Meta.Net\bin\Debug\Meta.Net.dll
+C:\Projects\Meta.Net\Meta.Net\bin\Debug\Meta.Net.pdb
+C:\Projects\Meta.Net\Meta.Net\obj\Debug\Meta.Net.csprojResolveAssemblyReference.cache
+C:\Projects\Meta.Net\Meta.Net\obj\Debug\Meta.Net.dll
+C:\Projects\Meta.Net\Meta.Net\obj\Debug\Meta.Net.pdb

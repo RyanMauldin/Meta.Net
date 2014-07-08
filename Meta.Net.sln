@@ -1,0 +1,86 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net", "Meta.Net\Meta.Net.csproj", "{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{CE56922C-82D8-451B-BDA5-84D8BD693073}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net.Data", "Meta.Net.Data\Meta.Net.Data.csproj", "{9059C599-69E5-46C7-9974-297A0481126E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net.Data.MySql", "Meta.Net.Data.MySql\Meta.Net.Data.MySql.csproj", "{221C15D5-92A1-4C30-A824-7584E9B9AC01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net.Data.SqlServer", "Meta.Net.Data.SqlServer\Meta.Net.Data.SqlServer.csproj", "{8C1F8679-227E-49ED-B112-324A46E133F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net.Data.MongoDb", "Meta.Net.Data.MongoDb\Meta.Net.Data.MongoDb.csproj", "{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net.Generics", "Meta.Net.Generics\Meta.Net.Generics.csproj", "{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerCederberg", "PerCederberg\PerCederberg\PerCederberg.csproj", "{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meta.Net.TestConsole", "Meta.Net.TestConsole\Meta.Net.TestConsole.csproj", "{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug2|Any CPU = Debug2|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB67B0B-DAFB-4716-AA62-FE5E5E787BA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9059C599-69E5-46C7-9974-297A0481126E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9059C599-69E5-46C7-9974-297A0481126E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9059C599-69E5-46C7-9974-297A0481126E}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{9059C599-69E5-46C7-9974-297A0481126E}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{9059C599-69E5-46C7-9974-297A0481126E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9059C599-69E5-46C7-9974-297A0481126E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{221C15D5-92A1-4C30-A824-7584E9B9AC01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{221C15D5-92A1-4C30-A824-7584E9B9AC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{221C15D5-92A1-4C30-A824-7584E9B9AC01}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{221C15D5-92A1-4C30-A824-7584E9B9AC01}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{221C15D5-92A1-4C30-A824-7584E9B9AC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{221C15D5-92A1-4C30-A824-7584E9B9AC01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C1F8679-227E-49ED-B112-324A46E133F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C1F8679-227E-49ED-B112-324A46E133F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C1F8679-227E-49ED-B112-324A46E133F5}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C1F8679-227E-49ED-B112-324A46E133F5}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{8C1F8679-227E-49ED-B112-324A46E133F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C1F8679-227E-49ED-B112-324A46E133F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9257BF3-5A9B-4B42-96E3-AECFAF1E14F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D30CF22F-D06F-47DF-A2B7-DFCC6D6C7EC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}.Debug2|Any CPU.ActiveCfg = Debug2|Any CPU
+		{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}.Debug2|Any CPU.Build.0 = Debug2|Any CPU
+		{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{103D2F4E-E8F2-4D02-9707-58E00AD23FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}.Debug2|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}.Debug2|Any CPU.Build.0 = Debug|Any CPU
+		{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF0F2A9-DA43-4946-A10D-8D28B0E0AB86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

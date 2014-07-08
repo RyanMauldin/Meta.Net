@@ -1,0 +1,11 @@
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Meta.Net.Data.dll
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Meta.Net.Data.pdb
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Meta.Net.dll
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Meta.Net.Generics.dll
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Newtonsoft.Json.dll
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Meta.Net.Generics.pdb
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Meta.Net.pdb
+C:\Projects\Meta.Net\Meta.Net.Data\bin\Debug\Newtonsoft.Json.xml
+C:\Projects\Meta.Net\Meta.Net.Data\obj\Debug\Meta.Net.Data.csprojResolveAssemblyReference.cache
+C:\Projects\Meta.Net\Meta.Net.Data\obj\Debug\Meta.Net.Data.dll
+C:\Projects\Meta.Net\Meta.Net.Data\obj\Debug\Meta.Net.Data.pdb
