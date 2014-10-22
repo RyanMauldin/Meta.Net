@@ -48,13 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Meta.Net.Data.SqlServer\Meta.Net.Data.SqlServer.csproj">
-      <Project>{8c1f8679-227e-49ed-b112-324a46e133f5}</Project>
-      <Name>Meta.Net.Data.SqlServer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Meta.Net.Data\Meta.Net.Data.csproj">
-      <Project>{9059c599-69e5-46c7-9974-297a0481126e}</Project>
-      <Name>Meta.Net.Data</Name>
+    <ProjectReference Include="..\Meta.Net.SqlServer\Meta.Net.SqlServer.csproj">
+      <Project>{0C76C5DF-F821-49D9-8DF0-C77282B8FE58}</Project>
+      <Name>Meta.Net.SqlServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Meta.Net\Meta.Net.csproj">
       <Project>{fbb67b0b-dafb-4716-aa62-fe5e5e787ba8}</Project>

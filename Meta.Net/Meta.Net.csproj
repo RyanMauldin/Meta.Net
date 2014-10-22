@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,16 +42,79 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Abstract\BaseModule.cs" />
+    <Compile Include="Abstract\BaseMetaObject.cs" />
+    <Compile Include="Abstract\CatalogBasedObect.cs" />
+    <Compile Include="Abstract\ForeignKeyBasedObject.cs" />
+    <Compile Include="Abstract\IndexBasedMetaObject.cs" />
+    <Compile Include="Abstract\PrimaryKeyBasedObject.cs" />
+    <Compile Include="Abstract\SchemaBasedObject.cs" />
+    <Compile Include="Abstract\ServerBasedObject.cs" />
+    <Compile Include="Abstract\UniqueConstraintBasedObject.cs" />
+    <Compile Include="Abstract\UserTableBasedObject.cs" />
+    <Compile Include="DataConnectionInfo.cs" />
+    <Compile Include="DataConnectionManager.cs" />
+    <Compile Include="DataContext.cs" />
+    <Compile Include="DataMetadataScriptFactory.cs" />
+    <Compile Include="DataObjectLookup.cs" />
+    <Compile Include="DataProperties.cs" />
+    <Compile Include="DataTimer.cs" />
+    <Compile Include="Interfaces\ICatalog.cs" />
+    <Compile Include="Interfaces\IDataConnectionInfo.cs" />
+    <Compile Include="Interfaces\IIndexColumn.cs" />
+    <Compile Include="Interfaces\IMetadataScriptFactory.cs" />
+    <Compile Include="Interfaces\IModule.cs" />
+    <Compile Include="Interfaces\IMetaObject.cs" />
+    <Compile Include="Interfaces\ISchema.cs" />
+    <Compile Include="Interfaces\IServer.cs" />
+    <Compile Include="Interfaces\ITrigger.cs" />
+    <Compile Include="Interfaces\IUserTable.cs" />
+    <Compile Include="Metadata\CatalogsAdapter.cs" />
+    <Compile Include="Metadata\CheckConstraintsAdapter.cs" />
+    <Compile Include="Metadata\ComputedColumnsAdapter.cs" />
+    <Compile Include="Metadata\DefaultConstraintsAdapter.cs" />
+    <Compile Include="Metadata\ForeignKeysAdapter.cs" />
+    <Compile Include="Metadata\IdentityColumnsAdapter.cs" />
+    <Compile Include="Metadata\IndexesAdapter.cs" />
+    <Compile Include="Metadata\ModulesAdapter.cs" />
+    <Compile Include="Metadata\PrimaryKeysAdapter.cs" />
+    <Compile Include="Metadata\SchemasAdapter.cs" />
+    <Compile Include="Metadata\UniqueConstraintsAdapter.cs" />
+    <Compile Include="Metadata\UserDefinedDataTypesAdapter.cs" />
+    <Compile Include="Metadata\UserTableColumnsAdapter.cs" />
+    <Compile Include="Metadata\UserTablesAdapter.cs" />
+    <Compile Include="Objects\AggregateFunction.cs" />
+    <Compile Include="Objects\Catalog.cs" />
+    <Compile Include="Objects\CheckConstraint.cs" />
+    <Compile Include="Objects\ComputedColumn.cs" />
+    <Compile Include="Objects\DefaultConstraint.cs" />
+    <Compile Include="Objects\ForeignKey.cs" />
+    <Compile Include="Objects\ForeignKeyColumn.cs" />
+    <Compile Include="Objects\IdentityColumn.cs" />
+    <Compile Include="Objects\Index.cs" />
+    <Compile Include="Objects\IndexColumn.cs" />
+    <Compile Include="Objects\InlineTableValuedFunction.cs" />
+    <Compile Include="Objects\PrimaryKey.cs" />
+    <Compile Include="Objects\PrimaryKeyColumn.cs" />
+    <Compile Include="Objects\ScalarFunction.cs" />
+    <Compile Include="Objects\Schema.cs" />
+    <Compile Include="Objects\Server.cs" />
+    <Compile Include="Objects\StoredProcedure.cs" />
+    <Compile Include="Objects\TableValuedFunction.cs" />
+    <Compile Include="Objects\Trigger.cs" />
+    <Compile Include="Objects\UniqueConstraint.cs" />
+    <Compile Include="Objects\UniqueConstraintColumn.cs" />
+    <Compile Include="Objects\UserDefinedDataType.cs" />
+    <Compile Include="Objects\UserTable.cs" />
+    <Compile Include="Objects\UserTableColumn.cs" />
+    <Compile Include="Objects\View.cs" />
+    <Compile Include="Types\DataComparisonType.cs" />
+    <Compile Include="Types\DataContextType.cs" />
     <Compile Include="Interfaces\IScriptable.cs" />
-    <Compile Include="Interfaces\ISyncAction.cs" />
-    <Compile Include="Interfaces\ISyncComparer.cs" />
-    <Compile Include="Interfaces\ISyncManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringPredicate.cs" />
-    <Compile Include="SyncAction.cs" />
-    <Compile Include="SyncActionResult.cs" />
-    <Compile Include="SyncActionResultType.cs" />
-    <Compile Include="SyncActionsCollection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

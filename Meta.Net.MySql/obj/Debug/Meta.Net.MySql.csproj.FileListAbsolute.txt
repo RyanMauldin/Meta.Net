@@ -1,0 +1,13 @@
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.MySql.dll.config
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.MySql.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.MySql.pdb
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.Sync.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\MySql.Data.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\PerCederberg.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.Sync.pdb
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\Meta.Net.pdb
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\bin\Debug\PerCederberg.pdb
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\obj\Debug\Meta.Net.MySql.csprojResolveAssemblyReference.cache
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\obj\Debug\Meta.Net.MySql.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.MySql\obj\Debug\Meta.Net.MySql.pdb

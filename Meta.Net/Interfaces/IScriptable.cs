@@ -7,8 +7,6 @@ namespace Meta.Net.Interfaces
     /// </summary>
     public interface IScriptable
     {
-        # region methods (1)
-
         /// <summary>
         /// Generates a set of script strings.
         /// </summary>
@@ -20,7 +18,5 @@ namespace Meta.Net.Interfaces
         /// </summary>
         /// <returns>collection of strings</returns>
         StringCollection Script(string delimiter);
-
-        # endregion methods
     }
 }

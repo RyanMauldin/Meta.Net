@@ -3,3 +3,8 @@ C:\Projects\Meta.Net\PerCederberg\PerCederberg\bin\Debug\PerCederberg.pdb
 C:\Projects\Meta.Net\PerCederberg\PerCederberg\obj\Debug\PerCederberg.csprojResolveAssemblyReference.cache
 C:\Projects\Meta.Net\PerCederberg\PerCederberg\obj\Debug\PerCederberg.dll
 C:\Projects\Meta.Net\PerCederberg\PerCederberg\obj\Debug\PerCederberg.pdb
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\PerCederberg\PerCederberg\bin\Debug\PerCederberg.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\PerCederberg\PerCederberg\bin\Debug\PerCederberg.pdb
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\PerCederberg\PerCederberg\obj\Debug\PerCederberg.csprojResolveAssemblyReference.cache
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\PerCederberg\PerCederberg\obj\Debug\PerCederberg.dll
+C:\Users\rmauldin\Documents\GitHub\Meta.Net\PerCederberg\PerCederberg\obj\Debug\PerCederberg.pdb
