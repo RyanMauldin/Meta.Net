@@ -1,4 +1,8 @@
 Meta.Net
 ========
 
-A great start to a database synchronization library. I started this project around 5 years ago and stopped working on it. I am putting this out there in hopes that people will want to help finish it. This was made back when datasets were popular but I hope to update to newer techniques for fetching the sql metadata.
+Meta.Net is a C#.NET Framework for pulling database metadata from Sql Server and MySql. For now do not use anything from Meta.Net.Sync library. I broke this on purpose during a major re-write as I do not want anyone synchronizing databases with it yet.
+
+Look at Meta.Net.TestConsole project, Program.cs - GetCatalogs() method for current usage.
+
+I am working on serialization and deserialization to and from json first, before re-writing the synchronization libraries. Contact me if you are interested.
