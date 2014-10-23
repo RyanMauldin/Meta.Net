@@ -104,11 +104,11 @@ namespace Meta.Net.Objects
 
         /// <summary>
         /// Shallow Clone...
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="parentMetaObject">The newly cloned parent meta object.</param>
         /// <param name="foreignKey">The foreign key to shallow clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static ForeignKey ShallowClone(IMetaObject parentMetaObject, ForeignKey foreignKey)
         {
             return new ForeignKey

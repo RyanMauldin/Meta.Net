@@ -46,10 +46,10 @@ namespace Meta.Net.Objects
 
         /// <summary>
         /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="checkConstraint">The check constraint to clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static CheckConstraint Clone(CheckConstraint checkConstraint)
         {
             return new CheckConstraint

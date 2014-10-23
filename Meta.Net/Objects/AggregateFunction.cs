@@ -23,13 +23,13 @@ namespace Meta.Net.Objects
         }
 
         /// <summary>
-        /// Deep Clone of this class's isntance specific metadata associated to the same schema
+        /// Deep Clone of this class's instance specific metadata associated to the same schema
         /// as found in the schemaLookup. If the schemaLookup does not contain the schema,
         /// this method will return null. The schema in the schemaLookup does not have to
         /// be the same instance of the schema in the aggregateFunction parameter.
         /// </summary>
         /// <param name="aggregateFunction">The aggregate function to clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata, or null if the schemaLookup does not contain a schema with the same name.</returns>
+        /// <returns>A clone of this class's instance specific metadata, or null if the schemaLookup does not contain a schema with the same name.</returns>
         public static AggregateFunction Clone(AggregateFunction aggregateFunction)
         {
             return new AggregateFunction

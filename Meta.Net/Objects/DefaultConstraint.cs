@@ -38,10 +38,10 @@ namespace Meta.Net.Objects
 
         /// <summary>
         /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="defaultConstraint">The default constraint to clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static DefaultConstraint Clone(DefaultConstraint defaultConstraint)
         {
             return new DefaultConstraint

@@ -98,10 +98,10 @@ namespace Meta.Net.Objects
 
         /// <summary>
         /// Shallow Clone...
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="primaryKey">The primary key to shallow clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static PrimaryKey ShallowClone(PrimaryKey primaryKey)
         {
             return new PrimaryKey

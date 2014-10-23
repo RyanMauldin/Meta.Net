@@ -402,11 +402,11 @@ namespace Meta.Net.Objects
 
         /// <summary>
         /// Shallow Clone...
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="server">The server to shallow clone.</param>
         /// <param name="dataContext">The data context to use.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static Server ShallowClone(Server server, DataContext dataContext)
         {
             return new Server(server.ObjectName, dataContext);

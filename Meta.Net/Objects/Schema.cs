@@ -1441,10 +1441,10 @@ namespace Meta.Net.Objects
 
         /// <summary>
         /// Shallow Clone...
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="schema">The schema to shallow clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static Schema ShallowClone(Schema schema)
         {
             return new Schema

@@ -24,10 +24,10 @@ namespace Meta.Net.Objects
 
 		/// <summary>
         /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's isntance specific metadata.
+        /// A clone of this class's instance specific metadata.
         /// </summary>
         /// <param name="storedProcedure">The stored procedure to clone.</param>
-        /// <returns>A clone of this class's isntance specific metadata.</returns>
+        /// <returns>A clone of this class's instance specific metadata.</returns>
         public static StoredProcedure Clone(StoredProcedure storedProcedure)
         {
             return new StoredProcedure
