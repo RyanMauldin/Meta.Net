@@ -46,7 +46,7 @@ namespace Meta.Net.Sync
                     userTables => userTables.Select(
                         userTable => userTable.Namespace)));
 
-            CreatedForeignKeys.UnionWith(createdCatalog.ForeignKeyPool.Keys);
+            CreatedForeignKeys.UnionWith(createdCatalog.Schemas.SelectMany(p => p.UserTables.SelectMany(q => q.ForeignKeys.Select(r => r.Namespace))));
         }
 
         public void PreloadCreatedDependencies(Schema createdSchema)
@@ -60,7 +60,7 @@ namespace Meta.Net.Sync
 
             if (createdSchema.Catalog != null)
             {
-                CreatedForeignKeys.UnionWith(createdSchema.Catalog.ForeignKeyPool.Keys);
+                CreatedForeignKeys.UnionWith(createdSchema.Catalog.Schemas.SelectMany(p => p.UserTables.SelectMany(q => q.ForeignKeys.Select(r => r.Namespace))));
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace Meta.Net.Sync
 
             if (createdUserTable.Catalog != null)
             {
-                CreatedForeignKeys.UnionWith(createdUserTable.Catalog.ForeignKeyPool.Keys);
+                CreatedForeignKeys.UnionWith(createdUserTable.Catalog.Schemas.SelectMany(p => p.UserTables.SelectMany(q => q.ForeignKeys.Select(r => r.Namespace))));
                 return;
             }
 
@@ -102,7 +102,7 @@ namespace Meta.Net.Sync
                     userTables => userTables.Select(
                         userTable => userTable.Namespace)));
 
-            DroppedForeignKeys.UnionWith(droppedCatalog.ForeignKeyPool.Keys);
+            DroppedForeignKeys.UnionWith(droppedCatalog.Schemas.SelectMany(p => p.UserTables.SelectMany(q => q.ForeignKeys.Select(r => r.Namespace))));
         }
 
         public void PreloadDroppedDependencies(Schema droppedSchema)
@@ -116,7 +116,7 @@ namespace Meta.Net.Sync
 
             if (droppedSchema.Catalog != null)
             {
-                DroppedForeignKeys.UnionWith(droppedSchema.Catalog.ForeignKeyPool.Keys);
+                DroppedForeignKeys.UnionWith(droppedSchema.Catalog.Schemas.SelectMany(p => p.UserTables.SelectMany(q => q.ForeignKeys.Select(r => r.Namespace))));
                 return;
             }
 
@@ -134,7 +134,7 @@ namespace Meta.Net.Sync
 
             if (droppedUserTable.Catalog != null)
             {
-                DroppedForeignKeys.UnionWith(droppedUserTable.Catalog.ForeignKeyPool.Keys);
+                DroppedForeignKeys.UnionWith(droppedUserTable.Catalog.Schemas.SelectMany(p => p.UserTables.SelectMany(q => q.ForeignKeys.Select(r => r.Namespace))));
                 return;
             }
 

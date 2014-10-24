@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,30 +13,25 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public View(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
-        public View()
-        {
-            
-        }
-
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="view">The view to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static View Clone(View view)
+        public override IMetaObject DeepClone()
         {
             return new View
             {
-                ObjectName = view.ObjectName,
-                Definition = view.Definition,
-                UsesAnsiNulls = view.UsesAnsiNulls,
-                UsesQuotedIdentifier = view.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new View
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
             };
         }
 

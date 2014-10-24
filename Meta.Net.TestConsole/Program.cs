@@ -270,7 +270,11 @@ namespace Meta.Net.TestConsole
                     connection.Open();
                     var startTime = DateTime.Now;
                     var metadataScriptFactory = new SqlServerMetadataScriptFactory();
-                    var server = new Server("localhost", new SqlServerContext());
+                    var server = new Server()
+                    {
+                        ObjectName = "localhost",
+                        DataContext = new SqlServerContext()
+                    };
                     //CatalogsAdapter.Build(server, connection, metadataScriptFactory);
                     CatalogsAdapter.BuildSpecific(server, connection, metadataScriptFactory, new []{ "Lifeboat" });
                     var finishTime = DateTime.Now;

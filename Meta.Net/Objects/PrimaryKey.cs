@@ -1,5 +1,6 @@
 ﻿using System;
 using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -25,30 +26,61 @@ namespace Meta.Net.Objects
         
         public DataObjectLookup<PrimaryKey, PrimaryKeyColumn> PrimaryKeyColumns { get; private set; }
 
-        private static void Init(PrimaryKey primaryKey, UserTable userTable, string objectName)
-        {
-            primaryKey.PrimaryKeyColumns = new DataObjectLookup<PrimaryKey, PrimaryKeyColumn>(primaryKey);
-            primaryKey.UserTable = userTable;
-            primaryKey.ObjectName = GetDefaultObjectName(primaryKey, objectName);
-            primaryKey.AllowPageLocks = true;
-            primaryKey.AllowRowLocks = true;
-            primaryKey.FileGroup = "PRIMARY";
-            primaryKey.FillFactor = 0;
-            primaryKey.IgnoreDupKey = false;
-            primaryKey.IndexType = string.Empty;
-            primaryKey.IsClustered = false;
-            primaryKey.IsDisabled = false;
-            primaryKey.IsPadded = true;
-        }
-
-        public PrimaryKey(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public PrimaryKey()
         {
+            AllowPageLocks = true;
+            AllowRowLocks = true;
+            FileGroup = "PRIMARY";
+            FillFactor = 0;
+            IgnoreDupKey = false;
+            IndexType = string.Empty;
+            IsClustered = false;
+            IsDisabled = false;
+            IsPadded = true;
             PrimaryKeyColumns = new DataObjectLookup<PrimaryKey, PrimaryKeyColumn>(this);
+        }
+
+        public override IMetaObject DeepClone()
+        {
+            var primaryKey = new PrimaryKey
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                AllowPageLocks = AllowPageLocks,
+                AllowRowLocks = AllowRowLocks,
+                FileGroup = FileGroup == null ? null : string.Copy(FileGroup),
+                FillFactor = FillFactor,
+                IgnoreDupKey = IgnoreDupKey,
+                IndexType = IndexType == null ? null : string.Copy(IndexType),
+                IsClustered = IsClustered,
+                IsDisabled = IsDisabled,
+                IsPadded = IsPadded
+            };
+
+            primaryKey.PrimaryKeyColumns.DeepClone(primaryKey);
+
+            return primaryKey;
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new PrimaryKey
+            {
+                ObjectName = ObjectName,
+                AllowPageLocks = AllowPageLocks,
+                AllowRowLocks = AllowRowLocks,
+                FileGroup = FileGroup,
+                FillFactor = FillFactor,
+                IgnoreDupKey = IgnoreDupKey,
+                IndexType = IndexType,
+                IsClustered = IsClustered,
+                IsDisabled = IsDisabled,
+                IsPadded = IsPadded
+            };
+        }
+
+        public static void Clear(PrimaryKey primaryKey)
+        {
+            primaryKey.PrimaryKeyColumns.Clear();
         }
 
         public static void AddPrimaryKeyColumn(PrimaryKey primaryKey, PrimaryKeyColumn primaryKeyColumn)
@@ -59,64 +91,29 @@ namespace Meta.Net.Objects
             primaryKey.PrimaryKeyColumns.Add(primaryKeyColumn);
         }
 
-        /// <summary>
-        /// Shallow Clear...
-        /// </summary>
-        /// <param name="primaryKey">The primary key to shallow clear.</param>
-        public static void Clear(PrimaryKey primaryKey)
+        public static void RemovePrimaryKeyColumn(PrimaryKey primaryKey, string objectNamespace)
         {
-            primaryKey.PrimaryKeyColumns.Clear();
+            primaryKey.PrimaryKeyColumns.Remove(objectNamespace);
         }
 
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// </summary>
-        /// <param name="primaryKey">The primary key to deep clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static PrimaryKey Clone(PrimaryKey primaryKey)
+        public static void RemovePrimaryKeyColumn(PrimaryKey primaryKey, PrimaryKeyColumn primaryKeyColumn)
         {
-            var primaryKeyClone = new PrimaryKey
-            {
-                ObjectName = primaryKey.ObjectName,
-                AllowPageLocks = primaryKey.AllowPageLocks,
-                AllowRowLocks = primaryKey.AllowRowLocks,
-                FileGroup = primaryKey.FileGroup,
-                FillFactor = primaryKey.FillFactor,
-                IgnoreDupKey = primaryKey.IgnoreDupKey,
-                IndexType = primaryKey.IndexType,
-                IsClustered = primaryKey.IsClustered,
-                IsDisabled = primaryKey.IsDisabled,
-                IsPadded = primaryKey.IsPadded
-            };
-
-            foreach (var primaryKeyColumn in primaryKey.PrimaryKeyColumns)
-                AddPrimaryKeyColumn(primaryKeyClone, PrimaryKeyColumn.Clone(primaryKeyColumn));
-
-            return primaryKeyClone;
+            primaryKey.PrimaryKeyColumns.Remove(primaryKeyColumn.Namespace);
         }
 
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="primaryKey">The primary key to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static PrimaryKey ShallowClone(PrimaryKey primaryKey)
+        public static void RenamePrimaryKeyColumn(PrimaryKey primaryKey, string objectNamespace, string newObjectName)
         {
-            return new PrimaryKey
-            {
-                ObjectName = primaryKey.ObjectName,
-                AllowPageLocks = primaryKey.AllowPageLocks,
-                AllowRowLocks = primaryKey.AllowRowLocks,
-                FileGroup = primaryKey.FileGroup,
-                FillFactor = primaryKey.FillFactor,
-                IgnoreDupKey = primaryKey.IgnoreDupKey,
-                IndexType = primaryKey.IndexType,
-                IsClustered = primaryKey.IsClustered,
-                IsDisabled = primaryKey.IsDisabled,
-                IsPadded = primaryKey.IsPadded
-            };
+            var primaryKeyColumn = primaryKey.PrimaryKeyColumns[objectNamespace];
+            if (primaryKeyColumn == null)
+                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
+                    objectNamespace, primaryKey.Description, primaryKey.Namespace, newObjectName));
+
+            primaryKey.PrimaryKeyColumns.Rename(primaryKeyColumn, newObjectName);
+        }
+
+        public static long ObjectCount(PrimaryKey primaryKey)
+        {
+            return primaryKey.PrimaryKeyColumns.Count;
         }
 
         //public static bool CompareDefinitions(PrimaryKey sourcePrimaryKey, PrimaryKey targetPrimaryKey)
@@ -281,31 +278,6 @@ namespace Meta.Net.Objects
         //        }
         //    }
         //}
-
-        public static long ObjectCount(PrimaryKey primaryKey)
-        {
-            return primaryKey.PrimaryKeyColumns.Count;
-        }
-
-        public static void RemovePrimaryKeyColumn(PrimaryKey primaryKey, string objectNamespace)
-        {
-            primaryKey.PrimaryKeyColumns.Remove(objectNamespace);
-        }
-
-        public static void RemovePrimaryKeyColumn(PrimaryKey primaryKey, PrimaryKeyColumn primaryKeyColumn)
-        {
-            primaryKey.PrimaryKeyColumns.Remove(primaryKeyColumn.Namespace);
-        }
-
-        public static void RenamePrimaryKeyColumn(PrimaryKey primaryKey, string objectNamespace, string newObjectName)
-        {
-            var primaryKeyColumn = primaryKey.PrimaryKeyColumns[objectNamespace];
-            if (primaryKeyColumn == null)
-                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
-                    objectNamespace, primaryKey.Description, primaryKey.Namespace, newObjectName));
-
-            primaryKey.PrimaryKeyColumns.Rename(primaryKeyColumn, newObjectName);
-        }
 
         ///// <summary>
         ///// Modifies the source PrimaryKey to contain all objects that are

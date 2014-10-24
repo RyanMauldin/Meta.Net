@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -22,51 +23,50 @@ namespace Meta.Net.Objects
         public bool IsAssemblyType { get; set; }
         public bool IsNullable { get; set; }
 
-        private static void Init(UserDefinedDataType userDefinedDataType, Schema schema, string objectName)
-        {
-            userDefinedDataType.Schema = schema;
-            userDefinedDataType.ObjectName = GetDefaultObjectName(userDefinedDataType, objectName);
-            userDefinedDataType.Collation = "";
-            userDefinedDataType.DataType = "int";
-            userDefinedDataType.HasDefault = false;
-            userDefinedDataType.IsAssemblyType = false;
-            userDefinedDataType.IsNullable = false;
-            userDefinedDataType.IsUserDefined = false;
-            userDefinedDataType.MaxLength = 0;
-            userDefinedDataType.Precision = 0;
-            userDefinedDataType.Scale = 0;
-        }
-
-        public UserDefinedDataType(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-        
         public UserDefinedDataType()
         {
-            
+            Collation = string.Empty;
+            DataType = "int";
+            HasDefault = false;
+            IsAssemblyType = false;
+            IsNullable = false;
+            IsUserDefined = false;
+            MaxLength = 0;
+            Precision = 0;
+            Scale = 0;
         }
-
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="userDefinedDataType">The user-defined data type to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static UserDefinedDataType Clone(UserDefinedDataType userDefinedDataType)
+        
+        public override IMetaObject DeepClone()
         {
             return new UserDefinedDataType
             {
-                ObjectName = userDefinedDataType.ObjectName,
-                Collation = userDefinedDataType.Collation,
-                DataType = userDefinedDataType.DataType,
-                HasDefault = userDefinedDataType.HasDefault,
-                IsAssemblyType = userDefinedDataType.IsAssemblyType,
-                IsNullable = userDefinedDataType.IsNullable,
-                IsUserDefined = userDefinedDataType.IsUserDefined,
-                MaxLength = userDefinedDataType.MaxLength,
-                Precision = userDefinedDataType.Precision,
-                Scale = userDefinedDataType.Scale
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Collation = Collation == null ? null : string.Copy(Collation),
+                DataType = DataType == null ? null : string.Copy(DataType),
+                HasDefault = HasDefault,
+                IsAssemblyType = IsAssemblyType,
+                IsNullable = IsNullable,
+                IsUserDefined = IsUserDefined,
+                MaxLength = MaxLength,
+                Precision = Precision,
+                Scale = Scale
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new UserDefinedDataType
+            {
+                ObjectName = ObjectName,
+                Collation = Collation,
+                DataType = DataType,
+                HasDefault = HasDefault,
+                IsAssemblyType = IsAssemblyType,
+                IsNullable = IsNullable,
+                IsUserDefined = IsUserDefined,
+                MaxLength = MaxLength,
+                Precision = Precision,
+                Scale = Scale
             };
         }
 

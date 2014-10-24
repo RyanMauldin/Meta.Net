@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,7 +13,7 @@ namespace Meta.Net.Objects
         public override string Description
         {
             get { return DefaultDescription; }
-        } 
+        }
 
         public string FileStreamFileGroup { get; set; }
         public string LobFileGroup { get; set; }
@@ -30,34 +31,13 @@ namespace Meta.Net.Objects
         public DataObjectLookup<UserTable, UniqueConstraint> UniqueConstraints { get; private set; }
         public DataObjectLookup<UserTable, UserTableColumn> UserTableColumns { get; private set; }
 
-        private static void Init(UserTable userTable, Schema schema, string objectName)
-        {
-            userTable.CheckConstraints = new DataObjectLookup<UserTable, CheckConstraint>(userTable);
-            userTable.ComputedColumns = new DataObjectLookup<UserTable, ComputedColumn>(userTable);
-            userTable.DefaultConstraints = new DataObjectLookup<UserTable, DefaultConstraint>(userTable);
-            userTable.ForeignKeys = new DataObjectLookup<UserTable, ForeignKey>(userTable);
-            userTable.IdentityColumns = new DataObjectLookup<UserTable, IdentityColumn>(userTable);
-            userTable.Indexes = new DataObjectLookup<UserTable, Index>(userTable);
-            userTable.PrimaryKeys = new DataObjectLookup<UserTable, PrimaryKey>(userTable);
-            userTable.UniqueConstraints = new DataObjectLookup<UserTable, UniqueConstraint>(userTable);
-            userTable.UserTableColumns = new DataObjectLookup<UserTable, UserTableColumn>(userTable);
-
-            userTable.Schema = schema;
-            userTable.ObjectName = GetDefaultObjectName(userTable, objectName);
-            userTable.FileStreamFileGroup = "";
-            userTable.HasTextNTextOrImageColumns = false;
-            userTable.LobFileGroup = "";
-            userTable.TextInRowLimit = 0;
-            userTable.UsesAnsiNulls = true;
-        }
-
-        public UserTable(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
         public UserTable()
         {
+            FileStreamFileGroup = string.Empty;
+            HasTextNTextOrImageColumns = false;
+            LobFileGroup = string.Empty;
+            TextInRowLimit = 0;
+            UsesAnsiNulls = true;
             CheckConstraints = new DataObjectLookup<UserTable, CheckConstraint>(this);
             ComputedColumns = new DataObjectLookup<UserTable, ComputedColumn>(this);
             DefaultConstraints = new DataObjectLookup<UserTable, DefaultConstraint>(this);
@@ -67,6 +47,46 @@ namespace Meta.Net.Objects
             PrimaryKeys = new DataObjectLookup<UserTable, PrimaryKey>(this);
             UniqueConstraints = new DataObjectLookup<UserTable, UniqueConstraint>(this);
             UserTableColumns = new DataObjectLookup<UserTable, UserTableColumn>(this);
+        }
+
+        public override IMetaObject DeepClone()
+        {
+            var userTable = new UserTable
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                FileStreamFileGroup = FileStreamFileGroup == null ? null : string.Copy(FileStreamFileGroup),
+                HasTextNTextOrImageColumns = HasTextNTextOrImageColumns,
+                LobFileGroup = LobFileGroup == null ? null : string.Copy(LobFileGroup),
+                TextInRowLimit = TextInRowLimit,
+                UsesAnsiNulls = UsesAnsiNulls
+            };
+
+            userTable.CheckConstraints = CheckConstraints.DeepClone(userTable);
+            userTable.ComputedColumns = ComputedColumns.DeepClone(userTable);
+            userTable.DefaultConstraints = DefaultConstraints.DeepClone(userTable);
+            userTable.ForeignKeys = ForeignKeys.DeepClone(userTable);
+            userTable.IdentityColumns = IdentityColumns.DeepClone(userTable);
+            userTable.Indexes = Indexes.DeepClone(userTable);
+            userTable.PrimaryKeys = PrimaryKeys.DeepClone(userTable);
+            userTable.UniqueConstraints = UniqueConstraints.DeepClone(userTable);
+            userTable.UserTableColumns = UserTableColumns.DeepClone(userTable);
+
+            // TODO: Rig up ReferencedUserTables and ReferencedUserTableColumns in Foreign Keys based on newly created objects from deep clone.
+
+            return userTable;
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new UserTable
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                FileStreamFileGroup = FileStreamFileGroup == null ? null : string.Copy(FileStreamFileGroup),
+                HasTextNTextOrImageColumns = HasTextNTextOrImageColumns,
+                LobFileGroup = LobFileGroup == null ? null : string.Copy(LobFileGroup),
+                TextInRowLimit = TextInRowLimit,
+                UsesAnsiNulls = UsesAnsiNulls
+            };
         }
 
         public static void AddCheckConstraint(UserTable userTable, CheckConstraint checkConstraint)
@@ -168,54 +188,6 @@ namespace Meta.Net.Objects
                 UniqueConstraint.Clear(uniqueConstraint);
             userTable.UniqueConstraints.Clear();
             userTable.UserTableColumns.Clear();
-        }
-
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// </summary>
-        /// <param name="userTable">The user-table to deep clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static UserTable Clone(UserTable userTable)
-        {
-            var userTableClone = new UserTable
-            {
-                ObjectName = userTable.ObjectName,
-                FileStreamFileGroup = userTable.FileStreamFileGroup,
-                HasTextNTextOrImageColumns = userTable.HasTextNTextOrImageColumns,
-                LobFileGroup = userTable.LobFileGroup,
-                TextInRowLimit = userTable.TextInRowLimit,
-                UsesAnsiNulls = userTable.UsesAnsiNulls
-            };
-
-            foreach (var checkConstraint in userTable.CheckConstraints)
-                AddCheckConstraint(userTableClone, CheckConstraint.Clone(checkConstraint));
-
-            foreach (var computedColumn in userTable.ComputedColumns)
-                AddComputedColumn(userTableClone, ComputedColumn.Clone(computedColumn));
-
-            foreach (var defaultConstraint in userTable.DefaultConstraints)
-                AddDefaultConstraint(userTableClone, DefaultConstraint.Clone(defaultConstraint));
-
-            foreach (var foreignKey in userTable.ForeignKeys)
-                AddForeignKey(userTableClone, ForeignKey.Clone(foreignKey));
-
-            foreach (var identityColumn in userTable.IdentityColumns)
-                AddIdentityColumn(userTableClone, IdentityColumn.Clone(identityColumn));
-
-            foreach (var index in userTable.Indexes)
-                AddIndex(userTableClone, Index.Clone(index));
-
-            foreach (var primaryKey in userTable.PrimaryKeys)
-                AddPrimaryKey(userTableClone, PrimaryKey.Clone(primaryKey));
-
-            foreach (var uniqueConstraint in userTable.UniqueConstraints)
-                AddUniqueConstraint(userTableClone, UniqueConstraint.Clone(uniqueConstraint));
-
-            foreach (var userTableColumn in userTable.UserTableColumns)
-                AddUserTableColumn(userTableClone, UserTableColumn.Clone(userTableColumn));
-
-            return userTableClone;
         }
 
         //public static bool CompareDefinitions(UserTable sourceUserTable, UserTable targetUserTable)

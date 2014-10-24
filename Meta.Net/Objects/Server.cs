@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Meta.Net.Abstract;
-using Meta.Net.Types;
 using Meta.Net.Interfaces;
 using Meta.Net.Metadata;
 
@@ -23,6 +22,19 @@ namespace Meta.Net.Objects
             get { return ObjectName; }
         }
 
+        public DataContext DataContext { get; set; }
+
+        /// <summary>
+        /// The collection of catalogs assigned to this server.
+        /// </summary>
+        public DataObjectLookup<Server, Catalog> Catalogs { get; private set; }
+
+        public Server()
+        {
+            DataContext = null;
+            Catalogs = new DataObjectLookup<Server, Catalog>(this);
+        }
+
         /// <summary>
         /// This data object can never have a parent data object assigned as it is the root of all data objects.
         /// </summary>
@@ -41,47 +53,30 @@ namespace Meta.Net.Objects
         {
             return false;
         }
-        
-        public DataContext DataContext { get; set; }
 
-        /// <summary>
-        /// The collection of catalogs assigned to this server.
-        /// </summary>
-        public DataObjectLookup<Server, Catalog> Catalogs { get; private set; }
-
-		private static void Init(Server server, string objectName, DataContext dataContext)
+        public override IMetaObject DeepClone()
         {
-            server.DataContext = dataContext;
-            server.Catalogs = new DataObjectLookup<Server, Catalog>(server);
-            server.ObjectName = GetDefaultObjectName(server, objectName);
+            var server = new Server
+            {
+                ObjectName = string.Copy(ObjectName),
+                DataContext = DataContext.DeepClone()
+            };
+            server.Catalogs = Catalogs.DeepClone(server);
+            return server;
         }
 
-        public Server(string objectName, DataContext dataContext)
+        public override IMetaObject ShallowClone()
         {
-            Init(this, objectName, dataContext);
-        }
-
-        public Server(DataContext dataContext)
-        {
-            Init(this, null, dataContext);
-        }
-
-        public Server()
-        {
-            Catalogs = new DataObjectLookup<Server, Catalog>(this);
-        }
-
-		public static void AddCatalog(Server server, Catalog catalog)
-        {
-            if (catalog.Server != null && !catalog.Server.Equals(server))
-                RemoveCatalog(catalog.Server, catalog);
-
-            server.Catalogs.Add(catalog);
+            return new Server
+            {
+                ObjectName = ObjectName,
+                DataContext = DataContext.ShallowClone()
+            };
         }
 
         /// <summary>
         /// Deep Clear... disassociates all objects in each catalog
-        /// first before clearing out the collections in hopes of better
+        /// first, before clearing out the collections in hopes of better
         /// memory dissipation from garbage collection.
         /// </summary>
         /// <param name="server">The server to deep clear.</param>
@@ -93,22 +88,117 @@ namespace Meta.Net.Objects
             server.Catalogs.Clear();
         }
 
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// </summary>
-        /// <param name="server">The server to deep clone.</param>
-        /// <param name="dataContext">The DataContext to use for the clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static Server Clone(Server server, DataContext dataContext)
+		public static void AddCatalog(Server server, Catalog catalog)
         {
-            // TODO: Finish upgrading clones in all DataObjects
-            var serverClone = new Server(server.ObjectName, dataContext);
-            
-            foreach (var catalog in server.Catalogs)
-                AddCatalog(serverClone, Catalog.Clone(catalog));
+            if (catalog.Server != null && !catalog.Server.Equals(server))
+                RemoveCatalog(catalog.Server, catalog);
 
-            return serverClone;
+            server.Catalogs.Add(catalog);
+        }
+
+        public static void RemoveCatalog(Server server, string objectNamespace)
+        {
+            server.Catalogs.Remove(objectNamespace);
+        }
+
+        public static void RemoveCatalog(Server server, Catalog catalog)
+        {
+            server.Catalogs.Remove(catalog.Namespace);
+        }
+
+        public static void RenameCatalog(Server server, string objectNamespace, string newObjectName)
+        {
+            var catalog = server.Catalogs[objectNamespace];
+            if (catalog == null)
+                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
+                    objectNamespace, server.Description, server.Namespace, newObjectName));
+
+            server.Catalogs.Rename(catalog, newObjectName);
+        }
+
+        public static bool GetCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.Get(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory());
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static bool GetSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.GetSpecific(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static bool BuildCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.Build(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory());
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static bool BuildSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.BuildSpecific(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static long ObjectCount(Server server, bool deepCount = false)
+        {
+            if (!deepCount)
+                return server.Catalogs.Count;
+
+            return server.Catalogs.Count
+                + server.Catalogs.Sum(p => Catalog.ObjectCount(p, true));
         }
 
         //public static bool CompareDefinitions(Server sourceServer, Server targetServer)
@@ -201,82 +291,6 @@ namespace Meta.Net.Objects
         //        }
         //    }
         //}
-
-        public static bool GetCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
-        {
-            Clear(server);
-
-            if (dataConnectionManager == null)
-                return false;
-
-            dataConnectionManager.Open();
-            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
-                return false;
-
-            CatalogsAdapter.Get(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory());
-
-            if (closeDataConnectionAfterUse)
-                dataConnectionManager.Close();
-
-            return true;
-        }
-
-        public static bool GetSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
-        {
-            Clear(server);
-
-            if (dataConnectionManager == null)
-                return false;
-
-            dataConnectionManager.Open();
-            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
-                return false;
-
-            CatalogsAdapter.GetSpecific(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
-
-            if (closeDataConnectionAfterUse)
-                dataConnectionManager.Close();
-
-            return true;
-        }
-
-        public static bool BuildCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
-        {
-            Clear(server);
-
-            if (dataConnectionManager == null)
-                return false;
-
-            dataConnectionManager.Open();
-            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
-                return false;
-
-            CatalogsAdapter.Build(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory());
-
-            if(closeDataConnectionAfterUse)
-                dataConnectionManager.Close();
-
-            return true;
-        }
-
-        public static bool BuildSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
-        {
-            Clear(server);
-
-            if (dataConnectionManager == null)
-                return false;
-
-            dataConnectionManager.Open();
-            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
-                return false;
-
-            CatalogsAdapter.BuildSpecific(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
-
-            if (closeDataConnectionAfterUse)
-                dataConnectionManager.Close();
-
-            return true;
-        }
         
         //public static void GenerateAlterScripts(DataContext sourceDataContext, DataContext targetDataContext,
         //    Server alteredServer, Server sourceServer, Server targetServer, Server droppedServer, Server createdServer,
@@ -370,47 +384,6 @@ namespace Meta.Net.Objects
         //        }
         //    }
         //}
-
-        public static long ObjectCount(Server server, bool deepCount = false)
-        {
-            if (!deepCount)
-                return server.Catalogs.Count;
-
-            return server.Catalogs.Count
-                + server.Catalogs.Sum(p => Catalog.ObjectCount(p, true));
-        }
-
-        public static void RemoveCatalog(Server server, string objectNamespace)
-        {
-            server.Catalogs.Remove(objectNamespace);
-        }
-
-        public static void RemoveCatalog(Server server, Catalog catalog)
-        {
-            server.Catalogs.Remove(catalog.Namespace);
-        }
-
-        public static void RenameCatalog(Server server, string objectNamespace, string newObjectName)
-        {
-            var catalog = server.Catalogs[objectNamespace];
-            if (catalog == null)
-                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
-                    objectNamespace, server.Description, server.Namespace, newObjectName));
-
-            server.Catalogs.Rename(catalog, newObjectName);
-        }
-
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="server">The server to shallow clone.</param>
-        /// <param name="dataContext">The data context to use.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static Server ShallowClone(Server server, DataContext dataContext)
-        {
-            return new Server(server.ObjectName, dataContext);
-        }
 
         ///// <summary>
         ///// Modifies the source Server to contain objects that are

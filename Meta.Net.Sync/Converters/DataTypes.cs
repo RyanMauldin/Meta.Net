@@ -420,7 +420,7 @@ namespace Meta.Net.Sync.Converters
             if (targetDataContext.ContextType != DataContextType.SqlServer)
                 throw new Exception(string.Format("Invalid targetDataContext type of {0} for DataTypes.BuildMySqlToSqlServerDefinition", targetDataContext.ContextType));
 
-            var userTableColumnClone = UserTableColumn.Clone(userTableColumn);
+            var userTableColumnClone = (UserTableColumn)userTableColumn.DeepClone();
             ConvertDataType(sourceDataContext, targetDataContext, ref userTableColumnClone);
 
             var builder = new StringBuilder();
@@ -578,7 +578,7 @@ namespace Meta.Net.Sync.Converters
             if (targetDataContext.ContextType != DataContextType.MySql)
                 throw new Exception(string.Format("Invalid targetDataContext type of {0} for DataTypes.SqlServerToMySqlDefinition", targetDataContext.ContextType));
 
-            var userTableColumnClone = UserTableColumn.Clone(userTableColumn);
+            var userTableColumnClone = (UserTableColumn)userTableColumn.DeepClone();
             ConvertDataType(sourceDataContext, targetDataContext, ref userTableColumnClone);
 
             var builder = new StringBuilder();

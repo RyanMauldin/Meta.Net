@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -32,69 +33,74 @@ namespace Meta.Net.Objects
         public int Scale { get; set; }
         public bool HasForeignKey { get; set; }
 
-        private static void Init(UserTableColumn userTableColumn, UserTable userTable, string objectName)
-        {
-            userTableColumn.UserTable = userTable;
-            userTableColumn.ObjectName = GetDefaultObjectName(userTableColumn, objectName);
-            userTableColumn.Collation = DataProperties.DefaultCollation;
-            userTableColumn.ColumnOrdinal = 0;
-            userTableColumn.DataType = "int";
-            //userTableColumn.CommonDataType = DataTypes.GetCommonDataType(userTableColumn.DataType);
-            userTableColumn.HasDefault = false;
-            userTableColumn.HasXmlCollection = false;
-            userTableColumn.IsAnsiPadded = true;
-            userTableColumn.IsAssemblyType = false;
-            userTableColumn.IsComputed = false;
-            userTableColumn.IsFileStream = false;
-            userTableColumn.IsIdentity = false;
-            userTableColumn.IsNullable = false;
-            userTableColumn.IsRowGuidColumn = false;
-            userTableColumn.IsUserDefined = false;
-            userTableColumn.IsXmlDocument = false;
-            userTableColumn.MaxLength = 0;
-            userTableColumn.Precision = 0;
-            userTableColumn.Scale = 0;
-        }
-
-        public UserTableColumn(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public UserTableColumn()
         {
-            
+            Collation = DataProperties.DefaultCollation;
+            ColumnOrdinal = 0;
+            DataType = "int";
+            HasDefault = false;
+            HasXmlCollection = false;
+            IsAnsiPadded = true;
+            IsAssemblyType = false;
+            IsComputed = false;
+            IsFileStream = false;
+            IsIdentity = false;
+            IsNullable = false;
+            IsRowGuidColumn = false;
+            IsUserDefined = false;
+            IsXmlDocument = false;
+            MaxLength = 0;
+            Precision = 0;
+            Scale = 0;
         }
 
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="userTableColumn">The user-table column to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static UserTableColumn Clone(UserTableColumn userTableColumn)
+        public override IMetaObject DeepClone()
         {
             return new UserTableColumn
             {
-                ObjectName = userTableColumn.ObjectName,
-                Collation = userTableColumn.Collation,
-                ColumnOrdinal = userTableColumn.ColumnOrdinal,
-                //CommonDataType = userTableColumn.CommonDataType,
-                DataType = userTableColumn.DataType,
-                HasDefault = userTableColumn.HasDefault,
-                HasXmlCollection = userTableColumn.HasXmlCollection,
-                IsAnsiPadded = userTableColumn.IsAnsiPadded,
-                IsAssemblyType = userTableColumn.IsAssemblyType,
-                IsComputed = userTableColumn.IsComputed,
-                IsFileStream = userTableColumn.IsFileStream,
-                IsIdentity = userTableColumn.IsIdentity,
-                IsNullable = userTableColumn.IsNullable,
-                IsRowGuidColumn = userTableColumn.IsRowGuidColumn,
-                IsUserDefined = userTableColumn.IsUserDefined,
-                IsXmlDocument = userTableColumn.IsXmlDocument,
-                MaxLength = userTableColumn.MaxLength,
-                Precision = userTableColumn.Precision,
-                Scale = userTableColumn.Scale
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Collation = Collation == null ? null : string.Copy(Collation),
+                ColumnOrdinal = ColumnOrdinal,
+                DataType = DataType == null ? null : string.Copy(DataType),
+                HasDefault = HasDefault,
+                HasXmlCollection = HasXmlCollection,
+                IsAnsiPadded = IsAnsiPadded,
+                IsAssemblyType = IsAssemblyType,
+                IsComputed = IsComputed,
+                IsFileStream = IsFileStream,
+                IsIdentity = IsIdentity,
+                IsNullable = IsNullable,
+                IsRowGuidColumn = IsRowGuidColumn,
+                IsUserDefined = IsUserDefined,
+                IsXmlDocument = IsXmlDocument,
+                MaxLength = MaxLength,
+                Precision = Precision,
+                Scale = Scale
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new UserTableColumn
+            {
+                ObjectName = ObjectName,
+                Collation = Collation,
+                ColumnOrdinal = ColumnOrdinal,
+                DataType = DataType,
+                HasDefault = HasDefault,
+                HasXmlCollection = HasXmlCollection,
+                IsAnsiPadded = IsAnsiPadded,
+                IsAssemblyType = IsAssemblyType,
+                IsComputed = IsComputed,
+                IsFileStream = IsFileStream,
+                IsIdentity = IsIdentity,
+                IsNullable = IsNullable,
+                IsRowGuidColumn = IsRowGuidColumn,
+                IsUserDefined = IsUserDefined,
+                IsXmlDocument = IsXmlDocument,
+                MaxLength = MaxLength,
+                Precision = Precision,
+                Scale = Scale
             };
         }
 

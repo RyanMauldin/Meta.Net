@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,30 +13,25 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public ScalarFunction(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
-        public ScalarFunction()
-        {
-            
-        }
-
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="scalarFunction">The scalar function to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static ScalarFunction Clone(ScalarFunction scalarFunction)
+        public override IMetaObject DeepClone()
         {
             return new ScalarFunction
             {
-                ObjectName = scalarFunction.ObjectName,
-                Definition = scalarFunction.Definition,
-                UsesAnsiNulls = scalarFunction.UsesAnsiNulls,
-                UsesQuotedIdentifier = scalarFunction.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new ScalarFunction
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
             };
         }
 

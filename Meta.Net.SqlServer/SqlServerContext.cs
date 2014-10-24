@@ -19,6 +19,31 @@ namespace Meta.Net.SqlServer
             get { return true; }
         }
 
+        public override int MaxObjectNameLength
+        {
+            get { return 128; }
+        }
+
+        public override int MaxAliasLength
+        {
+            get { return 128; }
+        }
+
+        public override int MaxTempTableNameLength
+        {
+            get { return 116; }
+        }
+
+        public override DataContext DeepClone()
+        {
+            return new SqlServerContext();
+        }
+
+        public override DataContext ShallowClone()
+        {
+            return new SqlServerContext();
+        }
+
         public override DataContextType ContextType
         {
             get { return DataContextType.SqlServer; }

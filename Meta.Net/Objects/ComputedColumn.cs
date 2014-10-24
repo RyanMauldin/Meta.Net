@@ -1,5 +1,5 @@
-﻿using System;
-using Meta.Net.Abstract;
+﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -17,39 +17,32 @@ namespace Meta.Net.Objects
         public bool IsNullable { get; set; }
         public bool IsPersisted { get; set; }
 
-        private static void Init(ComputedColumn computedColumn, UserTable userTable, string objectName)
-        {
-            computedColumn.UserTable = userTable;
-            computedColumn.ObjectName = GetDefaultObjectName(computedColumn, objectName);
-            computedColumn.Definition = "";
-            computedColumn.IsPersisted = false;
-            computedColumn.IsNullable = true;
-        }
-
-        public ComputedColumn(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public ComputedColumn()
         {
-            
+            Definition = string.Empty;
+            IsPersisted = false;
+            IsNullable = true;
         }
 
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="computedColumn">The computed column to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static ComputedColumn Clone(ComputedColumn computedColumn)
+        public override IMetaObject DeepClone()
         {
             return new ComputedColumn
             {
-                ObjectName = computedColumn.ObjectName,
-                Definition = computedColumn.Definition,
-                IsPersisted = computedColumn.IsPersisted,
-                IsNullable = computedColumn.IsNullable
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                IsPersisted = IsPersisted,
+                IsNullable = IsNullable
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new ComputedColumn
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                IsPersisted = IsPersisted,
+                IsNullable = IsNullable
             };
         }
 

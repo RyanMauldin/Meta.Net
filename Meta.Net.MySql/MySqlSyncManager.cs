@@ -19,7 +19,7 @@ namespace Meta.Net.MySql
             }
 
         public MySqlSyncManager()
-            : base(new Server(new MySqlContext()), new Server(new MySqlContext()), new DataProperties())
+            : base(new Server { DataContext = new MySqlContext() }, new Server { DataContext = new MySqlContext() }, new DataProperties())
         {
             
         }

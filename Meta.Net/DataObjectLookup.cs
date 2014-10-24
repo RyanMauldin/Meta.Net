@@ -344,5 +344,21 @@ namespace Meta.Net
             childDataObject.ObjectName = newObjectName;
             Add(childDataObject);
         }
+
+        public DataObjectLookup<TP, TC> DeepClone(TP parentDataObject)
+        {
+            var dataObjectLookup = new DataObjectLookup<TP, TC>(parentDataObject);
+            foreach (var childDataObject in ChildDataObjects.Values.Select(p => p.DeepClone()))
+                dataObjectLookup.Add((TC)childDataObject);
+            return dataObjectLookup;
+        }
+
+        public DataObjectLookup<TP, TC> ShallowClone(TP parentDataObject)
+        {
+            var dataObjectLookup = new DataObjectLookup<TP, TC>(parentDataObject);
+            foreach (var childDataObject in ChildDataObjects.Values.Select(p => p.ShallowClone()))
+                dataObjectLookup.Add((TC)childDataObject);
+            return dataObjectLookup;
+        }
     }
 }

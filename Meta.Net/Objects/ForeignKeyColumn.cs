@@ -41,37 +41,21 @@ namespace Meta.Net.Objects
             }
         }
 
-        private static void Init(ForeignKeyColumn foreignKeyColumn, ForeignKey foreignKey, string objectName)
-        {
-            foreignKeyColumn.ForeignKey = foreignKey;
-            foreignKeyColumn.ObjectName = GetDefaultObjectName(foreignKeyColumn, objectName);
-            // TODO: foreignKeyColumn.ReferencedColumnName = "";
-        }
-
-        public ForeignKeyColumn(ForeignKey foreignKey, string objectName)
-        {
-            Init(this, foreignKey, objectName);
-        }
-
-        public ForeignKeyColumn()
-        {
-            
-        }
-
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="foreignKeyColumn">The foreign key column to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static ForeignKeyColumn Clone(ForeignKeyColumn foreignKeyColumn)
+        public override IMetaObject DeepClone()
         {
             return new ForeignKeyColumn
             {
-                ObjectName = foreignKeyColumn.ObjectName,
-                KeyOrdinal = foreignKeyColumn.KeyOrdinal,
-                ReferencedUserTable = foreignKeyColumn.ReferencedUserTable 
-                //TODO: ReferencedColumnName = foreignKeyColumn.ReferencedColumnName
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                KeyOrdinal = KeyOrdinal
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new ForeignKeyColumn
+            {
+                ObjectName = ObjectName,
+                KeyOrdinal = KeyOrdinal
             };
         }
 

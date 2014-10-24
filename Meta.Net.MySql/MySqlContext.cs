@@ -19,6 +19,21 @@ namespace Meta.Net.MySql
             get { return false; }
         }
 
+        public override int MaxObjectNameLength
+        {
+            get { return 64; }
+        }
+
+        public override int MaxAliasLength
+        {
+            get { return 256; }
+        }
+
+        public override int MaxTempTableNameLength
+        {
+            get { return 64; }
+        }
+
         public override DataContextType ContextType
         {
             get { return DataContextType.MySql; }
@@ -29,6 +44,16 @@ namespace Meta.Net.MySql
         public override string Delimiter
         {
             get { return ";\r\n"; }
+        }
+
+        public override DataContext DeepClone()
+        {
+            return new MySqlContext();
+        }
+
+        public override DataContext ShallowClone()
+        {
+            return new MySqlContext();
         }
 
         //protected override IDataScriptFactory CreateScriptFactory()

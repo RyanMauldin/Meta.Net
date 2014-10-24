@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Meta.Net.Abstract;
-using Meta.Net.Types;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -55,73 +54,141 @@ namespace Meta.Net.Objects
         public string UserAccessDescription { get; set; }
 
         public DataObjectLookup<Catalog, Schema> Schemas { get; private set; }
-        public Dictionary<string, ForeignKey> ForeignKeyPool { get; private set; }
-        public Dictionary<string, List<ForeignKey>> ReferencedUserTablePool { get; private set; }
-
-        private static void Init(Catalog catalog, Server server, string objectName)
-        {
-            catalog.ForeignKeyPool = new Dictionary<string, ForeignKey>(StringComparer.OrdinalIgnoreCase);
-            catalog.ReferencedUserTablePool = new Dictionary<string, List<ForeignKey>>(StringComparer.OrdinalIgnoreCase);
-            catalog.Schemas = new DataObjectLookup<Catalog, Schema>(catalog);
-            catalog.Server = server;
-            catalog.ObjectName = GetDefaultObjectName(catalog, objectName);
-            catalog.CollationName = "";
-            catalog.CompatibilityLevel = 100;
-            catalog.CreateDate = DateTime.Now.ToString("u");
-            catalog.IsAnsiNullDefaultOn = true;
-            catalog.IsAnsiNullsOn = true;
-            catalog.IsAnsiPaddingOn = true;
-            catalog.IsAnsiWarningsOn = true;
-            catalog.IsArithabortOn = true;
-            catalog.IsAutoCloseOn = false;
-            catalog.IsAutoCreateStatsOn = true;
-            catalog.IsAutoShrinkOn = false;
-            catalog.IsAutoUpdateStatsAsyncOn = false;
-            catalog.IsAutoUpdateStatsOn = true;
-            catalog.IsCleanlyShutdown = true;
-            catalog.IsConcatNullYieldsNullOn = false;
-            catalog.IsCursorCloseOnCommitOn = false;
-            catalog.IsDateCorrelationOn = false;
-            catalog.IsDbChainingOn = false;
-            catalog.IsFulltextEnabled = false;
-            catalog.IsInStandby = false;
-            catalog.IsLocalCursorDefault = false;
-            catalog.IsMasterKeyEncryptedByServer = false;
-            catalog.IsNumericRoundabortOn = false;
-            catalog.IsParameterizationForced = false;
-            catalog.IsQuotedIdentifierOn = true;
-            catalog.IsReadOnly = false;
-            catalog.IsRecursiveTriggersOn = false;
-            catalog.IsSupplementalLoggingEnabled = false;
-            catalog.IsTrustworthyOn = true;
-            catalog.PageVerifyOption = 2;
-            catalog.PageVerifyOptionDescription = "CHECKSUM";
-            catalog.RecoveryModel = 3;
-            catalog.RecoveryModelDescription = "SIMPLE";
-            catalog.State = 0;
-            catalog.StateDescription = "ONLINE";
-            catalog.UserAccess = 0;
-            catalog.UserAccessDescription = "MULTI_USER";
-        }
-
-        public Catalog(Server server, string objectName)
-        {
-            Init(this, server, objectName);
-        }
 
         public Catalog()
         {
             Schemas = new DataObjectLookup<Catalog, Schema>(this);
-            ForeignKeyPool = new Dictionary<string, ForeignKey>(StringComparer.OrdinalIgnoreCase);
-            ReferencedUserTablePool = new Dictionary<string, List<ForeignKey>>(StringComparer.OrdinalIgnoreCase);
+            CollationName = string.Empty;
+            CompatibilityLevel = 100;
+            CreateDate = DateTime.Now.ToString("u");
+            IsAnsiNullDefaultOn = true;
+            IsAnsiNullsOn = true;
+            IsAnsiPaddingOn = true;
+            IsAnsiWarningsOn = true;
+            IsArithabortOn = true;
+            IsAutoCloseOn = false;
+            IsAutoCreateStatsOn = true;
+            IsAutoShrinkOn = false;
+            IsAutoUpdateStatsAsyncOn = false;
+            IsAutoUpdateStatsOn = true;
+            IsCleanlyShutdown = true;
+            IsConcatNullYieldsNullOn = false;
+            IsCursorCloseOnCommitOn = false;
+            IsDateCorrelationOn = false;
+            IsDbChainingOn = false;
+            IsFulltextEnabled = false;
+            IsInStandby = false;
+            IsLocalCursorDefault = false;
+            IsMasterKeyEncryptedByServer = false;
+            IsNumericRoundabortOn = false;
+            IsParameterizationForced = false;
+            IsQuotedIdentifierOn = true;
+            IsReadOnly = false;
+            IsRecursiveTriggersOn = false;
+            IsSupplementalLoggingEnabled = false;
+            IsTrustworthyOn = true;
+            PageVerifyOption = 2;
+            PageVerifyOptionDescription = "CHECKSUM";
+            RecoveryModel = 3;
+            RecoveryModelDescription = "SIMPLE";
+            State = 0;
+            StateDescription = "ONLINE";
+            UserAccess = 0;
+            UserAccessDescription = "MULTI_USER";
         }
 
-        public static void AddSchema(Catalog catalog, Schema schema)
+        public override IMetaObject DeepClone()
         {
-            if (schema.Catalog != null && !schema.Catalog.Equals(catalog))
-                RemoveSchema(schema.Catalog, schema);
+            var catalog = new Catalog
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                CollationName = CollationName == null ? null : string.Copy(CollationName),
+                CompatibilityLevel = CompatibilityLevel,
+                CreateDate = CreateDate == null ? null : string.Copy(CreateDate),
+                IsAnsiNullDefaultOn = IsAnsiNullDefaultOn,
+                IsAnsiNullsOn = IsAnsiNullsOn,
+                IsAnsiPaddingOn = IsAnsiPaddingOn,
+                IsAnsiWarningsOn = IsAnsiWarningsOn,
+                IsArithabortOn = IsArithabortOn,
+                IsAutoCloseOn = IsAutoCloseOn,
+                IsAutoCreateStatsOn = IsAutoCreateStatsOn,
+                IsAutoShrinkOn = IsAutoShrinkOn,
+                IsAutoUpdateStatsAsyncOn = IsAutoUpdateStatsAsyncOn,
+                IsAutoUpdateStatsOn = IsAutoUpdateStatsOn,
+                IsCleanlyShutdown = IsCleanlyShutdown,
+                IsConcatNullYieldsNullOn = IsConcatNullYieldsNullOn,
+                IsCursorCloseOnCommitOn = IsCursorCloseOnCommitOn,
+                IsDateCorrelationOn = IsDateCorrelationOn,
+                IsDbChainingOn = IsDbChainingOn,
+                IsFulltextEnabled = IsFulltextEnabled,
+                IsInStandby = IsInStandby,
+                IsLocalCursorDefault = IsLocalCursorDefault,
+                IsMasterKeyEncryptedByServer = IsMasterKeyEncryptedByServer,
+                IsNumericRoundabortOn = IsNumericRoundabortOn,
+                IsParameterizationForced = IsParameterizationForced,
+                IsQuotedIdentifierOn = IsQuotedIdentifierOn,
+                IsReadOnly = IsReadOnly,
+                IsRecursiveTriggersOn = IsRecursiveTriggersOn,
+                IsSupplementalLoggingEnabled = IsSupplementalLoggingEnabled,
+                IsTrustworthyOn = IsTrustworthyOn,
+                PageVerifyOption = PageVerifyOption,
+                PageVerifyOptionDescription = PageVerifyOptionDescription == null ? null : string.Copy(PageVerifyOptionDescription),
+                RecoveryModel = RecoveryModel,
+                RecoveryModelDescription = RecoveryModelDescription == null ? null : string.Copy(RecoveryModelDescription),
+                State = State,
+                StateDescription = StateDescription == null ? null : string.Copy(StateDescription),
+                UserAccess = UserAccess,
+                UserAccessDescription = UserAccessDescription == null ? null : string.Copy(UserAccessDescription)
+            };
 
-            catalog.Schemas.Add(schema);
+            catalog.Schemas.DeepClone(catalog);
+
+            return catalog;
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new Catalog
+            {
+                ObjectName = ObjectName,
+                CollationName = CollationName,
+                CompatibilityLevel = CompatibilityLevel,
+                CreateDate = CreateDate,
+                IsAnsiNullDefaultOn = IsAnsiNullDefaultOn,
+                IsAnsiNullsOn = IsAnsiNullsOn,
+                IsAnsiPaddingOn = IsAnsiPaddingOn,
+                IsAnsiWarningsOn = IsAnsiWarningsOn,
+                IsArithabortOn = IsArithabortOn,
+                IsAutoCloseOn = IsAutoCloseOn,
+                IsAutoCreateStatsOn = IsAutoCreateStatsOn,
+                IsAutoShrinkOn = IsAutoShrinkOn,
+                IsAutoUpdateStatsAsyncOn = IsAutoUpdateStatsAsyncOn,
+                IsAutoUpdateStatsOn = IsAutoUpdateStatsOn,
+                IsCleanlyShutdown = IsCleanlyShutdown,
+                IsConcatNullYieldsNullOn = IsConcatNullYieldsNullOn,
+                IsCursorCloseOnCommitOn = IsCursorCloseOnCommitOn,
+                IsDateCorrelationOn = IsDateCorrelationOn,
+                IsDbChainingOn = IsDbChainingOn,
+                IsFulltextEnabled = IsFulltextEnabled,
+                IsInStandby = IsInStandby,
+                IsLocalCursorDefault = IsLocalCursorDefault,
+                IsMasterKeyEncryptedByServer = IsMasterKeyEncryptedByServer,
+                IsNumericRoundabortOn = IsNumericRoundabortOn,
+                IsParameterizationForced = IsParameterizationForced,
+                IsQuotedIdentifierOn = IsQuotedIdentifierOn,
+                IsReadOnly = IsReadOnly,
+                IsRecursiveTriggersOn = IsRecursiveTriggersOn,
+                IsSupplementalLoggingEnabled = IsSupplementalLoggingEnabled,
+                IsTrustworthyOn = IsTrustworthyOn,
+                PageVerifyOption = PageVerifyOption,
+                PageVerifyOptionDescription = PageVerifyOptionDescription,
+                RecoveryModel = RecoveryModel,
+                RecoveryModelDescription = RecoveryModelDescription,
+                State = State,
+                StateDescription = StateDescription,
+                UserAccess = UserAccess,
+                UserAccessDescription = UserAccessDescription
+            };
         }
 
         /// <summary>
@@ -136,70 +203,50 @@ namespace Meta.Net.Objects
                 Schema.Clear(schema);
 
             catalog.Schemas.Clear();
-            catalog.ForeignKeyPool.Clear();
-            catalog.ReferencedUserTablePool.Clear();
         }
 
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// Makes a call to Schema.LinkForeignKeys(schema) internally after each schema
-        /// in the specified catalog has been deep cloned to auto-populate the catalog
-        /// properties Catalog.ForeignKeyPool and Catalog.ReferencedUserTablePool.
-        /// </summary>
-        /// <param name="catalog">The catalog to deep clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static Catalog Clone(Catalog catalog)
+        public static void AddSchema(Catalog catalog, Schema schema)
         {
-            var catalogClone = new Catalog
-            {
-                ObjectName = catalog.ObjectName,
-                CollationName = catalog.CollationName,
-                CompatibilityLevel = catalog.CompatibilityLevel,
-                CreateDate = catalog.CreateDate,
-                IsAnsiNullDefaultOn = catalog.IsAnsiNullDefaultOn,
-                IsAnsiNullsOn = catalog.IsAnsiNullsOn,
-                IsAnsiPaddingOn = catalog.IsAnsiPaddingOn,
-                IsAnsiWarningsOn = catalog.IsAnsiWarningsOn,
-                IsArithabortOn = catalog.IsArithabortOn,
-                IsAutoCloseOn = catalog.IsAutoCloseOn,
-                IsAutoCreateStatsOn = catalog.IsAutoCreateStatsOn,
-                IsAutoShrinkOn = catalog.IsAutoShrinkOn,
-                IsAutoUpdateStatsAsyncOn = catalog.IsAutoUpdateStatsAsyncOn,
-                IsAutoUpdateStatsOn = catalog.IsAutoUpdateStatsOn,
-                IsCleanlyShutdown = catalog.IsCleanlyShutdown,
-                IsConcatNullYieldsNullOn = catalog.IsConcatNullYieldsNullOn,
-                IsCursorCloseOnCommitOn = catalog.IsCursorCloseOnCommitOn,
-                IsDateCorrelationOn = catalog.IsDateCorrelationOn,
-                IsDbChainingOn = catalog.IsDbChainingOn,
-                IsFulltextEnabled = catalog.IsFulltextEnabled,
-                IsInStandby = catalog.IsInStandby,
-                IsLocalCursorDefault = catalog.IsLocalCursorDefault,
-                IsMasterKeyEncryptedByServer = catalog.IsMasterKeyEncryptedByServer,
-                IsNumericRoundabortOn = catalog.IsNumericRoundabortOn,
-                IsParameterizationForced = catalog.IsParameterizationForced,
-                IsQuotedIdentifierOn = catalog.IsQuotedIdentifierOn,
-                IsReadOnly = catalog.IsReadOnly,
-                IsRecursiveTriggersOn = catalog.IsRecursiveTriggersOn,
-                IsSupplementalLoggingEnabled = catalog.IsSupplementalLoggingEnabled,
-                IsTrustworthyOn = catalog.IsTrustworthyOn,
-                PageVerifyOption = catalog.PageVerifyOption,
-                PageVerifyOptionDescription = catalog.PageVerifyOptionDescription,
-                RecoveryModel = catalog.RecoveryModel,
-                RecoveryModelDescription = catalog.RecoveryModelDescription,
-                State = catalog.State,
-                StateDescription = catalog.StateDescription,
-                UserAccess = catalog.UserAccess,
-                UserAccessDescription = catalog.UserAccessDescription
-            };
+            if (schema.Catalog != null && !schema.Catalog.Equals(catalog))
+                RemoveSchema(schema.Catalog, schema);
 
-            foreach (var schemaClone in catalog.Schemas.Select(Schema.Clone))
-            {
-                AddSchema(catalogClone, schemaClone);
-                //Schema.LinkForeignKeys(schemaClone);
-            }
-            
-            return catalogClone;
+            catalog.Schemas.Add(schema);
+        }
+
+        public static void RemoveSchema(Catalog catalog, string objectNamespace)
+        {
+            catalog.Schemas.Remove(objectNamespace);
+        }
+
+        public static void RemoveSchema(Catalog catalog, Schema schema)
+        {
+            catalog.Schemas.Remove(schema.Namespace);
+        }
+
+        public static void RenameSchema(Catalog catalog, string objectNamespace, string newObjectName)
+        {
+            var schema = catalog.Schemas[objectNamespace];
+            if (schema == null)
+                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
+                    objectNamespace, catalog.Description, catalog.Namespace, newObjectName));
+
+            catalog.Schemas.Rename(schema, newObjectName);
+        }
+
+        public static long ObjectCount(Catalog catalog, bool deepCount = false)
+        {
+            if (!deepCount)
+                return catalog.Schemas.Count;
+
+            return catalog.Schemas.Count +
+                   catalog.Schemas.Sum(
+                       schema => Schema.ObjectCount(schema, true));
+        }
+
+        public static bool UsesCaseSensitiveCollation(Catalog catalog)
+        {
+            // TODO: Find reason for needing!
+            return catalog.CollationName.IndexOf("_CS_", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         //public static bool CompareDefinitions(Catalog sourceCatalog, Catalog targetCatalog)
@@ -437,87 +484,6 @@ namespace Meta.Net.Objects
         //    }
         //}
 
-        public static long ObjectCount(Catalog catalog, bool deepCount = false)
-        {
-            if (!deepCount)
-                return catalog.Schemas.Count;
-
-            return catalog.Schemas.Count +
-                   catalog.Schemas.Sum(
-                       schema => Schema.ObjectCount(schema, true));
-        }
-
-        public static void RemoveSchema(Catalog catalog, string objectNamespace)
-        {
-            catalog.Schemas.Remove(objectNamespace);
-        }
-
-        public static void RemoveSchema(Catalog catalog, Schema schema)
-        {
-            catalog.Schemas.Remove(schema.Namespace);
-        }
-
-        public static void RenameSchema(Catalog catalog, string objectNamespace, string newObjectName)
-        {
-            var schema = catalog.Schemas[objectNamespace];
-            if (schema == null)
-                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
-                    objectNamespace, catalog.Description, catalog.Namespace, newObjectName));
-
-            catalog.Schemas.Rename(schema, newObjectName);
-        }
-
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="catalog">The catalog to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static Catalog ShallowClone(Catalog catalog)
-        {
-            return new Catalog
-            {
-                ObjectName = catalog.ObjectName,
-                CollationName = catalog.CollationName,
-                CompatibilityLevel = catalog.CompatibilityLevel,
-                CreateDate = catalog.CreateDate,
-                IsAnsiNullDefaultOn = catalog.IsAnsiNullDefaultOn,
-                IsAnsiNullsOn = catalog.IsAnsiNullsOn,
-                IsAnsiPaddingOn = catalog.IsAnsiPaddingOn,
-                IsAnsiWarningsOn = catalog.IsAnsiWarningsOn,
-                IsArithabortOn = catalog.IsArithabortOn,
-                IsAutoCloseOn = catalog.IsAutoCloseOn,
-                IsAutoCreateStatsOn = catalog.IsAutoCreateStatsOn,
-                IsAutoShrinkOn = catalog.IsAutoShrinkOn,
-                IsAutoUpdateStatsAsyncOn = catalog.IsAutoUpdateStatsAsyncOn,
-                IsAutoUpdateStatsOn = catalog.IsAutoUpdateStatsOn,
-                IsCleanlyShutdown = catalog.IsCleanlyShutdown,
-                IsConcatNullYieldsNullOn = catalog.IsConcatNullYieldsNullOn,
-                IsCursorCloseOnCommitOn = catalog.IsCursorCloseOnCommitOn,
-                IsDateCorrelationOn = catalog.IsDateCorrelationOn,
-                IsDbChainingOn = catalog.IsDbChainingOn,
-                IsFulltextEnabled = catalog.IsFulltextEnabled,
-                IsInStandby = catalog.IsInStandby,
-                IsLocalCursorDefault = catalog.IsLocalCursorDefault,
-                IsMasterKeyEncryptedByServer = catalog.IsMasterKeyEncryptedByServer,
-                IsNumericRoundabortOn = catalog.IsNumericRoundabortOn,
-                IsParameterizationForced = catalog.IsParameterizationForced,
-                IsQuotedIdentifierOn = catalog.IsQuotedIdentifierOn,
-                IsReadOnly = catalog.IsReadOnly,
-                IsRecursiveTriggersOn = catalog.IsRecursiveTriggersOn,
-                IsSupplementalLoggingEnabled = catalog.IsSupplementalLoggingEnabled,
-                IsTrustworthyOn = catalog.IsTrustworthyOn,
-                PageVerifyOption = catalog.PageVerifyOption,
-                PageVerifyOptionDescription = catalog.PageVerifyOptionDescription,
-                RecoveryModel = catalog.RecoveryModel,
-                RecoveryModelDescription = catalog.RecoveryModelDescription,
-                State = catalog.State,
-                StateDescription = catalog.StateDescription,
-                UserAccess = catalog.UserAccess,
-                UserAccessDescription = catalog.UserAccessDescription
-            };
-        }
-
         ///// <summary>
         ///// Modifies the source Catalog to contain all objects that are
         ///// present in both iteself and in the target Catalog.
@@ -571,12 +537,6 @@ namespace Meta.Net.Objects
         //        }
         //    }
         //}
-
-        public static bool UsesCaseSensitiveCollation(Catalog catalog)
-        {
-            // TODO: Find reason for needing!
-            return catalog.CollationName.IndexOf("_CS_", StringComparison.OrdinalIgnoreCase) >= 0;
-        }
 
         ///// <summary>
         ///// Deserialization Constructor.

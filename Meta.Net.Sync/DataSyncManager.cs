@@ -576,7 +576,11 @@ namespace Meta.Net.Sync
             DataTimer.RaiseTimerStatusEvent(
                 string.Format("Creating and pulling data objects for source connection [{0}]",
                                 SourceDataConnectionInfo.Name));
-            SourceServer = new Server(SourceDataConnectionInfo.Name, SourceDataConnectionInfo.DataContext);
+            SourceServer = new Server()
+            {
+                ObjectName = SourceDataConnectionInfo.Name,
+                DataContext = SourceDataConnectionInfo.DataContext
+            };
 
             Server.BuildCatalogs(SourceServer, SourceDataConnectionManager, closeDataConnectionAfterUse);
 
@@ -720,7 +724,11 @@ namespace Meta.Net.Sync
             DataTimer.RaiseTimerStatusEvent(
                 string.Format("Creating and pulling data objects for target connection [{0}]",
                                 TargetDataConnectionInfo.Name));
-            TargetServer = new Server(TargetDataConnectionInfo.Name, TargetDataConnectionInfo.DataContext);
+            TargetServer = new Server
+            {
+                ObjectName = TargetDataConnectionInfo.Name,
+                DataContext = TargetDataConnectionInfo.DataContext
+            };
 
             Server.BuildCatalogs(TargetServer, TargetDataConnectionManager, closeDataConnectionAfterUse);
 
@@ -899,12 +907,12 @@ namespace Meta.Net.Sync
             var sourceDataContext = SourceDataConnectionInfo.DataContext;
             var targetDataContext = TargetDataConnectionInfo.DataContext;
 
-            var sourceServerClone = Server.Clone(DataSyncComparer.SourceServer, sourceDataContext);
-            var targetServerClone = Server.Clone(DataSyncComparer.TargetServer, targetDataContext);
-            var droppedServerClone = Server.Clone(DataSyncComparer.DroppedServer, targetDataContext);
-            var createdServerClone = Server.Clone(DataSyncComparer.CreatedServer, sourceDataContext);
-            var alteredServerClone = Server.Clone(DataSyncComparer.AlteredServer, sourceDataContext);
-            var matchedServerClone = Server.Clone(DataSyncComparer.MatchedServer, sourceDataContext);
+            var sourceServerClone = DataSyncComparer.SourceServer.DeepClone();
+            var targetServerClone = DataSyncComparer.TargetServer.DeepClone();
+            var droppedServerClone = DataSyncComparer.DroppedServer.DeepClone();
+            var createdServerClone = DataSyncComparer.CreatedServer.DeepClone();
+            var alteredServerClone = DataSyncComparer.AlteredServer.DeepClone();
+            var matchedServerClone = DataSyncComparer.MatchedServer.DeepClone();
 
             //Server.GenerateDropScripts(sourceDataContext, targetDataContext, droppedServerClone,
             //    sourceServerClone, targetServerClone, DataSyncActionsCollection, DataProperties);

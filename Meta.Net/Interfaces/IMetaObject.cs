@@ -9,5 +9,7 @@ namespace Meta.Net.Interfaces
         string Namespace { get; }
         IMetaObject ParentMetaObject { get; set; }
         bool CanBeAssignedParentMetaObject(IMetaObject metaObject);
+        IMetaObject DeepClone();
+        IMetaObject ShallowClone();
     }
 }

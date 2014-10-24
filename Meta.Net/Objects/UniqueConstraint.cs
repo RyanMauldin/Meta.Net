@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 using Meta.Net.Types;
 
 namespace Meta.Net.Objects
@@ -27,30 +28,56 @@ namespace Meta.Net.Objects
 
         public DataObjectLookup<UniqueConstraint, UniqueConstraintColumn> UniqueConstraintColumns { get; private set; }
 
-		private static void Init(UniqueConstraint uniqueConstraint, UserTable userTable, string objectName)
+		public UniqueConstraint()
         {
-            uniqueConstraint.UniqueConstraintColumns = new DataObjectLookup<UniqueConstraint, UniqueConstraintColumn>(uniqueConstraint);
-            uniqueConstraint.UserTable = userTable;
-            uniqueConstraint.ObjectName = GetDefaultObjectName(uniqueConstraint, objectName);
-            uniqueConstraint.AllowPageLocks = true;
-            uniqueConstraint.AllowRowLocks = true;
-            uniqueConstraint.FileGroup = "PRIMARY";
-            uniqueConstraint.FillFactor = 0;
-            uniqueConstraint.IgnoreDupKey = false;
-            uniqueConstraint.IndexType = "";
-            uniqueConstraint.IsClustered = false;
-            uniqueConstraint.IsDisabled = false;
-            uniqueConstraint.IsPadded = true;
-        }
-
-        public UniqueConstraint(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
-        public UniqueConstraint()
-        {
+            AllowPageLocks = true;
+            AllowRowLocks = true;
+            FileGroup = "PRIMARY";
+            FillFactor = 0;
+            IgnoreDupKey = false;
+            IndexType = string.Empty;
+            IsClustered = false;
+            IsDisabled = false;
+            IsPadded = true;
             UniqueConstraintColumns = new DataObjectLookup<UniqueConstraint, UniqueConstraintColumn>(this);
+        }
+
+        public override IMetaObject DeepClone()
+        {
+            var uniqueConstraint = new UniqueConstraint
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                AllowPageLocks = AllowPageLocks,
+                AllowRowLocks = AllowRowLocks,
+                FileGroup = FileGroup == null ? null : string.Copy(FileGroup),
+                FillFactor = FillFactor,
+                IgnoreDupKey = IgnoreDupKey,
+                IndexType = IndexType == null ? null : string.Copy(IndexType),
+                IsClustered = IsClustered,
+                IsDisabled = IsDisabled,
+                IsPadded = IsPadded
+            };
+
+            uniqueConstraint.UniqueConstraintColumns.DeepClone(uniqueConstraint);
+
+            return uniqueConstraint;
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new UniqueConstraint
+            {
+                ObjectName = ObjectName,
+                AllowPageLocks = AllowPageLocks,
+                AllowRowLocks = AllowRowLocks,
+                FileGroup = FileGroup,
+                FillFactor = FillFactor,
+                IgnoreDupKey = IgnoreDupKey,
+                IndexType = IndexType,
+                IsClustered = IsClustered,
+                IsDisabled = IsDisabled,
+                IsPadded = IsPadded
+            };
         }
 
 		public static void AddUniqueConstraintColumn(UniqueConstraint uniqueConstraint, UniqueConstraintColumn uniqueConstraintColumn)

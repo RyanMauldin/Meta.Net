@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,30 +13,25 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public StoredProcedure(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
-        public StoredProcedure()
-        {
-            
-        }
-
-		/// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="storedProcedure">The stored procedure to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static StoredProcedure Clone(StoredProcedure storedProcedure)
+        public override IMetaObject DeepClone()
         {
             return new StoredProcedure
             {
-                ObjectName = storedProcedure.ObjectName,
-                Definition = storedProcedure.Definition,
-                UsesAnsiNulls = storedProcedure.UsesAnsiNulls,
-                UsesQuotedIdentifier = storedProcedure.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new StoredProcedure
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
             };
         }
 

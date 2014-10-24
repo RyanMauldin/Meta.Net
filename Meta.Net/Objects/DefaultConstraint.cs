@@ -1,5 +1,5 @@
-﻿using System;
-using Meta.Net.Abstract;
+﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -17,39 +17,32 @@ namespace Meta.Net.Objects
         public string Definition { get; set; }
         public bool IsSystemNamed { get; set; }
 
-        private static void Init(DefaultConstraint defaultConstraint, UserTable userTable, string objectName)
-        {
-            defaultConstraint.UserTable = userTable;
-            defaultConstraint.ObjectName = GetDefaultObjectName(defaultConstraint, objectName);
-            defaultConstraint.ColumnName = string.Empty;
-            defaultConstraint.Definition = string.Empty;
-            defaultConstraint.IsSystemNamed = false;
-        }
-
-        public DefaultConstraint(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public DefaultConstraint()
         {
-            
+            ColumnName = string.Empty;
+            Definition = string.Empty;
+            IsSystemNamed = false;
         }
 
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="defaultConstraint">The default constraint to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static DefaultConstraint Clone(DefaultConstraint defaultConstraint)
+        public override IMetaObject DeepClone()
         {
             return new DefaultConstraint
             {
-                ObjectName = defaultConstraint.ObjectName,
-                ColumnName = defaultConstraint.ColumnName,
-                Definition = defaultConstraint.Definition,
-                IsSystemNamed = defaultConstraint.IsSystemNamed
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ColumnName = ColumnName == null ? null : string.Copy(ColumnName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                IsSystemNamed = IsSystemNamed
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new DefaultConstraint
+            {
+                ObjectName = ObjectName,
+                ColumnName = ColumnName,
+                Definition = Definition,
+                IsSystemNamed = IsSystemNamed
             };
         }
 

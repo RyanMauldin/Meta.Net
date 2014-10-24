@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,30 +13,25 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-		public TableValuedFunction(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
-        public TableValuedFunction()
-        {
-            
-        }
-
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="tableValuedFunction">The table-valued function to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static TableValuedFunction Clone(TableValuedFunction tableValuedFunction)
+        public override IMetaObject DeepClone()
         {
             return new TableValuedFunction
             {
-                ObjectName = tableValuedFunction.ObjectName,
-                Definition = tableValuedFunction.Definition,
-                UsesAnsiNulls = tableValuedFunction.UsesAnsiNulls,
-                UsesQuotedIdentifier = tableValuedFunction.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new TableValuedFunction
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
             };
         }
 

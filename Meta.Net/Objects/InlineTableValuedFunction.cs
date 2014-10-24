@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,30 +13,25 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public InlineTableValuedFunction(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
-        public InlineTableValuedFunction()
-        {
-            
-        }
-
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="inlineTableValuedFunction">The inline table-valued function to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static InlineTableValuedFunction Clone(InlineTableValuedFunction inlineTableValuedFunction)
+        public override IMetaObject DeepClone()
         {
             return new InlineTableValuedFunction
             {
-                ObjectName = inlineTableValuedFunction.ObjectName,
-                Definition = inlineTableValuedFunction.Definition,
-                UsesAnsiNulls = inlineTableValuedFunction.UsesAnsiNulls,
-                UsesQuotedIdentifier = inlineTableValuedFunction.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new InlineTableValuedFunction
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
             };
         }
 

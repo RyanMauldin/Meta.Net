@@ -1,4 +1,5 @@
 ﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -12,35 +13,28 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public AggregateFunction(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
-        public AggregateFunction()
-        {
-
-        }
-
-        /// <summary>
-        /// Deep Clone of this class's instance specific metadata associated to the same schema
-        /// as found in the schemaLookup. If the schemaLookup does not contain the schema,
-        /// this method will return null. The schema in the schemaLookup does not have to
-        /// be the same instance of the schema in the aggregateFunction parameter.
-        /// </summary>
-        /// <param name="aggregateFunction">The aggregate function to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata, or null if the schemaLookup does not contain a schema with the same name.</returns>
-        public static AggregateFunction Clone(AggregateFunction aggregateFunction)
+        public override IMetaObject DeepClone()
         {
             return new AggregateFunction
             {
-                ObjectName = aggregateFunction.ObjectName,
-                Definition = aggregateFunction.Definition,
-                UsesAnsiNulls = aggregateFunction.UsesAnsiNulls,
-                UsesQuotedIdentifier = aggregateFunction.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
             };
         }
 
+        public override IMetaObject ShallowClone()
+        {
+            return new AggregateFunction
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier
+            };
+        }
+        
         //public static void GenerateAlterScripts(
         //    DataContext sourceDataContext, DataContext targetDataContext,
         //    AggregateFunction aggregateFunction, DataSyncActionsCollection dataSyncActions, DataProperties dataProperties)

@@ -25,28 +25,7 @@ namespace Meta.Net.Objects
         public DataObjectLookup<Schema, UserTable> UserTables { get; private set; }
         public DataObjectLookup<Schema, View> Views { get; private set; }
 
-		private static void Init(Schema schema, Catalog catalog, string objectName)
-        {
-            schema.Catalog = catalog;
-            schema.AggregateFunctions = new DataObjectLookup<Schema, AggregateFunction>(schema);
-            schema.InlineTableValuedFunctions = new DataObjectLookup<Schema, InlineTableValuedFunction>(schema);
-            schema.TableValuedFunctions = new DataObjectLookup<Schema, TableValuedFunction>(schema);
-            schema.ScalarFunctions = new DataObjectLookup<Schema, ScalarFunction>(schema);
-            schema.StoredProcedures = new DataObjectLookup<Schema, StoredProcedure>(schema);
-            schema.Triggers = new DataObjectLookup<Schema, Trigger>(schema);
-            schema.UserDefinedDataTypes = new DataObjectLookup<Schema, UserDefinedDataType>(schema);
-            schema.UserTables = new DataObjectLookup<Schema, UserTable>(schema);
-            schema.Views = new DataObjectLookup<Schema, View>(schema);
-
-            schema.ObjectName = GetDefaultObjectName(schema, objectName);
-        }
-
-        public Schema(Catalog catalog, string objectName)
-        {
-            Init(this, catalog, objectName);
-        }
-        
-        public Schema()
+		public Schema()
         {
             AggregateFunctions = new DataObjectLookup<Schema, AggregateFunction>(this);
             InlineTableValuedFunctions = new DataObjectLookup<Schema, InlineTableValuedFunction>(this);
@@ -57,6 +36,34 @@ namespace Meta.Net.Objects
             UserDefinedDataTypes = new DataObjectLookup<Schema, UserDefinedDataType>(this);
             UserTables = new DataObjectLookup<Schema, UserTable>(this);
             Views = new DataObjectLookup<Schema, View>(this);
+        }
+
+        public override IMetaObject DeepClone()
+        {
+            var schema = new Schema
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName)
+            };
+
+            schema.AggregateFunctions = AggregateFunctions.DeepClone(schema);
+            schema.InlineTableValuedFunctions = InlineTableValuedFunctions.DeepClone(schema);
+            schema.TableValuedFunctions = TableValuedFunctions.DeepClone(schema);
+            schema.ScalarFunctions = ScalarFunctions.DeepClone(schema);
+            schema.StoredProcedures = StoredProcedures.DeepClone(schema);
+            schema.Triggers = Triggers.DeepClone(schema);
+            schema.UserDefinedDataTypes = UserDefinedDataTypes.DeepClone(schema);
+            schema.UserTables = UserTables.DeepClone(schema);
+            schema.Views = Views.DeepClone(schema);
+
+            return schema;
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new Schema
+            {
+                ObjectName = ObjectName
+            };
         }
 
         public static void AddAggregateFunction(Schema schema, AggregateFunction aggregateFunction)
@@ -150,49 +157,6 @@ namespace Meta.Net.Objects
             schema.UserTables.Clear();
             schema.UserDefinedDataTypes.Clear();
             schema.Views.Clear();
-        }
-
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// </summary>
-        /// <param name="schema">The schema to deep clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static Schema Clone(Schema schema)
-        {
-            var schemaClone = new Schema
-            {
-                ObjectName = schema.ObjectName
-            };
-
-            foreach (var aggregateFunction in schema.AggregateFunctions)
-                AddAggregateFunction(schemaClone, AggregateFunction.Clone(aggregateFunction));
-
-            foreach (var inlineTableValuedFunction in schema.InlineTableValuedFunctions)
-                AddInlineTableValuedFunction(schemaClone, InlineTableValuedFunction.Clone(inlineTableValuedFunction));
-
-            foreach (var scalarFunction in schema.ScalarFunctions)
-                AddScalarFunction(schemaClone, ScalarFunction.Clone(scalarFunction));
-
-            foreach (var storedProcedure in schema.StoredProcedures)
-                AddStoredProcedure(schemaClone, StoredProcedure.Clone(storedProcedure));
-
-            foreach (var tableValuedFunction in schema.TableValuedFunctions)
-                AddTableValuedFunction(schemaClone, TableValuedFunction.Clone(tableValuedFunction));
-
-            foreach (var trigger in schema.Triggers)
-                AddTrigger(schemaClone, Trigger.Clone(trigger));
-
-            foreach (var userDefinedDataType in schema.UserDefinedDataTypes)
-                AddUserDefinedDataType(schemaClone, UserDefinedDataType.Clone(userDefinedDataType));
-
-            foreach (var userTable in schema.UserTables)
-                AddUserTable(schemaClone, UserTable.Clone(userTable));
-
-            foreach (var view in schema.Views)
-                AddView(schemaClone, View.Clone(view));
-
-            return schemaClone;
         }
 
         //public static bool CompareDefinitions(Schema sourceSchema, Schema targetSchema)

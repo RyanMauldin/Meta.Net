@@ -176,7 +176,7 @@ namespace Meta.Net.Metadata
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.Catalogs(catalogs.ToList());
+                command.CommandText = metadataScriptFactory.Catalogs(catalogs);
                 using (var reader = command.ExecuteReader())
                 {
                     if (!reader.HasRows)

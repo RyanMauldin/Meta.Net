@@ -1,5 +1,4 @@
 ﻿using Meta.Net.Interfaces;
-using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
@@ -9,13 +8,11 @@ namespace Meta.Net.Abstract
         public bool UsesAnsiNulls { get; set; }
         public bool UsesQuotedIdentifier { get; set; }
 
-        protected static void Init(BaseModule baseDataModule, Schema schema, string objectName)
+        protected BaseModule()
         {
-            baseDataModule.Schema = schema;
-            baseDataModule.ObjectName = GetDefaultObjectName(baseDataModule, objectName);
-            baseDataModule.Definition = "";
-            baseDataModule.UsesAnsiNulls = true;
-            baseDataModule.UsesQuotedIdentifier = true;
+            Definition = string.Empty;
+            UsesAnsiNulls = true;
+            UsesQuotedIdentifier = true;
         }
 
         public static bool CompareDefinitions(IModule sourceModule, IModule targetModule)

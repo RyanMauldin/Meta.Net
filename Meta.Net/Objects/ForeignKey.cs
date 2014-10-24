@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Meta.Net.Abstract;
-using Meta.Net.Types;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
@@ -42,88 +40,56 @@ namespace Meta.Net.Objects
         public int UpdateAction { get; set; }
         public string UpdateActionDescription { get; set; }
 
-        private static void Init(ForeignKey foreignKey, UserTable userTable, string objectName)
-        {
-            foreignKey.ForeignKeyColumns = new DataObjectLookup<ForeignKey, ForeignKeyColumn>(foreignKey);
-            foreignKey.UserTable = userTable;
-            foreignKey.ObjectName = GetDefaultObjectName(foreignKey, objectName);
-            foreignKey.DeleteActionDescription = "NO_ACTION";
-            foreignKey.UpdateActionDescription = "NO_ACTION";
-        }
-
-        public ForeignKey(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public ForeignKey()
         {
+            DeleteActionDescription = "NO_ACTION";
+            UpdateActionDescription = "NO_ACTION";
             ForeignKeyColumns = new DataObjectLookup<ForeignKey, ForeignKeyColumn>(this);
         }
 
-		public static long ObjectCount(ForeignKey foreignKey)
+        public override IMetaObject DeepClone()
         {
-            return foreignKey.ForeignKeyColumns.Count;
+            var foreignKey = new ForeignKey
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                IsDisabled = IsDisabled,
+                IsNotForReplication = IsNotForReplication,
+                IsNotTrusted = IsNotTrusted,
+                IsSystemNamed = IsSystemNamed,
+                DeleteAction = DeleteAction,
+                DeleteActionDescription = DeleteActionDescription == null ? null : string.Copy(DeleteActionDescription),
+                UpdateAction = UpdateAction,
+                UpdateActionDescription = UpdateActionDescription == null ? null : string.Copy(UpdateActionDescription)
+            };
+
+            foreignKey.ForeignKeyColumns.DeepClone(foreignKey);
+
+            return foreignKey;
         }
 
-        /// <summary>
+        public override IMetaObject ShallowClone()
+        {
+            return new ForeignKey
+            {
+                ObjectName = ObjectName,
+                IsDisabled = IsDisabled,
+                IsNotForReplication = IsNotForReplication,
+                IsNotTrusted = IsNotTrusted,
+                IsSystemNamed = IsSystemNamed,
+                DeleteAction = DeleteAction,
+                DeleteActionDescription = DeleteActionDescription,
+                UpdateAction = UpdateAction,
+                UpdateActionDescription = UpdateActionDescription
+            };
+        }
+
+		/// <summary>
         /// Shallow Clear...
         /// </summary>
         /// <param name="foreignKey">The foreignKey to shallow clear.</param>
         public static void Clear(ForeignKey foreignKey)
         {
             foreignKey.ForeignKeyColumns.Clear();
-        }
-
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// </summary>
-        /// <param name="foreignKey">The foreign key to deep clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static ForeignKey Clone(ForeignKey foreignKey)
-        {
-            var foreignKeyClone = new ForeignKey
-            {
-                ObjectName = foreignKey.ObjectName,    
-                IsDisabled = foreignKey.IsDisabled,
-                IsNotForReplication = foreignKey.IsNotForReplication,
-                IsNotTrusted = foreignKey.IsNotTrusted,
-                IsSystemNamed = foreignKey.IsSystemNamed,
-                DeleteAction = foreignKey.DeleteAction,
-                DeleteActionDescription = foreignKey.DeleteActionDescription,
-                UpdateAction = foreignKey.UpdateAction,
-                UpdateActionDescription = foreignKey.UpdateActionDescription
-            };
-
-            foreach (var foreignKeyColumn in foreignKey.ForeignKeyColumns)
-                AddForeignKeyColumn(foreignKeyClone, ForeignKeyColumn.Clone(foreignKeyColumn));
-
-            return foreignKeyClone;
-        }
-
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="parentMetaObject">The newly cloned parent meta object.</param>
-        /// <param name="foreignKey">The foreign key to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static ForeignKey ShallowClone(IMetaObject parentMetaObject, ForeignKey foreignKey)
-        {
-            return new ForeignKey
-            {
-                ParentMetaObject = parentMetaObject,
-                ObjectName = foreignKey.ObjectName,
-                IsDisabled = foreignKey.IsDisabled,
-                IsNotForReplication = foreignKey.IsNotForReplication,
-                IsNotTrusted = foreignKey.IsNotTrusted,
-                IsSystemNamed = foreignKey.IsSystemNamed,
-                DeleteAction = foreignKey.DeleteAction,
-                DeleteActionDescription = foreignKey.DeleteActionDescription,
-                UpdateAction = foreignKey.UpdateAction,
-                UpdateActionDescription = foreignKey.UpdateActionDescription
-            };
         }
 
         public static void AddForeignKeyColumn(ForeignKey foreignKey, ForeignKeyColumn foreignKeyColumn)
@@ -161,6 +127,11 @@ namespace Meta.Net.Objects
                     objectNamespace, foreignKey.Description, foreignKey.Namespace, newObjectName));
 
             foreignKey.ForeignKeyColumns.Rename(foreignKeyColumn, newObjectName);
+        }
+
+        public static long ObjectCount(ForeignKey foreignKey)
+        {
+            return foreignKey.ForeignKeyColumns.Count;
         }
 
         //public static bool CompareDefinitions(ForeignKey sourceForeignKey, ForeignKey targetForeignKey)

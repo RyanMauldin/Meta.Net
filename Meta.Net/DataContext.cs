@@ -5,7 +5,6 @@ using Meta.Net.Interfaces;
 
 namespace Meta.Net
 {
-    /// Catalog.Name, Table.Name => `dbname`.`table1`
     /// <summary>
     /// Supported universal data server context specific properties and methods.
     /// </summary>
@@ -23,6 +22,12 @@ namespace Meta.Net
 
         public abstract bool IncludeSchemaNameInNamespace { get; }
 
+        public abstract int MaxObjectNameLength { get; }
+
+        public abstract int MaxAliasLength { get; }
+
+        public abstract int MaxTempTableNameLength { get; }
+        
         //public IMetaScriptFactory ScriptFactory
         //{
         //    get
@@ -74,6 +79,10 @@ namespace Meta.Net
         {
             return ConvertIdentifier(fromContext, this, nameSpace);
         }
+
+        public abstract DataContext DeepClone();
+
+        public abstract DataContext ShallowClone();
 
         //public abstract DataSyncManager CreateSyncManager(DataConnectionInfo source, DataConnectionInfo target, DataProperties properties);
 

@@ -1,5 +1,5 @@
-﻿using System;
-using Meta.Net.Abstract;
+﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -21,47 +21,44 @@ namespace Meta.Net.Objects
         public bool IsSystemNamed { get; set; }
         public bool IsTableConstraint { get; set; }
 
-        private static void Init(CheckConstraint checkConstraint, UserTable userTable, string objectName)
-        {
-            checkConstraint.UserTable = userTable;
-            checkConstraint.ObjectName = GetDefaultObjectName(checkConstraint, objectName);
-            checkConstraint.ColumnName = "";
-            checkConstraint.Definition = "";
-            checkConstraint.IsDisabled = false;
-            checkConstraint.IsNotForReplication = false;
-            checkConstraint.IsNotTrusted = false;
-            checkConstraint.IsSystemNamed = false;
-            checkConstraint.IsTableConstraint = true;
-        }
-
-        public CheckConstraint(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public CheckConstraint()
         {
-            
+            ColumnName = string.Empty;
+            Definition = string.Empty;
+            IsDisabled = false;
+            IsNotForReplication = false;
+            IsNotTrusted = false;
+            IsSystemNamed = false;
+            IsTableConstraint = true;
         }
 
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="checkConstraint">The check constraint to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static CheckConstraint Clone(CheckConstraint checkConstraint)
+        public override IMetaObject DeepClone()
         {
             return new CheckConstraint
             {
-                ObjectName = checkConstraint.ObjectName,
-                ColumnName = checkConstraint.ColumnName,
-                Definition = checkConstraint.Definition,
-                IsDisabled = checkConstraint.IsDisabled,
-                IsNotForReplication = checkConstraint.IsNotForReplication,
-                IsNotTrusted = checkConstraint.IsNotTrusted,
-                IsSystemNamed = checkConstraint.IsSystemNamed,
-                IsTableConstraint = checkConstraint.IsTableConstraint
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ColumnName = ColumnName == null ? null : string.Copy(ColumnName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                IsDisabled = IsDisabled,
+                IsNotForReplication = IsNotForReplication,
+                IsNotTrusted = IsNotTrusted,
+                IsSystemNamed = IsSystemNamed,
+                IsTableConstraint = IsTableConstraint
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new CheckConstraint
+            {
+                ObjectName = ObjectName,
+                ColumnName = ColumnName,
+                Definition = Definition,
+                IsDisabled = IsDisabled,
+                IsNotForReplication = IsNotForReplication,
+                IsNotTrusted = IsNotTrusted,
+                IsSystemNamed = IsSystemNamed,
+                IsTableConstraint = IsTableConstraint
             };
         }
 

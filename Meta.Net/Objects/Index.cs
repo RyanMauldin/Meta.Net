@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Meta.Net.Abstract;
-using Meta.Net.Types;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -28,31 +27,64 @@ namespace Meta.Net.Objects
 
         public DataObjectLookup<Index, IndexColumn> IndexColumns { get; private set; }
 
-        private static void Init(Index index, UserTable userTable, string objectName)
-        {
-            index.IndexColumns = new DataObjectLookup<Index, IndexColumn>(index);
-            index.UserTable = userTable;
-            index.ObjectName = GetDefaultObjectName(index, objectName);
-            index.AllowPageLocks = true;
-            index.AllowRowLocks = true;
-            index.FileGroup = "PRIMARY";
-            index.FillFactor = 0;
-            index.IgnoreDupKey = false;
-            index.IndexType = "";
-            index.IsClustered = false;
-            index.IsDisabled = false;
-            index.IsPadded = true;
-            index.IsUnique = false;
-        }
-
-        public Index(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
         public Index()
         {
+            AllowPageLocks = true;
+            AllowRowLocks = true;
+            FileGroup = "PRIMARY";
+            FillFactor = 0;
+            IgnoreDupKey = false;
+            IndexType = string.Empty;
+            IsClustered = false;
+            IsDisabled = false;
+            IsPadded = true;
+            IsUnique = false;
             IndexColumns = new DataObjectLookup<Index, IndexColumn>(this);
+        }
+
+        public override IMetaObject DeepClone()
+        {
+            var index = new Index
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                AllowPageLocks = AllowPageLocks,
+                AllowRowLocks = AllowRowLocks,
+                FileGroup = FileGroup == null ? null : string.Copy(FileGroup),
+                FillFactor = FillFactor,
+                IgnoreDupKey = IgnoreDupKey,
+                IndexType = IndexType == null ? null : string.Copy(IndexType),
+                IsClustered = IsClustered,
+                IsDisabled = IsDisabled,
+                IsPadded = IsPadded,
+                IsUnique = IsUnique
+            };
+
+            index.IndexColumns.DeepClone(index);
+
+            return index;
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new Index
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                AllowPageLocks = AllowPageLocks,
+                AllowRowLocks = AllowRowLocks,
+                FileGroup = FileGroup == null ? null : string.Copy(FileGroup),
+                FillFactor = FillFactor,
+                IgnoreDupKey = IgnoreDupKey,
+                IndexType = IndexType == null ? null : string.Copy(IndexType),
+                IsClustered = IsClustered,
+                IsDisabled = IsDisabled,
+                IsPadded = IsPadded,
+                IsUnique = IsUnique
+            };
+        }
+
+        public static void Clear(Index index)
+        {
+            index.IndexColumns.Clear();
         }
 
 		public static void AddIndexColumn(Index index, IndexColumn indexColumn)
@@ -63,42 +95,29 @@ namespace Meta.Net.Objects
             index.IndexColumns.Add(indexColumn);
         }
 
-        /// <summary>
-        /// Shallow Clear...
-        /// </summary>
-        /// <param name="index">The index to shallow clear.</param>
-        public static void Clear(Index index)
+        public static void RemoveIndexColumn(Index index, string objectNamespace)
         {
-            index.IndexColumns.Clear();
+            index.IndexColumns.Remove(objectNamespace);
         }
 
-        /// <summary>
-        /// Deep Clone...
-        /// A clone of this class and clones of all assosiated metadata.
-        /// </summary>
-        /// <param name="index">The index to deep clone.</param>
-        /// <returns>A clone of this class and clones of all assosiated metadata.</returns>
-        public static Index Clone(Index index)
+        public static void RemoveIndexColumn(Index index, IndexColumn indexColumn)
         {
-            var indexClone = new Index
-            {
-                ObjectName = index.ObjectName,
-                AllowPageLocks = index.AllowPageLocks,
-                AllowRowLocks = index.AllowRowLocks,
-                FileGroup = index.FileGroup,
-                FillFactor = index.FillFactor,
-                IgnoreDupKey = index.IgnoreDupKey,
-                IndexType = index.IndexType,
-                IsClustered = index.IsClustered,
-                IsDisabled = index.IsDisabled,
-                IsPadded = index.IsPadded,
-                IsUnique = index.IsUnique
-            };
+            index.IndexColumns.Remove(indexColumn.Namespace);
+        }
 
-            foreach (var indexColumn in index.IndexColumns)
-                AddIndexColumn(indexClone, IndexColumn.Clone(indexColumn));
+        public static void RenameIndexColumn(Index index, string objectNamespace, string newObjectName)
+        {
+            var indexColumn = index.IndexColumns[objectNamespace];
+            if (indexColumn == null)
+                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
+                    objectNamespace, index.Description, index.Namespace, newObjectName));
 
-            return indexClone;
+            index.IndexColumns.Rename(indexColumn, newObjectName);
+        }
+
+        public static long ObjectCount(Index index)
+        {
+            return index.IndexColumns.Count;
         }
 
         //public static bool CompareDefinitions(Index sourceIndex, Index targetIndex)
@@ -265,55 +284,6 @@ namespace Meta.Net.Objects
         //        }
         //    }
         //}
-
-        public static long ObjectCount(Index index)
-        {
-            return index.IndexColumns.Count;
-        }
-
-        public static void RemoveIndexColumn(Index index, string objectNamespace)
-        {
-            index.IndexColumns.Remove(objectNamespace);
-        }
-
-        public static void RemoveIndexColumn(Index index, IndexColumn indexColumn)
-        {
-            index.IndexColumns.Remove(indexColumn.Namespace);
-        }
-
-        public static void RenameIndexColumn(Index index, string objectNamespace, string newObjectName)
-        {
-            var indexColumn = index.IndexColumns[objectNamespace];
-            if (indexColumn == null)
-                throw new Exception(string.Format("{0} could not be found in {1} {2} to rename to {3}",
-                    objectNamespace, index.Description, index.Namespace, newObjectName));
-
-            index.IndexColumns.Rename(indexColumn, newObjectName);
-        }
-
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="index">The index to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static Index ShallowClone(Index index)
-        {
-            return new Index
-            {
-                ObjectName = index.ObjectName,
-                AllowPageLocks = index.AllowPageLocks,
-                AllowRowLocks = index.AllowRowLocks,
-                FileGroup = index.FileGroup,
-                FillFactor = index.FillFactor,
-                IgnoreDupKey = index.IgnoreDupKey,
-                IndexType = index.IndexType,
-                IsClustered = index.IsClustered,
-                IsDisabled = index.IsDisabled,
-                IsPadded = index.IsPadded,
-                IsUnique = index.IsUnique
-            };
-        }
 
         ///// <summary>
         ///// Modifies this Index to contain all objects that are

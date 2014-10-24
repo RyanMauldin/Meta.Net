@@ -1,5 +1,4 @@
-﻿using System;
-using Meta.Net.Abstract;
+﻿using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
@@ -19,46 +18,44 @@ namespace Meta.Net.Objects
         public string TriggerForObjectName { get; set; }
         public string TriggerForSchema { get; set; }
 
-        private static void Init(Trigger trigger, Schema schema, string objectName)
-        {
-            BaseModule.Init(trigger, schema, objectName);
-            trigger.IsDisabled = false;
-            trigger.IsNotForReplication = false;
-            trigger.TriggerForObjectName = "";
-            trigger.TriggerForSchema = "";
-        }
-
-        public Trigger(Schema schema, string objectName)
-        {
-            Init(this, schema, objectName);
-        }
-
         public Trigger()
         {
-            
+            IsDisabled = false;
+            IsNotForReplication = false;
+            TriggerForObjectName = string.Empty;
+            TriggerForSchema = string.Empty;
         }
-        
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="trigger">The trigger to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static Trigger Clone(Trigger trigger)
+
+        public override IMetaObject DeepClone()
         {
             return new Trigger
             {
-                ObjectName = trigger.ObjectName,
-                Definition = trigger.Definition,
-                IsDisabled = trigger.IsDisabled,
-                IsNotForReplication = trigger.IsNotForReplication,
-                TriggerForSchema = trigger.TriggerForSchema,
-                TriggerForObjectName = trigger.TriggerForObjectName,
-                UsesAnsiNulls = trigger.UsesAnsiNulls,
-                UsesQuotedIdentifier = trigger.UsesQuotedIdentifier
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                Definition = Definition == null ? null : string.Copy(Definition),
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier,
+                IsDisabled = IsDisabled,
+                IsNotForReplication = IsNotForReplication,
+                TriggerForObjectName = TriggerForObjectName,
+                TriggerForSchema = TriggerForSchema
             };
         }
 
+        public override IMetaObject ShallowClone()
+        {
+            return new Trigger
+            {
+                ObjectName = ObjectName,
+                Definition = Definition,
+                UsesAnsiNulls = UsesAnsiNulls,
+                UsesQuotedIdentifier = UsesQuotedIdentifier,
+                IsDisabled = IsDisabled,
+                IsNotForReplication = IsNotForReplication,
+                TriggerForObjectName = TriggerForObjectName,
+                TriggerForSchema = TriggerForSchema
+            };
+        }
+        
         //public static bool CompareDefinitions(Trigger sourceTrigger, Trigger targetTrigger)
         //{
         //    var result = BaseModule.CompareDefinitions(sourceTrigger, targetTrigger);

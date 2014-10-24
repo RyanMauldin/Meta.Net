@@ -1,5 +1,4 @@
-﻿using System;
-using Meta.Net.Abstract;
+﻿using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
@@ -19,38 +18,30 @@ namespace Meta.Net.Objects
         public bool IsDescendingKey { get; set; }
         public bool IsIncludedColumn { get; set; }
 
-        private static void Init(PrimaryKeyColumn primaryKeyColumn, PrimaryKey primaryKey, string objectName)
-        {
-            primaryKeyColumn.PrimaryKey = primaryKey;
-            primaryKeyColumn.ObjectName = GetDefaultObjectName(primaryKeyColumn, objectName);
-            primaryKeyColumn.IsDescendingKey = false;
-            primaryKeyColumn.KeyOrdinal = 1;
-            primaryKeyColumn.PartitionOrdinal = 0;
-        }
-
-		public PrimaryKeyColumn(PrimaryKey primaryKey, string objectName)
-        {
-            Init(this, primaryKey, objectName);
-        }
-
         public PrimaryKeyColumn()
         {
-            
+            IsDescendingKey = false;
+            KeyOrdinal = 1;
+            PartitionOrdinal = 0;
         }
 
-        /// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="primaryKeyColumn">The primary key column to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static PrimaryKeyColumn Clone(PrimaryKeyColumn primaryKeyColumn)
+        public override IMetaObject DeepClone()
         {
             return new PrimaryKeyColumn
             {
-                ObjectName = primaryKeyColumn.ObjectName,
-                KeyOrdinal = primaryKeyColumn.KeyOrdinal,
-                PartitionOrdinal = primaryKeyColumn.PartitionOrdinal
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                KeyOrdinal = KeyOrdinal,
+                PartitionOrdinal = PartitionOrdinal
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new PrimaryKeyColumn
+            {
+                ObjectName = ObjectName,
+                KeyOrdinal = KeyOrdinal,
+                PartitionOrdinal = PartitionOrdinal
             };
         }
 

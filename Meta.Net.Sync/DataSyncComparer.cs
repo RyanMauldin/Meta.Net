@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Meta.Net.Sync.Interfaces;
-using Meta.Net.Types;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Sync
@@ -35,8 +34,8 @@ namespace Meta.Net.Sync
         {
             Exceptions = new List<Exception>();
             DataSyncManager = dataSyncManager;
-            SourceServer = Server.Clone(DataSyncManager.SourceServer, dataSyncManager.SourceDataConnectionInfo.DataContext);
-            TargetServer = Server.Clone(DataSyncManager.TargetServer, dataSyncManager.TargetDataConnectionInfo.DataContext);
+            SourceServer = (Server)DataSyncManager.SourceServer.DeepClone();
+            TargetServer = (Server)DataSyncManager.TargetServer.DeepClone();
         }
 
 		/// <summary>

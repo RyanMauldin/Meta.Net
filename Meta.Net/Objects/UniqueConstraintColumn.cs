@@ -21,7 +21,7 @@ namespace Meta.Net.Objects
         private static void Init(UniqueConstraintColumn uniqueConstraintColumn, UniqueConstraint uniqueConstraint, string objectName)
         {
             uniqueConstraintColumn.UniqueConstraint = uniqueConstraint;
-            uniqueConstraintColumn.ObjectName = GetDefaultObjectName(uniqueConstraintColumn, objectName);
+            uniqueConstraintColumn.ObjectName = objectName;
             uniqueConstraintColumn.IsDescendingKey = false;
             uniqueConstraintColumn.KeyOrdinal = 1;
             uniqueConstraintColumn.PartitionOrdinal = 0;
@@ -35,6 +35,26 @@ namespace Meta.Net.Objects
         public UniqueConstraintColumn()
         {
             
+        }
+
+        public override IMetaObject DeepClone()
+        {
+            return new UniqueConstraintColumn
+            {
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                KeyOrdinal = KeyOrdinal,
+                PartitionOrdinal = PartitionOrdinal
+            };
+        }
+
+        public override IMetaObject ShallowClone()
+        {
+            return new UniqueConstraintColumn
+            {
+                ObjectName = ObjectName,
+                KeyOrdinal = KeyOrdinal,
+                PartitionOrdinal = PartitionOrdinal
+            };
         }
 
 		/// <summary>

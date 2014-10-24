@@ -1,5 +1,5 @@
-﻿using System;
-using Meta.Net.Abstract;
+﻿using Meta.Net.Abstract;
+using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
@@ -17,43 +17,36 @@ namespace Meta.Net.Objects
         public bool IsNotForReplication { get; set; }
         public int SeedValue { get; set; }
 
-		private static void Init(IdentityColumn identityColumn, UserTable userTable, string objectName)
+		public IdentityColumn()
         {
-            identityColumn.UserTable = userTable;
-		    identityColumn.ObjectName = GetDefaultObjectName(identityColumn, objectName);
-            identityColumn.SeedValue = 1;
-            identityColumn.IncrementValue = 1;
-            identityColumn.IsNotForReplication = false;
+            SeedValue = 1;
+            IncrementValue = 1;
+            IsNotForReplication = false;
         }
 
-        public IdentityColumn(UserTable userTable, string objectName)
-        {
-            Init(this, userTable, objectName);
-        }
-
-        public IdentityColumn()
-        {
-            
-        }
-
-		/// <summary>
-        /// Deep Clone and Shallow Clone... Leaf Node.
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="identityColumn">The identity column to clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static IdentityColumn Clone(IdentityColumn identityColumn)
+        public override IMetaObject DeepClone()
         {
             return new IdentityColumn
             {
-                ObjectName = identityColumn.ObjectName,
-                SeedValue = identityColumn.SeedValue,
-                IncrementValue = identityColumn.IncrementValue,
-                IsNotForReplication = identityColumn.IsNotForReplication
+                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                SeedValue = SeedValue,
+                IncrementValue = IncrementValue,
+                IsNotForReplication = IsNotForReplication
             };
         }
 
-        //public static bool CompareDefinitions(IdentityColumn sourceIdentityColumn, IdentityColumn targetIdentityColumn)
+        public override IMetaObject ShallowClone()
+        {
+            return new IdentityColumn
+            {
+                ObjectName = ObjectName,
+                SeedValue = SeedValue,
+                IncrementValue = IncrementValue,
+                IsNotForReplication = IsNotForReplication
+            };
+        }
+
+		//public static bool CompareDefinitions(IdentityColumn sourceIdentityColumn, IdentityColumn targetIdentityColumn)
         //{
         //    if (!CompareObjectNames(sourceIdentityColumn, targetIdentityColumn))
         //        return false;
@@ -65,14 +58,6 @@ namespace Meta.Net.Objects
         //        return false;
 
         //    return sourceIdentityColumn.SeedValue == targetIdentityColumn.SeedValue;
-        //}
-
-        //public static bool CompareObjectNames(IdentityColumn sourceIdentityColumn, IdentityColumn targetIdentityColumn, StringComparer stringComparer = null)
-        //{
-        //    if (stringComparer == null)
-        //        stringComparer = StringComparer.OrdinalIgnoreCase;
-
-        //    return stringComparer.Compare(sourceIdentityColumn.ObjectName, targetIdentityColumn.ObjectName) == 0;
         //}
 
         //public void GetObjectData(SerializationInfo info, StreamingContext context)
