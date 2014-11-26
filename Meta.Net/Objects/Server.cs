@@ -58,7 +58,7 @@ namespace Meta.Net.Objects
         {
             var server = new Server
             {
-                ObjectName = string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 DataContext = DataContext.DeepClone()
             };
             server.Catalogs = Catalogs.DeepClone(server);

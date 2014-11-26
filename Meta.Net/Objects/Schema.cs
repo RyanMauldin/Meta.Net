@@ -42,7 +42,7 @@ namespace Meta.Net.Objects
         {
             var schema = new Schema
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName)
+                ObjectName = ObjectName
             };
 
             schema.AggregateFunctions = AggregateFunctions.DeepClone(schema);

@@ -53,10 +53,10 @@ namespace Meta.Net.Objects
         {
             var userTable = new UserTable
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                FileStreamFileGroup = FileStreamFileGroup == null ? null : string.Copy(FileStreamFileGroup),
+                ObjectName = ObjectName,
+                FileStreamFileGroup = FileStreamFileGroup,
                 HasTextNTextOrImageColumns = HasTextNTextOrImageColumns,
-                LobFileGroup = LobFileGroup == null ? null : string.Copy(LobFileGroup),
+                LobFileGroup = LobFileGroup,
                 TextInRowLimit = TextInRowLimit,
                 UsesAnsiNulls = UsesAnsiNulls
             };
@@ -80,10 +80,10 @@ namespace Meta.Net.Objects
         {
             return new UserTable
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                FileStreamFileGroup = FileStreamFileGroup == null ? null : string.Copy(FileStreamFileGroup),
+                ObjectName = ObjectName,
+                FileStreamFileGroup = FileStreamFileGroup,
                 HasTextNTextOrImageColumns = HasTextNTextOrImageColumns,
-                LobFileGroup = LobFileGroup == null ? null : string.Copy(LobFileGroup),
+                LobFileGroup = LobFileGroup,
                 TextInRowLimit = TextInRowLimit,
                 UsesAnsiNulls = UsesAnsiNulls
             };

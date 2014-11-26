@@ -44,13 +44,13 @@ namespace Meta.Net.Objects
         {
             var primaryKey = new PrimaryKey
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 AllowPageLocks = AllowPageLocks,
                 AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup == null ? null : string.Copy(FileGroup),
+                FileGroup = FileGroup,
                 FillFactor = FillFactor,
                 IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType == null ? null : string.Copy(IndexType),
+                IndexType = IndexType,
                 IsClustered = IsClustered,
                 IsDisabled = IsDisabled,
                 IsPadded = IsPadded

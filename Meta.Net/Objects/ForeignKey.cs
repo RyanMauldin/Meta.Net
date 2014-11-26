@@ -51,15 +51,15 @@ namespace Meta.Net.Objects
         {
             var foreignKey = new ForeignKey
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 IsDisabled = IsDisabled,
                 IsNotForReplication = IsNotForReplication,
                 IsNotTrusted = IsNotTrusted,
                 IsSystemNamed = IsSystemNamed,
                 DeleteAction = DeleteAction,
-                DeleteActionDescription = DeleteActionDescription == null ? null : string.Copy(DeleteActionDescription),
+                DeleteActionDescription = DeleteActionDescription,
                 UpdateAction = UpdateAction,
-                UpdateActionDescription = UpdateActionDescription == null ? null : string.Copy(UpdateActionDescription)
+                UpdateActionDescription = UpdateActionDescription
             };
 
             foreignKey.ForeignKeyColumns.DeepClone(foreignKey);

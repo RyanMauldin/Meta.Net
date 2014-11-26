@@ -29,7 +29,7 @@ namespace Meta.Net.Objects
         {
             return new PrimaryKeyColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 KeyOrdinal = KeyOrdinal,
                 PartitionOrdinal = PartitionOrdinal
             };

@@ -101,10 +101,10 @@ namespace Meta.Net.Objects
         {
             var catalog = new Catalog
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                CollationName = CollationName == null ? null : string.Copy(CollationName),
+                ObjectName = ObjectName,
+                CollationName = CollationName,
                 CompatibilityLevel = CompatibilityLevel,
-                CreateDate = CreateDate == null ? null : string.Copy(CreateDate),
+                CreateDate = CreateDate,
                 IsAnsiNullDefaultOn = IsAnsiNullDefaultOn,
                 IsAnsiNullsOn = IsAnsiNullsOn,
                 IsAnsiPaddingOn = IsAnsiPaddingOn,
@@ -132,13 +132,13 @@ namespace Meta.Net.Objects
                 IsSupplementalLoggingEnabled = IsSupplementalLoggingEnabled,
                 IsTrustworthyOn = IsTrustworthyOn,
                 PageVerifyOption = PageVerifyOption,
-                PageVerifyOptionDescription = PageVerifyOptionDescription == null ? null : string.Copy(PageVerifyOptionDescription),
+                PageVerifyOptionDescription = PageVerifyOptionDescription,
                 RecoveryModel = RecoveryModel,
-                RecoveryModelDescription = RecoveryModelDescription == null ? null : string.Copy(RecoveryModelDescription),
+                RecoveryModelDescription = RecoveryModelDescription,
                 State = State,
-                StateDescription = StateDescription == null ? null : string.Copy(StateDescription),
+                StateDescription = StateDescription,
                 UserAccess = UserAccess,
-                UserAccessDescription = UserAccessDescription == null ? null : string.Copy(UserAccessDescription)
+                UserAccessDescription = UserAccessDescription
             };
 
             catalog.Schemas.DeepClone(catalog);

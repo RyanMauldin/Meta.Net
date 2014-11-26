@@ -40,9 +40,9 @@ namespace Meta.Net.Objects
         {
             return new UserDefinedDataType
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                Collation = Collation == null ? null : string.Copy(Collation),
-                DataType = DataType == null ? null : string.Copy(DataType),
+                ObjectName = ObjectName,
+                Collation = Collation,
+                DataType = DataType,
                 HasDefault = HasDefault,
                 IsAssemblyType = IsAssemblyType,
                 IsNullable = IsNullable,

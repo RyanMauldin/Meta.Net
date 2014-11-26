@@ -45,7 +45,7 @@ namespace Meta.Net.Objects
         {
             return new ForeignKeyColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 KeyOrdinal = KeyOrdinal
             };
         }

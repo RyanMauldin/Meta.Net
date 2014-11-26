@@ -30,7 +30,7 @@ namespace Meta.Net.Objects
         {
             return new IndexColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 IsDescendingKey = IsDescendingKey,
                 IsIncludedColumn = IsIncludedColumn,
                 KeyOrdinal = KeyOrdinal,

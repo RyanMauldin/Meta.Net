@@ -36,9 +36,9 @@ namespace Meta.Net.Objects
         {
             return new CheckConstraint
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                ColumnName = ColumnName == null ? null : string.Copy(ColumnName),
-                Definition = Definition == null ? null : string.Copy(Definition),
+                ObjectName = ObjectName,
+                ColumnName = ColumnName,
+                Definition = Definition,
                 IsDisabled = IsDisabled,
                 IsNotForReplication = IsNotForReplication,
                 IsNotTrusted = IsNotTrusted,

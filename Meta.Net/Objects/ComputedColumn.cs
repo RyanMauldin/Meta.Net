@@ -28,8 +28,8 @@ namespace Meta.Net.Objects
         {
             return new ComputedColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                Definition = Definition == null ? null : string.Copy(Definition),
+                ObjectName = ObjectName,
+                Definition = Definition,
                 IsPersisted = IsPersisted,
                 IsNullable = IsNullable
             };

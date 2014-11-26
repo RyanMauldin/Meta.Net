@@ -41,7 +41,7 @@ namespace Meta.Net.Objects
         {
             return new UniqueConstraintColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 KeyOrdinal = KeyOrdinal,
                 PartitionOrdinal = PartitionOrdinal
             };

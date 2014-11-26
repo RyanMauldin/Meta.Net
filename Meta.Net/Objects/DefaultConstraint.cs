@@ -28,9 +28,9 @@ namespace Meta.Net.Objects
         {
             return new DefaultConstraint
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                ColumnName = ColumnName == null ? null : string.Copy(ColumnName),
-                Definition = Definition == null ? null : string.Copy(Definition),
+                ObjectName = ObjectName,
+                ColumnName = ColumnName,
+                Definition = Definition,
                 IsSystemNamed = IsSystemNamed
             };
         }

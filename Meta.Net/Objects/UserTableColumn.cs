@@ -58,10 +58,10 @@ namespace Meta.Net.Objects
         {
             return new UserTableColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                Collation = Collation == null ? null : string.Copy(Collation),
+                ObjectName = ObjectName,
+                Collation = Collation,
                 ColumnOrdinal = ColumnOrdinal,
-                DataType = DataType == null ? null : string.Copy(DataType),
+                DataType = DataType,
                 HasDefault = HasDefault,
                 HasXmlCollection = HasXmlCollection,
                 IsAnsiPadded = IsAnsiPadded,

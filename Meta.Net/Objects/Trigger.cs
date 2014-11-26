@@ -30,8 +30,8 @@ namespace Meta.Net.Objects
         {
             return new Trigger
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
-                Definition = Definition == null ? null : string.Copy(Definition),
+                ObjectName = ObjectName,
+                Definition = Definition,
                 UsesAnsiNulls = UsesAnsiNulls,
                 UsesQuotedIdentifier = UsesQuotedIdentifier,
                 IsDisabled = IsDisabled,

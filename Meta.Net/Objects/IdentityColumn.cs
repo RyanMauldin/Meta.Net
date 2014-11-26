@@ -28,7 +28,7 @@ namespace Meta.Net.Objects
         {
             return new IdentityColumn
             {
-                ObjectName = ObjectName == null ? null : string.Copy(ObjectName),
+                ObjectName = ObjectName,
                 SeedValue = SeedValue,
                 IncrementValue = IncrementValue,
                 IsNotForReplication = IsNotForReplication
