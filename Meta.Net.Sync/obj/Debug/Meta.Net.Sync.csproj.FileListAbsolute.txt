@@ -1,7 +1,0 @@
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\bin\Debug\Meta.Net.Sync.dll
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\bin\Debug\Meta.Net.Sync.pdb
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\bin\Debug\Meta.Net.dll
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\bin\Debug\Meta.Net.pdb
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\obj\Debug\Meta.Net.Sync.csprojResolveAssemblyReference.cache
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\obj\Debug\Meta.Net.Sync.dll
-C:\Users\rmauldin\Documents\GitHub\Meta.Net\Meta.Net.Sync\obj\Debug\Meta.Net.Sync.pdb
