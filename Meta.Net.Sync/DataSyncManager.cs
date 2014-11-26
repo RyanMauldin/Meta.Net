@@ -6,6 +6,12 @@ using System;
 using System.Collections.Generic;
 using Meta.Net.Sync.Interfaces;
 
+// NOTE: I am busy rewriting the entire Meta.Net, Meta.Net.MySql, and Meta.Net.SqlServer libraries first
+// before even considering attempting the Sync again. I must at least get those perfect, before rewriting
+// this enite Meta.Net.Sync library. For one, dependencies were wrong and their order was not solid. Also,
+// Schemas are one thing, but getting and maintaining the data as well, is an entirely different story and
+// it had no buffering.
+
 namespace Meta.Net.Sync
 {
 
@@ -50,6 +56,7 @@ namespace Meta.Net.Sync
 
         protected DataSyncManager()
         {
+            throw new NotImplementedException();
             Exceptions = new List<Exception>();
             DataTimer = new DataTimer();
             
@@ -79,6 +86,7 @@ namespace Meta.Net.Sync
         /// <param name="dataProperties">data properties</param>
         protected DataSyncManager(Server sourceServer, Server targetServer, DataProperties dataProperties)
         {
+            throw new NotImplementedException();
             Exceptions = new List<Exception>();
             DataTimer = new DataTimer();
             DataSyncActionsCollection = new DataSyncActionsCollection();
@@ -106,6 +114,7 @@ namespace Meta.Net.Sync
         protected DataSyncManager(DataConnectionInfo sourceDataConnectionInfo
             , DataConnectionInfo targetDataConnectionInfo, DataProperties dataProperties)
         {
+            throw new NotImplementedException();
             Exceptions = new List<Exception>();
             DataTimer = new DataTimer();
             DataSyncActionsCollection = new DataSyncActionsCollection();
@@ -149,6 +158,7 @@ namespace Meta.Net.Sync
         /// <param name="dataProperties">data properties</param>
         protected DataSyncManager(Server sourceServer, DataConnectionInfo targetDataConnectionInfo, DataProperties dataProperties)
         {
+            throw new NotImplementedException();
             Exceptions = new List<Exception>();
             DataTimer = new DataTimer();
             DataSyncActionsCollection = new DataSyncActionsCollection();
@@ -852,6 +862,7 @@ namespace Meta.Net.Sync
         /// </returns>
         public bool Sync()
         {
+            throw new NotImplementedException();
             try
             {
                 var ticks = DateTime.Now.Ticks;
