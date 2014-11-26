@@ -7,7 +7,7 @@ Look at Meta.Net.TestConsole project, Program.cs - GetCatalogs() method for curr
 
 For now do not use anything from Meta.Net.Sync library. I broke the Sync library on purpose during a major re-write as I do not want anyone synchronizing databases with it yet.
 
-Currently, I am working on serialization and deserialization to and from json first, before re-writing the synchronization libraries. Contact me if you are interested.
+Currently, I am working on serialization and deserialization to and from json first, before re-writing the synchronization libraries. Contact me if you are interested. I am also considering ripping the Clone and Deep clone methods out and doing more of that work in the Meta.Net.Metadata Adapters. It is difficult to DeepClone when it comes to foreign keys... unless I serialize and deserialize like the adapters to do object dependencies within the relational model. There is no real use for the ShallowClone in my mind. So I will probably need to rip out the Clone methods and simply use the adapters to copy the model into json and then deserialize it back out to keep the relational structures intact.
 
 
 I noticed the following link:
