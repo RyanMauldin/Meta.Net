@@ -12,7 +12,8 @@ namespace Meta.Net.TestConsole
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine(StringBuilderTest());
+            //TestStringBuilders();
+
             Console.WriteLine(GetCatalogs());
             Console.WriteLine("Press any key to quit.");
             Console.ReadKey(true);
@@ -325,70 +326,149 @@ namespace Meta.Net.TestConsole
             return builder.ToString();
         }
 
-
-        public static string StringBuilderTest()
+        public static void TestStringBuilders()
         {
-            const string schemaObjectName = "TestSchema";
-            const string catalogObjectName = "TestCatalog";
-            const string userTableObjectName = "TestUserTable";
+            var cycles = 10000000;
+            var testString1 = "SchemaName";
+            var testString2 = "CatalogName";
+            var testString3 = "ObjectName";
+            Console.WriteLine("<---  String Builder Test - Short Strings: ({0}) cycles--->", cycles);
+            Console.WriteLine(StringBuilderTest(cycles, testString1, testString2, testString3));
+            testString1 = "SchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaNameSchemaName";
+            testString2 = "CatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogNameCatalogName";
+            testString3 = "ObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectNameObjectName";
+            Console.WriteLine("<---  String Builder Test 2 - Long Strings: ({0}) cycles --->", cycles);
+            Console.WriteLine(StringBuilderTest(cycles, testString1, testString2, testString3));
+        }
+        
+        public static string StringBuilderTest(int cycles, string testString1, string testString2, string testString3)
+        {
+            if (cycles <= 0)
+                cycles = 1;
 
-            var start = DateTime.UtcNow;
+            if (string.IsNullOrEmpty(testString1))
+                testString1 = string.Empty;
+            if (string.IsNullOrEmpty(testString2))
+                testString2 = string.Empty;
+            if (string.IsNullOrEmpty(testString3))
+                testString3 = string.Empty;
 
-            for (var i = 0; i < 10000000; i++)
+            var start1 = DateTime.UtcNow;
+            for (var i = 0; i < cycles; i++)
             {
-                var builder = new StringBuilder(schemaObjectName.Length + catalogObjectName.Length + userTableObjectName.Length + 2);
-                builder.AppendFormat("{0}.{1}.{2}", schemaObjectName, catalogObjectName, userTableObjectName);
+                var builder = new StringBuilder(testString1.Length + testString2.Length + testString3.Length + 2);
+                builder.AppendFormat("{0}.{1}.{2}", testString1, testString2, testString3);
                 var result = builder.ToString();
-                builder = new StringBuilder(result.Length + 1);
-                builder.Append(".");
+                builder = new StringBuilder(result);
+                builder.Clear();
             }
-
-            var finish = DateTime.UtcNow;
+            var finish1 = DateTime.UtcNow;
 
             var start2 = DateTime.UtcNow;
-
-            // This is the fastest method by far!!!
-            for (var i = 0; i < 10000000; i++)
+            // This is the fastest method by far (same as below but with method chaining) ~ Sometimes its faster, sometimes its not!!!
+            for (var i = 0; i < cycles; i++)
             {
-                var builder = new StringBuilder(schemaObjectName.Length + catalogObjectName.Length + userTableObjectName.Length + 2);
-                builder.Append(schemaObjectName).Append(".").Append(catalogObjectName).Append(".").Append(userTableObjectName);
+                var builder = new StringBuilder(testString1.Length + testString2.Length + testString3.Length + 2);
+                builder.Append(testString1).Append(".").Append(testString2).Append(".").Append(testString3);
                 var result = builder.ToString();
-                builder = new StringBuilder(result.Length + 1);
-                builder.Append(".");
+                builder = new StringBuilder(result);
+                builder.Clear();
             }
-
             var finish2 = DateTime.UtcNow;
 
             var start3 = DateTime.UtcNow;
-
-            for (var i = 0; i < 10000000; i++)
+            // This is the fastest method by far (same as above but seperated statements) ~ Sometimes its faster, sometimes its not!!!
+            for (var i = 0; i < cycles; i++)
             {
-                var builder = new StringBuilder();
-                builder.AppendFormat("{0}.{1}.{2}", schemaObjectName, catalogObjectName, userTableObjectName);
-                var result = builder.ToString();
-                builder = new StringBuilder(result.Length + 1);
+                var builder = new StringBuilder(testString1.Length + testString2.Length + testString3.Length + 2);
+                builder.Append(testString1);
                 builder.Append(".");
+                builder.Append(testString2);
+                builder.Append(".");
+                builder.Append(testString3);
+                var result = builder.ToString();
+                builder = new StringBuilder(result);
+                builder.Clear();
             }
-
             var finish3 = DateTime.UtcNow;
 
             var start4 = DateTime.UtcNow;
-
-            for (var i = 0; i < 10000000; i++)
+            for (var i = 0; i < cycles; i++)
             {
                 var builder = new StringBuilder();
-                builder.Append(schemaObjectName).Append(".").Append(catalogObjectName).Append(".").Append(userTableObjectName);
+                builder.AppendFormat("{0}.{1}.{2}", testString1, testString2, testString3);
                 var result = builder.ToString();
-                builder = new StringBuilder(result.Length + 1);
-                builder.Append(".");
+                builder = new StringBuilder(result);
+                builder.Clear();
             }
-
             var finish4 = DateTime.UtcNow;
 
-            var resultBuilder = new StringBuilder("Time 1: ").AppendLine(Convert.ToString((finish - start).TotalSeconds));
-            resultBuilder.Append("Time 2: ").AppendLine(Convert.ToString((finish2 - start2).TotalSeconds));
-            resultBuilder.Append("Time 3: ").AppendLine(Convert.ToString((finish3 - start3).TotalSeconds));
-            resultBuilder.Append("Time 4: ").AppendLine(Convert.ToString((finish4 - start4).TotalSeconds));
+            var start5 = DateTime.UtcNow;
+            for (var i = 0; i < cycles; i++)
+            {
+                var builder = new StringBuilder();
+                builder.Append(testString1).Append(".").Append(testString2).Append(".").Append(testString3);
+                var result = builder.ToString();
+                builder = new StringBuilder(result);
+                builder.Clear();
+            }
+            var finish5 = DateTime.UtcNow;
+
+            var start6 = DateTime.UtcNow;
+            for (var i = 0; i < cycles; i++)
+            {
+                var builder = new StringBuilder(testString1.Length + testString2.Length + testString3.Length + 2);
+                builder.Append(string.Format("{0}.{1}.{2}", testString1, testString2, testString3));
+                var result = builder.ToString();
+                builder = new StringBuilder(result);
+                builder.Clear();
+            }
+            var finish6 = DateTime.UtcNow;
+
+            var start7 = DateTime.UtcNow;
+            for (var i = 0; i < cycles; i++)
+            {
+                var builder = new StringBuilder(testString1.Length + testString2.Length + testString3.Length + 2);
+                builder.Append(testString1 + "." + testString2 + "." + testString3);
+                var result = builder.ToString();
+                builder = new StringBuilder(result);
+                builder.Clear();
+            }
+            var finish7 = DateTime.UtcNow;
+
+            var start8 = DateTime.UtcNow;
+            for (var i = 0; i < cycles; i++)
+            {
+                var builder = new StringBuilder();
+                builder.Append(string.Format("{0}.{1}.{2}", testString1, testString2, testString3));
+                var result = builder.ToString();
+                builder = new StringBuilder(result);
+                builder.Clear();
+            }
+            var finish8 = DateTime.UtcNow;
+
+            var start9 = DateTime.UtcNow;
+            // This method has memory issues when called many times
+            for (var i = 0; i < cycles; i++)
+            {
+                var builder = new StringBuilder();
+                builder.Append(testString1 + "." + testString2 + "." + testString3);
+                var result = builder.ToString();
+                builder = new StringBuilder(result);
+                builder.Clear();
+            }
+            var finish9 = DateTime.UtcNow;
+
+            var resultBuilder = new StringBuilder(100);
+            resultBuilder.Append("Time 1 - Known Length, AppendFormat           : ").AppendLine(Convert.ToString((finish1 - start1).TotalSeconds));
+            resultBuilder.Append("Time 2 - Known Length, Chained Statements     : ").AppendLine(Convert.ToString((finish2 - start2).TotalSeconds));
+            resultBuilder.Append("Time 3 - Known Length, Seperated Statements   : ").AppendLine(Convert.ToString((finish3 - start3).TotalSeconds));
+            resultBuilder.Append("Time 4 - Unknown Length, AppendFormat         : ").AppendLine(Convert.ToString((finish4 - start4).TotalSeconds));
+            resultBuilder.Append("Time 5 - Unknown Length, Chained Statements   : ").AppendLine(Convert.ToString((finish5 - start5).TotalSeconds));
+            resultBuilder.Append("Time 6 - Known Length, string.Format, Append  : ").AppendLine(Convert.ToString((finish6 - start6).TotalSeconds));
+            resultBuilder.Append("Time 7 - Known Length, concat +, Append       : ").AppendLine(Convert.ToString((finish7 - start7).TotalSeconds));
+            resultBuilder.Append("Time 8 - Unknown Length, string.Format, Append: ").AppendLine(Convert.ToString((finish8 - start8).TotalSeconds));
+            resultBuilder.Append("Time 9 - Unknown Length, concat +, Append     : ").AppendLine(Convert.ToString((finish9 - start9).TotalSeconds));
             resultBuilder.AppendLine();
             return resultBuilder.ToString();
         }
