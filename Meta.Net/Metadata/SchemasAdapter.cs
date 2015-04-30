@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
@@ -25,12 +26,12 @@ namespace Meta.Net.Metadata
             }
         }
 
-        public static void Get(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task GetAsync(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = metadataScriptFactory.Schemas(catalog.ObjectName);
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (!reader.HasRows)
                     {
@@ -45,15 +46,15 @@ namespace Meta.Net.Metadata
             }
         }
 
-        public static void Build(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task BuildAsync(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
-            Get(catalog, connection, metadataScriptFactory);
+            await GetAsync(catalog, connection, metadataScriptFactory);
             if (catalog.Schemas.Count == 0)
                 return;
 
-            UserDefinedDataTypesAdapter.Get(catalog, connection, metadataScriptFactory);
-            UserTablesAdapter.Build(catalog, connection, metadataScriptFactory);
-            ModulesAdapter.Get(catalog, connection, metadataScriptFactory);
+            await UserDefinedDataTypesAdapter.GetAsync(catalog, connection, metadataScriptFactory);
+            await UserTablesAdapter.BuildAsync(catalog, connection, metadataScriptFactory);
+            await ModulesAdapter.GetAsync(catalog, connection, metadataScriptFactory);
         }
     }
 }

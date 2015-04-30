@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Threading.Tasks;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
@@ -49,13 +50,13 @@ namespace Meta.Net.Metadata
             }
         }
 
-        public static Dictionary<string, UserTable> Get(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task<Dictionary<string, UserTable>> GetAsync(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
             var userTables = new Dictionary<string, UserTable>(StringComparer.OrdinalIgnoreCase);
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = metadataScriptFactory.UserTables(catalog.ObjectName);
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (!reader.HasRows)
                     {
@@ -72,21 +73,21 @@ namespace Meta.Net.Metadata
             return userTables;
         }
 
-        public static void Build(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task BuildAsync(Catalog catalog, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
-            var userTables = Get(catalog, connection, metadataScriptFactory);
+            var userTables = await GetAsync(catalog, connection, metadataScriptFactory);
             if (userTables.Count == 0)
                 return;
 
-            UserTableColumnsAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            var primaryKeyColumns = PrimaryKeysAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            var uniqueConstraintColumns = UniqueConstraintsAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            ForeignKeysAdapter.Get(catalog, userTables, primaryKeyColumns, uniqueConstraintColumns, connection, metadataScriptFactory);
-            ComputedColumnsAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            DefaultConstraintsAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            CheckConstraintsAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            IdentityColumnsAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
-            IndexesAdapter.Get(catalog, userTables, connection, metadataScriptFactory);
+            await UserTableColumnsAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            var primaryKeyColumns = await PrimaryKeysAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            var uniqueConstraintColumns = await UniqueConstraintsAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            await ForeignKeysAdapter.GetAsync(catalog, userTables, primaryKeyColumns, uniqueConstraintColumns, connection, metadataScriptFactory);
+            await ComputedColumnsAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            await DefaultConstraintsAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            await CheckConstraintsAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            await IdentityColumnsAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
+            await IndexesAdapter.GetAsync(catalog, userTables, connection, metadataScriptFactory);
         }
     }
 }

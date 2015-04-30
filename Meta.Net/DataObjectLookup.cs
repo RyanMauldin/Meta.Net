@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Meta.Net.Abstract;
@@ -39,19 +40,19 @@ namespace Meta.Net
         /// <summary>
         /// The underlying field for DataObjects.
         /// </summary>
-        private Dictionary<string, TC> _childDataObjects;
+        private ConcurrentDictionary<string, TC> _childDataObjects;
 
         /// <summary>
         /// The data object dictionary of type T
         /// </summary>
-        private Dictionary<string, TC> ChildDataObjects
+        private ConcurrentDictionary<string, TC> ChildDataObjects
         {
             get { return _childDataObjects; }
             set
             {
                 if (value == null)
                 {
-                    _childDataObjects = new Dictionary<string, TC>(StringComparer);
+                    _childDataObjects = new ConcurrentDictionary<string, TC>(StringComparer);
                     _lastUsedDataObject = null;
                     return;
                 }
@@ -76,7 +77,7 @@ namespace Meta.Net
                 throw new Exception("The parent dataobject should never be initialized as a null object.");
 
             ParentDataObject = parentDataObject;
-            ChildDataObjects = new Dictionary<string, TC>(StringComparer);
+            ChildDataObjects = new ConcurrentDictionary<string, TC>(StringComparer);
 
             if (childDataObjects == null)
                 return;
@@ -113,7 +114,9 @@ namespace Meta.Net
         {
             Init(parentDataObject, null);
             foreach (var childDataObject in childDataObjects)
-                ChildDataObjects.Add(childDataObject.Namespace, childDataObject);
+                if (!ChildDataObjects.TryAdd(childDataObject.Namespace, childDataObject))
+                    throw new Exception(string.Format(ObjectAlreadyExistsErrorMessage,
+                         ParentDataObject.Description, ParentDataObject.Namespace, childDataObject.Description, childDataObject.Namespace));
 
             _lastUsedDataObject = _childDataObjects.Count > 0
                 ? _childDataObjects.First().Value
@@ -163,7 +166,7 @@ namespace Meta.Net
 
         public IEnumerator<TC> GetEnumerator()
         {
-            return ((IEnumerable<TC>)ChildDataObjects.Values).GetEnumerator();
+            return ChildDataObjects.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -184,18 +187,18 @@ namespace Meta.Net
             return ChildDataObjects.ContainsKey(key);
         }
 
-        /// <summary>
-        /// Calls ContainsValue on underlying dictionary.
-        /// </summary>
-        /// <param name="value">The value to find.</param>
-        /// <returns>true if the dictionary has the value, false if not.</returns>
-        public bool ContainsValue(TC value)
-        {
-            if (value == null)
-                throw new Exception("Value parameter should never be null.");
+        ///// <summary>
+        ///// Calls ContainsValue on underlying dictionary.
+        ///// </summary>
+        ///// <param name="value">The value to find.</param>
+        ///// <returns>true if the dictionary has the value, false if not.</returns>
+        //public bool ContainsValue(TC value)
+        //{
+        //    if (value == null)
+        //        throw new Exception("Value parameter should never be null.");
 
-            return ChildDataObjects.ContainsValue(value);
-        }
+        //    return ChildDataObjects.ContainsValue(value);
+        //}
 
         /// <summary>
         /// Calls clear on the underlying dictionary.
@@ -231,7 +234,10 @@ namespace Meta.Net
                 throw new Exception(errorMessage);
             }
 
-            ChildDataObjects.Add(childDataObject.Namespace, childDataObject);
+            if(!ChildDataObjects.TryAdd(childDataObject.Namespace, childDataObject))
+                throw new Exception(string.Format(ObjectAlreadyExistsErrorMessage,
+                    ParentDataObject.Description, ParentDataObject.Namespace, childDataObject.Description, childDataObject.Namespace));
+
         }
 
         /// <summary>
@@ -303,10 +309,7 @@ namespace Meta.Net
                 _lastUsedDataObject = null;
 
             TC childDataObject;
-            if (!ChildDataObjects.TryGetValue(key, out childDataObject))
-                return;
-
-            ChildDataObjects.Remove(key);
+            ChildDataObjects.TryRemove(key, out childDataObject);
             childDataObject.ParentMetaObject = null;
         }
 
@@ -316,14 +319,15 @@ namespace Meta.Net
         /// <param name="childDataObject">The child data object to remove.</param>
         public void Remove(TC childDataObject)
         {
-            if (!ChildDataObjects.ContainsValue(childDataObject))
+            if (!ChildDataObjects.ContainsKey(childDataObject.Namespace))
                 return;
 
             if (StringComparer.Compare(_lastUsedDataObject.Namespace, childDataObject.Namespace) == 0
                 || _lastUsedDataObject.Equals(childDataObject))
                 _lastUsedDataObject = null;
 
-            ChildDataObjects.Remove(childDataObject.Namespace);
+            TC childDataObjectToRemove;
+            ChildDataObjects.TryRemove(childDataObject.Namespace, out childDataObjectToRemove);
             childDataObject.ParentMetaObject = null;
         }
 

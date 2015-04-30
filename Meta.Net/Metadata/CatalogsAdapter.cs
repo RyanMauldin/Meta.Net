@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Threading.Tasks;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
@@ -145,12 +146,12 @@ namespace Meta.Net.Metadata
         /// <param name="server">The server to fill catalogs only.</param>
         /// <param name="connection">The open database connection to use.</param>
         /// <param name="metadataScriptFactory">The metadata script factory determined by the database type.</param>
-        public static void Get(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task GetAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = metadataScriptFactory.Catalogs();
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (!reader.HasRows)
                     {
@@ -172,12 +173,12 @@ namespace Meta.Net.Metadata
         /// <param name="connection">The open database connection to use.</param>
         /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
         /// <param name="catalogs">The catalogs to filter.</param>
-        public static void GetSpecific(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
+        public static async Task GetSpecificAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
         {
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = metadataScriptFactory.Catalogs(catalogs);
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (!reader.HasRows)
                     {
@@ -199,11 +200,11 @@ namespace Meta.Net.Metadata
         /// <param name="server">The server to fill catalogs only.</param>
         /// <param name="connection">The open database connection to use.</param>
         /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
-        public static void Build(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task BuildAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
-            Get(server, connection, metadataScriptFactory);
+            await GetAsync(server, connection, metadataScriptFactory);
             foreach (var catalog in server.Catalogs)
-                SchemasAdapter.Build(catalog, connection, metadataScriptFactory);
+                await SchemasAdapter.BuildAsync(catalog, connection, metadataScriptFactory);
         }
 
         /// <summary>
@@ -214,11 +215,11 @@ namespace Meta.Net.Metadata
         /// <param name="connection">The open database connection to use.</param>
         /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
         /// <param name="catalogs">The catalogs to filter.</param>
-        public static void BuildSpecific(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
+        public static async Task BuildSpecificAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
         {
-            GetSpecific(server, connection, metadataScriptFactory, catalogs);
+            await GetSpecificAsync(server, connection, metadataScriptFactory, catalogs);
             foreach (var catalog in server.Catalogs)
-                SchemasAdapter.Build(catalog, connection, metadataScriptFactory);
+                await SchemasAdapter.BuildAsync(catalog, connection, metadataScriptFactory);
         }
     }
 }

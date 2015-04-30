@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading.Tasks;
 using Meta.Net.Metadata;
 using Meta.Net.Objects;
 using Meta.Net.SqlServer;
@@ -277,7 +278,9 @@ namespace Meta.Net.TestConsole
                         DataContext = new SqlServerContext()
                     };
                     //CatalogsAdapter.Build(server, connection, metadataScriptFactory);
-                    CatalogsAdapter.BuildSpecific(server, connection, metadataScriptFactory, new []{ "Lifeboat" });
+                    
+                    Task.WaitAll(CatalogsAdapter.BuildSpecificAsync(server, connection, metadataScriptFactory, new[] { "Lifeboat" }));
+                    
                     var finishTime = DateTime.Now;
                     timeSpan = finishTime.Subtract(startTime);
                     connection.Close();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
@@ -100,13 +101,13 @@ namespace Meta.Net.Metadata
             }
         }
 
-        public static Dictionary<string, PrimaryKeyColumn> Get(Catalog catalog, Dictionary<string, UserTable> userTables, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        public static async Task<Dictionary<string, PrimaryKeyColumn>> GetAsync(Catalog catalog, Dictionary<string, UserTable> userTables, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
             var primaryKeyColumns = new Dictionary<string, PrimaryKeyColumn>(StringComparer.OrdinalIgnoreCase);
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = metadataScriptFactory.PrimaryKeys(catalog.ObjectName);
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (!reader.HasRows)
                     {
