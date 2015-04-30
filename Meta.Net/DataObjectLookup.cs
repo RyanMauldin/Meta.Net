@@ -187,19 +187,6 @@ namespace Meta.Net
             return ChildDataObjects.ContainsKey(key);
         }
 
-        ///// <summary>
-        ///// Calls ContainsValue on underlying dictionary.
-        ///// </summary>
-        ///// <param name="value">The value to find.</param>
-        ///// <returns>true if the dictionary has the value, false if not.</returns>
-        //public bool ContainsValue(TC value)
-        //{
-        //    if (value == null)
-        //        throw new Exception("Value parameter should never be null.");
-
-        //    return ChildDataObjects.ContainsValue(value);
-        //}
-
         /// <summary>
         /// Calls clear on the underlying dictionary.
         /// Sets _lastUsedDataObject to null;
