@@ -2,6 +2,7 @@
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Meta.Net.Metadata;
 using Meta.Net.Objects;
@@ -279,7 +280,10 @@ namespace Meta.Net.TestConsole
                     };
                     //CatalogsAdapter.Build(server, connection, metadataScriptFactory);
                     
-                    Task.WaitAll(CatalogsAdapter.BuildSpecificAsync(server, connection, metadataScriptFactory, new[] { "Lifeboat" }));
+                    var cancellationTokenSource = new CancellationTokenSource();
+                    var cancellationToken = cancellationTokenSource.Token;
+
+                    Task.WaitAll(CatalogsAdapter.BuildSpecificAsync(server, connection, metadataScriptFactory, new[] { "Lifeboat" }, cancellationToken));
                     
                     var finishTime = DateTime.Now;
                     timeSpan = finishTime.Subtract(startTime);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
@@ -117,7 +118,26 @@ namespace Meta.Net.Objects
             server.Catalogs.Rename(catalog, newObjectName);
         }
 
-        public static async Task<bool> GetCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
+        public static bool GetCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.Get(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory());
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+        
+        public static async Task<bool> GetCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
         {
             Clear(server);
 
@@ -135,8 +155,51 @@ namespace Meta.Net.Objects
 
             return true;
         }
+        
+        public static async Task<bool> GetCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, CancellationToken cancellationToken, bool closeDataConnectionAfterUse = true)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return false;
 
-        public static async Task<bool> GetSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            await CatalogsAdapter.GetAsync(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), cancellationToken);
+            if (cancellationToken.IsCancellationRequested)
+                return false;
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static bool GetSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+           CatalogsAdapter.GetSpecific(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+        
+        public static async Task<bool> GetSpecificCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
         {
             Clear(server);
 
@@ -154,8 +217,51 @@ namespace Meta.Net.Objects
 
             return true;
         }
+        
+        public static async Task<bool> GetSpecificCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, CancellationToken cancellationToken, bool closeDataConnectionAfterUse = true)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return false;
 
-        public static async Task<bool> BuildCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+           await CatalogsAdapter.GetSpecificAsync(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs, cancellationToken);
+           if (cancellationToken.IsCancellationRequested)
+               return false;
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static bool BuildCatalogs(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.Build(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory());
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+        
+        public static async Task<bool> BuildCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, bool closeDataConnectionAfterUse = true)
         {
             Clear(server);
 
@@ -173,8 +279,51 @@ namespace Meta.Net.Objects
 
             return true;
         }
+        
+        public static async Task<bool> BuildCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, CancellationToken cancellationToken, bool closeDataConnectionAfterUse = true)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return false;
 
-        public static async Task<bool> BuildSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            await CatalogsAdapter.BuildAsync(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), cancellationToken);
+            if (cancellationToken.IsCancellationRequested)
+                return false;
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+
+        public static bool BuildSpecificCatalogs(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
+        {
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            CatalogsAdapter.BuildSpecific(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+        
+        public static async Task<bool> BuildSpecificCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, bool closeDataConnectionAfterUse = true)
         {
             Clear(server);
 
@@ -186,6 +335,30 @@ namespace Meta.Net.Objects
                 return false;
 
             await CatalogsAdapter.BuildSpecificAsync(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs);
+
+            if (closeDataConnectionAfterUse)
+                dataConnectionManager.Close();
+
+            return true;
+        }
+        
+        public static async Task<bool> BuildSpecificCatalogsAsync(Server server, DataConnectionManager dataConnectionManager, IList<string> catalogs, CancellationToken cancellationToken, bool closeDataConnectionAfterUse = true)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return false;
+
+            Clear(server);
+
+            if (dataConnectionManager == null)
+                return false;
+
+            dataConnectionManager.Open();
+            if (!dataConnectionManager.IsOpen() || dataConnectionManager.IsBusy())
+                return false;
+
+            await CatalogsAdapter.BuildSpecificAsync(server, dataConnectionManager.DataConnection, dataConnectionManager.DataConnectionInfo.CreateMetadataScriptFactory(), catalogs, cancellationToken);
+            if (cancellationToken.IsCancellationRequested)
+                return false;
 
             if (closeDataConnectionAfterUse)
                 dataConnectionManager.Close();

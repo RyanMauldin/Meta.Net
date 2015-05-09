@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
@@ -146,6 +146,32 @@ namespace Meta.Net.Metadata
         /// <param name="server">The server to fill catalogs only.</param>
         /// <param name="connection">The open database connection to use.</param>
         /// <param name="metadataScriptFactory">The metadata script factory determined by the database type.</param>
+        public static void Get(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = metadataScriptFactory.Catalogs();
+                using (var reader = command.ExecuteReader())
+                {
+                    if (!reader.HasRows)
+                    {
+                        reader.Close();
+                        return;
+                    }
+
+                    Read(server, reader);
+
+                    reader.Close();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Fills only the catalogs in the server object.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The metadata script factory determined by the database type.</param>
         public static async Task GetAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
             using (var command = connection.CreateCommand())
@@ -165,7 +191,64 @@ namespace Meta.Net.Metadata
                 }
             }
         }
+        
+        /// <summary>
+        /// Fills only the catalogs in the server object.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The metadata script factory determined by the database type.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task GetAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
 
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = metadataScriptFactory.Catalogs();
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                {
+                    if (!reader.HasRows)
+                    {
+                        reader.Close();
+                        return;
+                    }
+
+                    Read(server, reader);
+
+                    reader.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fills only the catalogs in the server object.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
+        /// <param name="catalogs">The catalogs to filter.</param>
+        public static void GetSpecific(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
+        {
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = metadataScriptFactory.Catalogs(catalogs);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (!reader.HasRows)
+                    {
+                        reader.Close();
+                        return;
+                    }
+
+                    Read(server, reader);
+
+                    reader.Close();
+                }
+            }
+        }
+        
         /// <summary>
         /// Fills only the catalogs in the server object.
         /// </summary>
@@ -192,7 +275,52 @@ namespace Meta.Net.Metadata
                 }
             }
         }
+        
+        /// <summary>
+        /// Fills only the catalogs in the server object.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
+        /// <param name="catalogs">The catalogs to filter.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task GetSpecificAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
 
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = metadataScriptFactory.Catalogs(catalogs);
+                using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                {
+                    if (!reader.HasRows)
+                    {
+                        reader.Close();
+                        return;
+                    }
+
+                    Read(server, reader);
+
+                    reader.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fills the catalogs in the server object as well as building out the schemas
+        /// and all objects in the database connection.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
+        public static void Build(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
+        {
+            Get(server, connection, metadataScriptFactory);
+            foreach (var catalog in server.Catalogs)
+                SchemasAdapter.Build(catalog, connection, metadataScriptFactory);
+        }
+        
         /// <summary>
         /// Fills the catalogs in the server object as well as building out the schemas
         /// and all objects in the database connection.
@@ -203,10 +331,51 @@ namespace Meta.Net.Metadata
         public static async Task BuildAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory)
         {
             await GetAsync(server, connection, metadataScriptFactory);
+
             foreach (var catalog in server.Catalogs)
                 await SchemasAdapter.BuildAsync(catalog, connection, metadataScriptFactory);
         }
+        
+        /// <summary>
+        /// Fills the catalogs in the server object as well as building out the schemas
+        /// and all objects in the database connection.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
+        /// <param name="cancellationToken">The cancellationToken.</param>
+        public static async Task BuildAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
 
+            await GetAsync(server, connection, metadataScriptFactory, cancellationToken);
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            foreach (var catalog in server.Catalogs)
+            {
+                await SchemasAdapter.BuildAsync(catalog, connection, metadataScriptFactory, cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// Fills the catalogs in the server object as well as building out the schemas
+        /// and all objects in the database connection.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
+        /// <param name="catalogs">The catalogs to filter.</param>
+        public static void BuildSpecific(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
+        {
+            GetSpecific(server, connection, metadataScriptFactory, catalogs);
+            foreach (var catalog in server.Catalogs)
+                SchemasAdapter.Build(catalog, connection, metadataScriptFactory);
+        }
+        
         /// <summary>
         /// Fills the catalogs in the server object as well as building out the schemas
         /// and all objects in the database connection.
@@ -218,8 +387,35 @@ namespace Meta.Net.Metadata
         public static async Task BuildSpecificAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs)
         {
             await GetSpecificAsync(server, connection, metadataScriptFactory, catalogs);
+
             foreach (var catalog in server.Catalogs)
                 await SchemasAdapter.BuildAsync(catalog, connection, metadataScriptFactory);
+        }
+        
+        /// <summary>
+        /// Fills the catalogs in the server object as well as building out the schemas
+        /// and all objects in the database connection.
+        /// </summary>
+        /// <param name="server">The server to fill catalogs only.</param>
+        /// <param name="connection">The open database connection to use.</param>
+        /// <param name="metadataScriptFactory">The script factory determined by the database type.</param>
+        /// <param name="catalogs">The catalogs to filter.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        public static async Task BuildSpecificAsync(Server server, DbConnection connection, IMetadataScriptFactory metadataScriptFactory, IList<string> catalogs, CancellationToken cancellationToken)
+        {
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            await GetSpecificAsync(server, connection, metadataScriptFactory, catalogs, cancellationToken);
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            foreach (var catalog in server.Catalogs)
+            {
+                await SchemasAdapter.BuildAsync(catalog, connection, metadataScriptFactory, cancellationToken);
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+            }
         }
     }
 }
