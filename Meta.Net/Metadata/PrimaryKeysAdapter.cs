@@ -81,7 +81,7 @@ namespace Meta.Net.Metadata
                         IsDisabled = isDisabled,
                         AllowRowLocks = allowRowLocks,
                         AllowPageLocks = allowPageLocks,
-                        IndexType = indexType
+                        IndexType = indexType // TODO: Remove this if possible... check other index code logic for usage (Mysql has BTREE, FULLTEXT, etc..., SQL Server doesn't)
                     };
 
                     userTable.PrimaryKeys.Add(primaryKey);

@@ -80,13 +80,13 @@ namespace Meta.Net.Metadata
                         FileGroup = fileGroup,
                         IgnoreDupKey = ignoreDupKey,
                         IsClustered = isClustered,
-                        IsUnique = isUnique, // TODO: See usages: refactor...
+                        IsUnique = isUnique,
                         FillFactor = fillFactor,
                         IsPadded = isPadded,
                         IsDisabled = isDisabled,
                         AllowRowLocks = allowRowLocks,
                         AllowPageLocks = allowPageLocks,
-                        IndexType = indexType
+                        IndexType = indexType // TODO: Remove this if possible... check other index code logic for usage (Mysql has BTREE, FULLTEXT, etc..., SQL Server doesn't)
                     };
 
                     userTable.Indexes.Add(index);

@@ -24,6 +24,7 @@ namespace Meta.Net.Metadata
             var fileGroupOrdinal = reader.GetOrdinal("FileGroup");
             var keyOrdinalOrdinal = reader.GetOrdinal("KeyOrdinal");
             var partitionOrdinalOrdinal = reader.GetOrdinal("PartitionOrdinal");
+            var isClusteredOrdinal = reader.GetOrdinal("IsClustered");
             var isDescendingKeyOrdinal = reader.GetOrdinal("IsDescendingKey");
             var ignoreDupKeyOrdinal = reader.GetOrdinal("IgnoreDupKey");
             var fillFactorOrdinal = reader.GetOrdinal("FillFactor");
@@ -42,6 +43,7 @@ namespace Meta.Net.Metadata
                 var fileGroup = Convert.ToString(reader[fileGroupOrdinal]);
                 var keyOrdinal = Convert.ToInt32(reader[keyOrdinalOrdinal]);
                 var partitionOrdinal = Convert.ToInt32(reader[partitionOrdinalOrdinal]);
+                var isClustered = Convert.ToBoolean(reader[isClusteredOrdinal]);
                 var isDescendingKey = Convert.ToBoolean(reader[isDescendingKeyOrdinal]);
                 var ignoreDupKey = Convert.ToBoolean(reader[ignoreDupKeyOrdinal]);
                 var fillFactor = Convert.ToInt32(reader[fillFactorOrdinal]);
@@ -74,14 +76,13 @@ namespace Meta.Net.Metadata
                         ObjectName = objectName,
                         FileGroup = fileGroup,
                         IgnoreDupKey = ignoreDupKey,
-                        IsClustered = false,
-                        // TODO: Remove usage if possible, rethink logic... check interface usage for indexes
+                        IsClustered = isClustered,
                         FillFactor = fillFactor,
                         IsPadded = isPadded,
                         IsDisabled = isDisabled,
                         AllowRowLocks = allowRowLocks,
                         AllowPageLocks = allowPageLocks,
-                        IndexType = indexType // TODO: Remove this if possible... check other code logic for usage
+                        IndexType = indexType // TODO: Remove this if possible... check other index code logic for usage (Mysql has BTREE, FULLTEXT, etc..., SQL Server doesn't)
                     };
 
                     userTable.UniqueConstraints.Add(uniqueConstraint);
