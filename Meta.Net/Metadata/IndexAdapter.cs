@@ -9,16 +9,16 @@ using Meta.Net.Objects;
 
 namespace Meta.Net.Metadata
 {
-    public static class ComputedColumnsAdapter
+    public static class IndexAdapter
     {
         public static void Read(
             Dictionary<string, UserTable> userTables,
             IDataReader reader)
         {
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new IndexFactory(reader);
 
             while (reader.Read())
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateIndex(userTables, reader);
         }
         
         public static async Task ReadAsync(
@@ -27,12 +27,12 @@ namespace Meta.Net.Metadata
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new IndexFactory(reader);
 
             while (await reader.ReadAsync(cancellationToken))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateIndex(userTables, reader);   
             }
         }
 
@@ -44,7 +44,7 @@ namespace Meta.Net.Metadata
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.Indexes(catalog.ObjectName);
                 using (var reader = command.ExecuteReader())
                 {
                     if (!reader.HasRows)
@@ -70,7 +70,7 @@ namespace Meta.Net.Metadata
             cancellationToken.ThrowIfCancellationRequested();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.Indexes(catalog.ObjectName);
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     if (!reader.HasRows)

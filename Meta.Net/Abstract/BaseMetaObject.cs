@@ -5,7 +5,6 @@ namespace Meta.Net.Abstract
 {
     public abstract class BaseMetaObject : IMetaObject
     {
-        public readonly static string Dot = ".";
         public string ObjectName { get; set; }
         public abstract string Description { get; }
         public abstract string Namespace { get; }

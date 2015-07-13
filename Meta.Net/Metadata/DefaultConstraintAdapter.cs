@@ -9,16 +9,16 @@ using Meta.Net.Objects;
 
 namespace Meta.Net.Metadata
 {
-    public static class ComputedColumnsAdapter
+    public static class DefaultConstraintAdapter
     {
         public static void Read(
             Dictionary<string, UserTable> userTables,
             IDataReader reader)
         {
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new DefaultConstraintFactory(reader);
 
             while (reader.Read())
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateDefaultConstraint(userTables, reader);
         }
         
         public static async Task ReadAsync(
@@ -27,13 +27,14 @@ namespace Meta.Net.Metadata
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new DefaultConstraintFactory(reader);
 
             while (await reader.ReadAsync(cancellationToken))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateDefaultConstraint(userTables, reader);
             }
+                
         }
 
         public static void Get(
@@ -44,7 +45,7 @@ namespace Meta.Net.Metadata
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.DefaultConstraints(catalog.ObjectName);
                 using (var reader = command.ExecuteReader())
                 {
                     if (!reader.HasRows)
@@ -70,7 +71,7 @@ namespace Meta.Net.Metadata
             cancellationToken.ThrowIfCancellationRequested();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.DefaultConstraints(catalog.ObjectName);
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     if (!reader.HasRows)

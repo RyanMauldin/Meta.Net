@@ -9,42 +9,48 @@ using Meta.Net.Objects;
 
 namespace Meta.Net.Metadata
 {
-    public static class ComputedColumnsAdapter
+    public static class ForeignKeyAdapter
     {
         public static void Read(
             Dictionary<string, UserTable> userTables,
+            Dictionary<string, PrimaryKeyColumn> primaryKeyColumns,
+            Dictionary<string, UniqueConstraintColumn> uniqueConstraintColumns,
             IDataReader reader)
         {
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new ForeignKeyFactory(reader);
 
             while (reader.Read())
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateForeignKey(userTables, primaryKeyColumns, uniqueConstraintColumns, reader);
         }
         
         public static async Task ReadAsync(
             Dictionary<string, UserTable> userTables,
+            Dictionary<string, PrimaryKeyColumn> primaryKeyColumns,
+            Dictionary<string, UniqueConstraintColumn> uniqueConstraintColumns,
             DbDataReader reader,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new ForeignKeyFactory(reader);
 
             while (await reader.ReadAsync(cancellationToken))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateForeignKey(userTables, primaryKeyColumns, uniqueConstraintColumns, reader);
             }
         }
 
         public static void Get(
             Catalog catalog,
             Dictionary<string, UserTable> userTables,
+            Dictionary<string, PrimaryKeyColumn> primaryKeyColumns,
+            Dictionary<string, UniqueConstraintColumn> uniqueConstraintColumns,
             DbConnection connection,
             IMetadataScriptFactory metadataScriptFactory)
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.ForeignKeys(catalog.ObjectName);
                 using (var reader = command.ExecuteReader())
                 {
                     if (!reader.HasRows)
@@ -53,7 +59,7 @@ namespace Meta.Net.Metadata
                         return;
                     }
 
-                    Read(userTables, reader);
+                    Read(userTables, primaryKeyColumns, uniqueConstraintColumns, reader);
 
                     reader.Close();
                 }
@@ -61,8 +67,9 @@ namespace Meta.Net.Metadata
         }
         
         public static async Task GetAsync(
-            Catalog catalog,
-            Dictionary<string, UserTable> userTables,
+            Catalog catalog, Dictionary<string, UserTable> userTables,
+            Dictionary<string, PrimaryKeyColumn> primaryKeyColumns,
+            Dictionary<string, UniqueConstraintColumn> uniqueConstraintColumns,
             DbConnection connection,
             IMetadataScriptFactory metadataScriptFactory,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -70,7 +77,7 @@ namespace Meta.Net.Metadata
             cancellationToken.ThrowIfCancellationRequested();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.ForeignKeys(catalog.ObjectName);
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     if (!reader.HasRows)
@@ -79,7 +86,7 @@ namespace Meta.Net.Metadata
                         return;
                     }
 
-                    await ReadAsync(userTables, reader, cancellationToken);
+                    await ReadAsync(userTables, primaryKeyColumns, uniqueConstraintColumns, reader, cancellationToken);
 
                     reader.Close();
                 }

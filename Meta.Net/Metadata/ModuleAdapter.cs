@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,42 +8,41 @@ using Meta.Net.Objects;
 
 namespace Meta.Net.Metadata
 {
-    public static class ComputedColumnsAdapter
+    public static class ModuleAdapter
     {
         public static void Read(
-            Dictionary<string, UserTable> userTables,
+            Catalog catalog,
             IDataReader reader)
         {
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new ModuleFactory(reader);
 
             while (reader.Read())
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateModule(catalog, reader);
         }
         
         public static async Task ReadAsync(
-            Dictionary<string, UserTable> userTables,
+            Catalog catalog,
             DbDataReader reader,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var factory = new ComputedColumnFactory(reader);
+            var factory = new ModuleFactory(reader);
 
             while (await reader.ReadAsync(cancellationToken))
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                factory.CreateComputedColumn(userTables, reader);
+                factory.CreateModule(catalog, reader);
             }
         }
 
         public static void Get(
             Catalog catalog,
-            Dictionary<string, UserTable> userTables,
             DbConnection connection,
             IMetadataScriptFactory metadataScriptFactory)
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.Modules(catalog.ObjectName);
                 using (var reader = command.ExecuteReader())
                 {
                     if (!reader.HasRows)
@@ -53,7 +51,7 @@ namespace Meta.Net.Metadata
                         return;
                     }
 
-                    Read(userTables, reader);
+                    Read(catalog, reader);
 
                     reader.Close();
                 }
@@ -62,7 +60,6 @@ namespace Meta.Net.Metadata
         
         public static async Task GetAsync(
             Catalog catalog,
-            Dictionary<string, UserTable> userTables,
             DbConnection connection,
             IMetadataScriptFactory metadataScriptFactory,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -70,7 +67,7 @@ namespace Meta.Net.Metadata
             cancellationToken.ThrowIfCancellationRequested();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = metadataScriptFactory.ComputedColumns(catalog.ObjectName);
+                command.CommandText = metadataScriptFactory.Modules(catalog.ObjectName);
                 using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                 {
                     if (!reader.HasRows)
@@ -79,7 +76,7 @@ namespace Meta.Net.Metadata
                         return;
                     }
 
-                    await ReadAsync(userTables, reader, cancellationToken);
+                    await ReadAsync(catalog, reader, cancellationToken);
 
                     reader.Close();
                 }

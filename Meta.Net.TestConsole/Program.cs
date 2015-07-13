@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,6 +22,15 @@ namespace Meta.Net.TestConsole
             Console.ReadKey(true);
 
             //#region Original
+            // Note that this region is commented out as it represented what was somewhat possible with an older
+            // version where I was semi synchronizing databases on first go around. Second go around not so great...
+            // and especially the data. I have started to refactor the entire thing and am just focusing on pulling
+            // in Metadata only for now. I am refactoring code I wrote 4 to 5 years ago and am like... what was I
+            // doing, I'm suprised what I had worked with no design patterns lol... New code will be supporting
+            // asynchronous operations, etc. Check out the GetCatalogs method in the test Program.cs file, and plug
+            // in your database. For SQL Server, you will have to have CONTROL SERVER permissions. If you do not know
+            // why sheck out the queries I'm using Meta.Net.SqlServer.SqlServerMetadataScriptFactory, study them and
+            // you will understand if paying attention to Books Online and all future SQL Server development.
 
             //Console.WriteLine("Welcome to Meta.Net ... Servicing all your database needs since 1868!");
             //Console.WriteLine();
@@ -263,8 +273,8 @@ namespace Meta.Net.TestConsole
             var builder = new StringBuilder();
             builder.AppendLine("\nCatalogs:\n");
 
-            //try
-            //{
+            try
+            {
                 var start = DateTime.Now;
                 TimeSpan timeSpan;
                 const string connectionString = "Data Source=localhost;Initial Catalog=master;Integrated Security=SSPI;Persist Security Info=no;Encrypt=yes;TrustServerCertificate=yes";
@@ -283,11 +293,34 @@ namespace Meta.Net.TestConsole
                     var cancellationTokenSource = new CancellationTokenSource();
                     var cancellationToken = cancellationTokenSource.Token;
 
-                    Task.WaitAll(CatalogsAdapter.BuildSpecificAsync(server, connection, metadataScriptFactory, new[] { "Lifeboat" }, cancellationToken));
+                    Task.WaitAll(CatalogAdapter.BuildSpecificAsync(server, connection, metadataScriptFactory, new[] { "Lifeboat" }, cancellationToken));
                     
                     var finishTime = DateTime.Now;
                     timeSpan = finishTime.Subtract(startTime);
                     connection.Close();
+
+                    var tables =
+                        from c in server.Catalogs
+                        from s in c.Schemas
+                        where !s.ObjectName.StartsWith("Pol", StringComparison.InvariantCultureIgnoreCase)
+                           && !s.ObjectName.StartsWith("UW", StringComparison.InvariantCultureIgnoreCase)
+                        from ut in s.UserTables
+                        where !ut.ObjectName.StartsWith("Audit", StringComparison.InvariantCultureIgnoreCase)
+                        select ut;
+
+                    Console.WriteLine(tables.Count());
+
+                    var columnCounts =
+                        from c in server.Catalogs
+                        from s in c.Schemas
+                        where !s.ObjectName.StartsWith("Pol", StringComparison.InvariantCultureIgnoreCase)
+                           && !s.ObjectName.StartsWith("UW", StringComparison.InvariantCultureIgnoreCase)
+                        from ut in s.UserTables
+                        where !ut.ObjectName.StartsWith("Audit", StringComparison.InvariantCultureIgnoreCase)
+                        select ut.UserTableColumns.Count();
+
+                    Console.WriteLine(columnCounts.Sum());
+                    Console.ReadKey(true);
 
                     foreach (var catalog in server.Catalogs)
                     {
@@ -317,17 +350,14 @@ namespace Meta.Net.TestConsole
                     }
                 }
 
-                var finish = DateTime.Now;
-                var span = finish.Subtract(start);
-                builder.AppendFormat("\n\nTotal connection time: {0}", span.TotalMilliseconds);
-                builder.AppendFormat("\n\nTotal read time: {0}\n\n", timeSpan.TotalMilliseconds);
-            //}
-            //catch (Exception e)
-            //{
-            //    builder.AppendLine("Exception: ").AppendLine(e.Message);
-            //    if (e.InnerException != null)
-            //        builder.AppendLine().Append("Inner Exception: ").AppendLine(e.InnerException.Message);
-            //}
+                builder.AppendFormat("\n\nTotal metadata pull time: {0}", timeSpan.TotalMilliseconds);
+            }
+            catch (Exception e)
+            {
+                builder.AppendLine("Exception: ").AppendLine(e.Message);
+                if (e.InnerException != null)
+                    builder.AppendLine().Append("Inner Exception: ").AppendLine(e.InnerException.Message);
+            }
 
             builder.AppendLine();
             return builder.ToString();

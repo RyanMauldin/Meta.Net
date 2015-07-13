@@ -27,7 +27,9 @@ namespace Meta.Net.Abstract
                 var schemaObjectName = schema.ObjectName;
 
                 var builder = new StringBuilder(schemaObjectName.Length + objectName.Length + 1);
-                builder.Append(schemaObjectName).Append(Dot).Append(objectName);
+                builder.Append(schemaObjectName).
+                    Append(Constants.Dot).
+                    Append(objectName);
                 return builder.ToString();
             }
         }

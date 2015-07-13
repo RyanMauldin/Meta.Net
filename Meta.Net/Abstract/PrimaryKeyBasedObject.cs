@@ -31,7 +31,13 @@ namespace Meta.Net.Abstract
                 var schemaObjectName = schema.ObjectName;
 
                 var builder = new StringBuilder(schemaObjectName.Length + userTableObjectName.Length + primaryKeyObjectName.Length + objectName.Length + 3);
-                builder.Append(schemaObjectName).Append(Dot).Append(userTableObjectName).Append(Dot).Append(primaryKeyObjectName).Append(Dot).Append(objectName);
+                builder.Append(schemaObjectName).
+                    Append(Constants.Dot).
+                    Append(userTableObjectName).
+                    Append(Constants.Dot).
+                    Append(primaryKeyObjectName).
+                    Append(Constants.Dot).
+                    Append(objectName);
                 return builder.ToString();
             }
         }
