@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(ForeignKeyColumn))]
     public abstract class ForeignKeyBasedObject : UserTableBasedObject
     {
         public override UserTable UserTable
@@ -36,7 +39,7 @@ namespace Meta.Net.Abstract
             }
         }
 
-        public virtual ForeignKey ForeignKey { get; set; }
+        [DataMember] public virtual ForeignKey ForeignKey { get; set; }
 
         public virtual DataObjectLookup<ForeignKey, ForeignKeyColumn> ForeignKeyColumns
         {

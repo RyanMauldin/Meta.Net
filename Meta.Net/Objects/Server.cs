@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Meta.Net.Abstract;
@@ -9,7 +10,7 @@ using Meta.Net.Metadata;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class Server : BaseMetaObject
     {
         public static readonly string DefaultDescription = "Server";
@@ -29,7 +30,7 @@ namespace Meta.Net.Objects
         /// <summary>
         /// The collection of catalogs assigned to this server.
         /// </summary>
-        public DataObjectLookup<Server, Catalog> Catalogs { get; private set; }
+        [DataMember] public DataObjectLookup<Server, Catalog> Catalogs { get; private set; }
 
         public Server()
         {
@@ -54,26 +55,6 @@ namespace Meta.Net.Objects
         public override bool CanBeAssignedParentMetaObject(IMetaObject metaObject)
         {
             return false;
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var server = new Server
-            {
-                ObjectName = ObjectName,
-                DataContext = DataContext.DeepClone()
-            };
-            server.Catalogs = Catalogs.DeepClone(server);
-            return server;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new Server
-            {
-                ObjectName = ObjectName,
-                DataContext = DataContext.ShallowClone()
-            };
         }
 
         /// <summary>
@@ -567,56 +548,6 @@ namespace Meta.Net.Objects
         //                break;
         //        }
         //    }
-        //}
-
-        //public Server(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-
-        //    // Deserialize Catalogs
-        //    var catalogs = info.GetInt32("Catalogs");
-        //    Catalogs = new DataObjectLookup<Catalog>();
-
-        //    for (var i = 0; i < catalogs; i++)
-        //    {
-        //        var catalog = (Catalog)info.GetValue("Catalog" + i, typeof (Catalog));
-        //        catalog.Server = this;
-        //        Catalogs.Add(catalog);
-        //        // TODO
-        //        //Schema.LinkForeignKeys(schema, dataContext);
-        //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-
-        //    // Serialize Catalogs
-        //    info.AddValue("Catalogs", Catalogs.Count);
-
-        //    var i = 0;
-        //    foreach (var catalog in Catalogs)
-        //        info.AddValue("Catalog" + i++, catalog);
-        //}
-
-        //public static Server FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<Server>(json);
-        //}
-
-        //public static string ToJson(Server server, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(server, formatting);
         //}
     }
 }

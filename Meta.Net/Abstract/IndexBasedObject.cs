@@ -1,10 +1,13 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization;
+using System.Text;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
-    public abstract class IndexBasedMetaObject : UserTableBasedObject
+    [DataContract]
+    [KnownType(typeof(IndexColumn))]
+    public abstract class IndexBasedObject : UserTableBasedObject
     {
         public override UserTable UserTable
         {
@@ -16,7 +19,7 @@ namespace Meta.Net.Abstract
             }
         }
 
-        public virtual Index Index { get; set; }
+        [DataMember] public virtual Index Index { get; set; }
 
         public override string Namespace
         {

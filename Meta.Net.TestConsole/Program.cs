@@ -299,6 +299,19 @@ namespace Meta.Net.TestConsole
                     timeSpan = finishTime.Subtract(startTime);
                     connection.Close();
 
+                    var clonedServer = server.DeepClone();
+                    clonedServer.DataContext = new SqlServerContext();
+
+                    //clonedServer.Catalogs.Add(new Catalog
+                    //{
+                    //    ObjectName = "Jello World"
+                    //});
+                
+                    //clonedServer.Catalogs.Add(new Catalog
+                    //{
+                    //    ObjectName = "jello World"
+                    //});
+
                     var tables =
                         from c in server.Catalogs
                         from s in c.Schemas
@@ -308,7 +321,17 @@ namespace Meta.Net.TestConsole
                         where !ut.ObjectName.StartsWith("Audit", StringComparison.InvariantCultureIgnoreCase)
                         select ut;
 
-                    Console.WriteLine(tables.Count());
+                    var clonedTables =
+                        from c in clonedServer.Catalogs
+                        from s in c.Schemas
+                        where !s.ObjectName.StartsWith("Pol", StringComparison.InvariantCultureIgnoreCase)
+                            && !s.ObjectName.StartsWith("UW", StringComparison.InvariantCultureIgnoreCase)
+                        from ut in s.UserTables
+                        where !ut.ObjectName.StartsWith("Audit", StringComparison.InvariantCultureIgnoreCase)
+                        select ut;
+
+                    Console.WriteLine("Table count: {0}", tables.Count());
+                    Console.WriteLine("Cloned table count: {0}", clonedTables.Count());
 
                     var columnCounts =
                         from c in server.Catalogs
@@ -319,10 +342,20 @@ namespace Meta.Net.TestConsole
                         where !ut.ObjectName.StartsWith("Audit", StringComparison.InvariantCultureIgnoreCase)
                         select ut.UserTableColumns.Count();
 
-                    Console.WriteLine(columnCounts.Sum());
+                    var clonedColumnCounts =
+                        from c in clonedServer.Catalogs
+                        from s in c.Schemas
+                        where !s.ObjectName.StartsWith("Pol", StringComparison.InvariantCultureIgnoreCase)
+                           && !s.ObjectName.StartsWith("UW", StringComparison.InvariantCultureIgnoreCase)
+                        from ut in s.UserTables
+                        where !ut.ObjectName.StartsWith("Audit", StringComparison.InvariantCultureIgnoreCase)
+                        select ut.UserTableColumns.Count();
+
+                    Console.WriteLine("Column count: {0}", columnCounts.Sum());
+                    Console.WriteLine("Cloned column count: {0}", clonedColumnCounts.Sum());
                     Console.ReadKey(true);
 
-                    foreach (var catalog in server.Catalogs)
+                    foreach (var catalog in clonedServer.Catalogs)
                     {
                         //if (catalog.ObjectName != "Lifeboat")
                         //    continue;

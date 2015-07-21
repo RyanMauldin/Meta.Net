@@ -1,9 +1,10 @@
-﻿using Meta.Net.Abstract;
+﻿using System.Runtime.Serialization;
+using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class UniqueConstraintColumn : UniqueConstraintBasedObject, IIndexColumn
     {
         public static readonly string DefaultDescription = "Unique Constraint Column";
@@ -13,10 +14,10 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public bool IsDescendingKey { get; set; }
-        public bool IsIncludedColumn { get; set; }
-        public int KeyOrdinal { get; set; }
-        public int PartitionOrdinal { get; set; }
+        [DataMember] public bool IsDescendingKey { get; set; }
+        [DataMember] public bool IsIncludedColumn { get; set; }
+        [DataMember] public int KeyOrdinal { get; set; }
+        [DataMember] public int PartitionOrdinal { get; set; }
 
         private static void Init(UniqueConstraintColumn uniqueConstraintColumn, UniqueConstraint uniqueConstraint, string objectName)
         {
@@ -35,26 +36,6 @@ namespace Meta.Net.Objects
         public UniqueConstraintColumn()
         {
             
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            return new UniqueConstraintColumn
-            {
-                ObjectName = ObjectName,
-                KeyOrdinal = KeyOrdinal,
-                PartitionOrdinal = PartitionOrdinal
-            };
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new UniqueConstraintColumn
-            {
-                ObjectName = ObjectName,
-                KeyOrdinal = KeyOrdinal,
-                PartitionOrdinal = PartitionOrdinal
-            };
         }
 
 		/// <summary>
@@ -85,45 +66,6 @@ namespace Meta.Net.Objects
         //        stringComparer = StringComparer.OrdinalIgnoreCase;
 
         //    return stringComparer.Compare(sourceUniqueConstraintColumn.ObjectName, targetUniqueConstraintColumn.ObjectName) == 0;
-        //} 
-
-        //public UniqueConstraintColumn(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    UniqueConstraint = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    IsDescendingKey = info.GetBoolean("IsDescendingKey");
-        //    KeyOrdinal = info.GetInt32("KeyOrdinal");
-        //    PartitionOrdinal = info.GetInt32("PartitionOrdinal");
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("IsDescendingKey", IsDescendingKey);
-        //    info.AddValue("KeyOrdinal", KeyOrdinal);
-        //    info.AddValue("PartitionOrdinal", PartitionOrdinal);
-        //}
-
-        //public static UniqueConstraintColumn FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<UniqueConstraintColumn>(json);
-        //}
-
-        //public static string ToJson(UniqueConstraintColumn uniqueConstraintColumn, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(uniqueConstraintColumn, formatting);
         //}
     }
 }

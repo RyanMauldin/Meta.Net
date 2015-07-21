@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
-using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class PrimaryKey : UserTableBasedObject
     {
         public static readonly string DefaultDescription = "Primary Key";
@@ -14,17 +14,17 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public string FileGroup { get; set; }
-        public bool IgnoreDupKey { get; set; }
-        public bool IsClustered { get; set; }
-        public int FillFactor { get; set; }
-        public bool IsPadded { get; set; }
-        public bool IsDisabled { get; set; }
-        public bool AllowRowLocks { get; set; }
-        public bool AllowPageLocks { get; set; }
-        public string IndexType { get; set; }
+        [DataMember] public string FileGroup { get; set; }
+        [DataMember] public bool IgnoreDupKey { get; set; }
+        [DataMember] public bool IsClustered { get; set; }
+        [DataMember] public int FillFactor { get; set; }
+        [DataMember] public bool IsPadded { get; set; }
+        [DataMember] public bool IsDisabled { get; set; }
+        [DataMember] public bool AllowRowLocks { get; set; }
+        [DataMember] public bool AllowPageLocks { get; set; }
+        [DataMember] public string IndexType { get; set; }
         
-        public DataObjectLookup<PrimaryKey, PrimaryKeyColumn> PrimaryKeyColumns { get; private set; }
+        [DataMember] public DataObjectLookup<PrimaryKey, PrimaryKeyColumn> PrimaryKeyColumns { get; private set; }
 
         public PrimaryKey()
         {
@@ -38,44 +38,6 @@ namespace Meta.Net.Objects
             IsDisabled = false;
             IsPadded = true;
             PrimaryKeyColumns = new DataObjectLookup<PrimaryKey, PrimaryKeyColumn>(this);
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var primaryKey = new PrimaryKey
-            {
-                ObjectName = ObjectName,
-                AllowPageLocks = AllowPageLocks,
-                AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup,
-                FillFactor = FillFactor,
-                IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType,
-                IsClustered = IsClustered,
-                IsDisabled = IsDisabled,
-                IsPadded = IsPadded
-            };
-
-            primaryKey.PrimaryKeyColumns.DeepClone(primaryKey);
-
-            return primaryKey;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new PrimaryKey
-            {
-                ObjectName = ObjectName,
-                AllowPageLocks = AllowPageLocks,
-                AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup,
-                FillFactor = FillFactor,
-                IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType,
-                IsClustered = IsClustered,
-                IsDisabled = IsDisabled,
-                IsPadded = IsPadded
-            };
         }
 
         public static void Clear(PrimaryKey primaryKey)
@@ -311,75 +273,6 @@ namespace Meta.Net.Objects
 
         //        AddPrimaryKeyColumn(sourcePrimaryKey, PrimaryKeyColumn.Clone(targetPrimaryKeyColumn));
         //    }
-        //}
-
-        //public PrimaryKey(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    UserTable = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    AllowPageLocks = info.GetBoolean("AllowPageLocks");
-        //    AllowRowLocks = info.GetBoolean("AllowRowLocks");
-        //    FileGroup = info.GetString("FileGroup");
-        //    FillFactor = info.GetInt32("FillFactor");
-        //    IgnoreDupKey = info.GetBoolean("IgnoreDupKey");
-        //    IndexType = info.GetString("IndexType");
-        //    IsClustered = info.GetBoolean("IsClustered");
-        //    IsDisabled = info.GetBoolean("IsDisabled");
-        //    IsPadded = info.GetBoolean("IsPadded");
-
-        //    // Deserialize Primary Key Columns
-        //    var primaryKeyColumns = info.GetInt32("PrimaryKeyColumns");
-        //    PrimaryKeyColumns = new Dictionary<string, PrimaryKeyColumn>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < primaryKeyColumns; i++)
-        //    {
-        //        var primaryKeyColumn = (PrimaryKeyColumn)info.GetValue("PrimaryKeyColumn" + i, typeof(PrimaryKeyColumn));
-        //        primaryKeyColumn.PrimaryKey = this;
-        //        PrimaryKeyColumns.Add(primaryKeyColumn.ObjectName, primaryKeyColumn);
-        //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("AllowPageLocks", AllowPageLocks);
-        //    info.AddValue("AllowRowLocks", AllowRowLocks);
-        //    info.AddValue("FileGroup", FileGroup);
-        //    info.AddValue("FillFactor", FillFactor);
-        //    info.AddValue("IgnoreDupKey", IgnoreDupKey);
-        //    info.AddValue("IndexType", IndexType);
-        //    info.AddValue("IsClustered", IsClustered);
-        //    info.AddValue("IsDisabled", IsDisabled);
-        //    info.AddValue("IsPadded", IsPadded);
-
-        //    // Serialize Primary Key Columns
-        //    info.AddValue("PrimaryKeyColumns", PrimaryKeyColumns.Count);
-
-        //    var i = 0;
-        //    foreach (var primaryKeyColumn in PrimaryKeyColumns.Values)
-        //        info.AddValue("PrimaryKeyColumn" + i++, primaryKeyColumn);
-        //}
-
-        //public static PrimaryKey FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<PrimaryKey>(json);
-        //}
-
-        //public static string ToJson(PrimaryKey primaryKey, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(primaryKey, formatting);
         //}
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
-using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class UserTable : SchemaBasedObject
     {
         public static readonly string DefaultDescription = "User-Table";
@@ -15,21 +15,21 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public string FileStreamFileGroup { get; set; }
-        public string LobFileGroup { get; set; }
-        public bool HasTextNTextOrImageColumns { get; set; }
-        public bool UsesAnsiNulls { get; set; }
-        public int TextInRowLimit { get; set; }
+        [DataMember] public string FileStreamFileGroup { get; set; }
+        [DataMember] public string LobFileGroup { get; set; }
+        [DataMember] public bool HasTextNTextOrImageColumns { get; set; }
+        [DataMember] public bool UsesAnsiNulls { get; set; }
+        [DataMember] public int TextInRowLimit { get; set; }
 
-        public DataObjectLookup<UserTable, CheckConstraint> CheckConstraints { get; private set; }
-        public DataObjectLookup<UserTable, ComputedColumn> ComputedColumns { get; private set; }
-        public DataObjectLookup<UserTable, DefaultConstraint> DefaultConstraints { get; private set; }
-        public DataObjectLookup<UserTable, PrimaryKey> PrimaryKeys { get; private set; }
-        public DataObjectLookup<UserTable, ForeignKey> ForeignKeys { get; private set; }
-        public DataObjectLookup<UserTable, IdentityColumn> IdentityColumns { get; private set; }
-        public DataObjectLookup<UserTable, Index> Indexes { get; private set; }
-        public DataObjectLookup<UserTable, UniqueConstraint> UniqueConstraints { get; private set; }
-        public DataObjectLookup<UserTable, UserTableColumn> UserTableColumns { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, CheckConstraint> CheckConstraints { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, ComputedColumn> ComputedColumns { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, DefaultConstraint> DefaultConstraints { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, PrimaryKey> PrimaryKeys { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, ForeignKey> ForeignKeys { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, IdentityColumn> IdentityColumns { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, Index> Indexes { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, UniqueConstraint> UniqueConstraints { get; private set; }
+        [DataMember] public DataObjectLookup<UserTable, UserTableColumn> UserTableColumns { get; private set; }
 
         public UserTable()
         {
@@ -47,46 +47,6 @@ namespace Meta.Net.Objects
             PrimaryKeys = new DataObjectLookup<UserTable, PrimaryKey>(this);
             UniqueConstraints = new DataObjectLookup<UserTable, UniqueConstraint>(this);
             UserTableColumns = new DataObjectLookup<UserTable, UserTableColumn>(this);
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var userTable = new UserTable
-            {
-                ObjectName = ObjectName,
-                FileStreamFileGroup = FileStreamFileGroup,
-                HasTextNTextOrImageColumns = HasTextNTextOrImageColumns,
-                LobFileGroup = LobFileGroup,
-                TextInRowLimit = TextInRowLimit,
-                UsesAnsiNulls = UsesAnsiNulls
-            };
-
-            userTable.CheckConstraints = CheckConstraints.DeepClone(userTable);
-            userTable.ComputedColumns = ComputedColumns.DeepClone(userTable);
-            userTable.DefaultConstraints = DefaultConstraints.DeepClone(userTable);
-            userTable.ForeignKeys = ForeignKeys.DeepClone(userTable);
-            userTable.IdentityColumns = IdentityColumns.DeepClone(userTable);
-            userTable.Indexes = Indexes.DeepClone(userTable);
-            userTable.PrimaryKeys = PrimaryKeys.DeepClone(userTable);
-            userTable.UniqueConstraints = UniqueConstraints.DeepClone(userTable);
-            userTable.UserTableColumns = UserTableColumns.DeepClone(userTable);
-
-            // TODO: Rig up ReferencedUserTables and ReferencedUserTableColumns in Foreign Keys based on newly created objects from deep clone.
-
-            return userTable;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new UserTable
-            {
-                ObjectName = ObjectName,
-                FileStreamFileGroup = FileStreamFileGroup,
-                HasTextNTextOrImageColumns = HasTextNTextOrImageColumns,
-                LobFileGroup = LobFileGroup,
-                TextInRowLimit = TextInRowLimit,
-                UsesAnsiNulls = UsesAnsiNulls
-            };
         }
 
         public static void AddCheckConstraint(UserTable userTable, CheckConstraint checkConstraint)
@@ -545,11 +505,6 @@ namespace Meta.Net.Objects
         //    }
         //}
 
-        //public static UserTable FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<UserTable>(json);
-        //}
-
         //public static void GenerateAlterScripts(
         //    DataContext sourceDataContext, DataContext targetDataContext,
         //    UserTable alteredUserTable, UserTable addableUserTable, UserTable droppableUserTable,
@@ -808,84 +763,6 @@ namespace Meta.Net.Objects
         //    adapter.SelectCommand = command;
         //    adapter.Fill(dataset);
         //    return dataset;
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("FileStreamFileGroup", FileStreamFileGroup);
-        //    info.AddValue("HasTextNTextOrImageColumns", HasTextNTextOrImageColumns);
-        //    info.AddValue("LobFileGroup", LobFileGroup);
-        //    info.AddValue("TextInRowLimit", TextInRowLimit);
-        //    info.AddValue("UsesAnsiNulls", UsesAnsiNulls);
-
-        //    // Serialize Check Constraints
-        //    info.AddValue("CheckConstraints", CheckConstraints.Count);
-
-        //    var i = 0;
-        //    foreach (var checkConstraint in CheckConstraints.Values)
-        //        info.AddValue("CheckConstraint" + i++, checkConstraint);
-
-        //    // Serialize Computed Columns
-        //    info.AddValue("ComputedColumns", ComputedColumns.Count);
-
-        //    i = 0;
-        //    foreach (var computedColumn in ComputedColumns.Values)
-        //        info.AddValue("ComputedColumn" + i++, computedColumn);
-
-        //    // Serialize Default Constraints
-        //    info.AddValue("DefaultConstraints", DefaultConstraints.Count);
-
-        //    i = 0;
-        //    foreach (var defaultConstraint in DefaultConstraints.Values)
-        //        info.AddValue("DefaultConstraint" + i++, defaultConstraint);
-
-        //    // Serialize Foreign Keys
-        //    info.AddValue("ForeignKeys", ForeignKeys.Count);
-
-        //    i = 0;
-        //    foreach (var foreignKey in ForeignKeys.Values)
-        //        info.AddValue("ForeignKey" + i++, foreignKey);
-
-        //    // Serialize Identity Columns
-        //    info.AddValue("IdentityColumns", IdentityColumns.Count);
-
-        //    i = 0;
-        //    foreach (var identityColumn in IdentityColumns.Values)
-        //        info.AddValue("IdentityColumn" + i++, identityColumn);
-
-        //    // Serialize Indexes
-        //    info.AddValue("Indexes", Indexes.Count);
-
-        //    i = 0;
-        //    foreach (var index in Indexes.Values)
-        //        info.AddValue("Index" + i++, index);
-
-        //    // Serialize Primary Keys
-        //    info.AddValue("PrimaryKeys", PrimaryKeys.Count);
-
-        //    i = 0;
-        //    foreach (var primaryKey in PrimaryKeys.Values)
-        //        info.AddValue("PrimaryKey" + i++, primaryKey);
-
-        //    // Serialize Unique Constraints
-        //    info.AddValue("UniqueConstraints", UniqueConstraints.Count);
-
-        //    i = 0;
-        //    foreach (var uniqueConstraint in UniqueConstraints.Values)
-        //        info.AddValue("UniqueConstraint" + i++, uniqueConstraint);
-
-        //    // Serialize User-Table Columns
-        //    info.AddValue("UserTableColumns", UserTableColumns.Count);
-
-        //    i = 0;
-        //    foreach (var userTableColumn in UserTableColumns.Values)
-        //        info.AddValue("UserTableColumn" + i++, userTableColumn);
         //}
 
         ///// <summary>
@@ -1518,30 +1395,6 @@ namespace Meta.Net.Objects
             userTable.UserTableColumns.Rename(userTableColumn, newObjectName);
         }
 
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="userTable">The user-table to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static UserTable ShallowClone(UserTable userTable)
-        {
-            return new UserTable
-            {
-                ObjectName = userTable.ObjectName,
-                FileStreamFileGroup = userTable.FileStreamFileGroup,
-                HasTextNTextOrImageColumns = userTable.HasTextNTextOrImageColumns,
-                LobFileGroup = userTable.LobFileGroup,
-                TextInRowLimit = userTable.TextInRowLimit,
-                UsesAnsiNulls = userTable.UsesAnsiNulls
-            };
-        }
-
-        //public static string ToJson(UserTable userTable, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(userTable, formatting);
-        //}
-
         ///// <summary>
         ///// Modifies the source UserTable to contain all objects that are
         ///// present in both iteself and the target UserTable.
@@ -1823,123 +1676,6 @@ namespace Meta.Net.Objects
         //        var sourceUserTableColumn = UserTableColumn.Clone(targetUserTableColumn);
         //        DataTypes.ConvertDataType(targetDataContext, sourceDataContext, ref sourceUserTableColumn);
         //        AddUserTableColumn(sourceUserTable, sourceUserTableColumn);
-        //    }
-        //}
-
-        //public UserTable(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    Schema = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    FileStreamFileGroup = info.GetString("FileStreamFileGroup");
-        //    HasTextNTextOrImageColumns = info.GetBoolean("HasTextNTextOrImageColumns");
-        //    LobFileGroup = info.GetString("LobFileGroup");
-        //    TextInRowLimit = info.GetInt32("TextInRowLimit");
-        //    UsesAnsiNulls = info.GetBoolean("UsesAnsiNulls");
-
-        //    // Deserialize Check Constraints
-        //    var checkConstraints = info.GetInt32("CheckConstraints");
-        //    CheckConstraints = new Dictionary<string, CheckConstraint>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < checkConstraints; i++)
-        //    {
-        //        var checkConstraint = (CheckConstraint)info.GetValue("CheckConstraint" + i, typeof(CheckConstraint));
-        //        checkConstraint.UserTable = this;
-        //        CheckConstraints.Add(checkConstraint.ObjectName, checkConstraint);
-        //    }
-
-        //    // Deserialize Computed Columns
-        //    var computedColumns = info.GetInt32("ComputedColumns");
-        //    ComputedColumns = new Dictionary<string, ComputedColumn>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < computedColumns; i++)
-        //    {
-        //        var computedColumn = (ComputedColumn)info.GetValue("ComputedColumn" + i, typeof(ComputedColumn));
-        //        computedColumn.UserTable = this;
-        //        ComputedColumns.Add(computedColumn.ObjectName, computedColumn);
-        //    }
-
-        //    // Deserialize Default Constraints
-        //    var defaultConstraints = info.GetInt32("DefaultConstraints");
-        //    DefaultConstraints = new Dictionary<string, DefaultConstraint>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < defaultConstraints; i++)
-        //    {
-        //        var defaultConstraint = (DefaultConstraint)info.GetValue("DefaultConstraint" + i, typeof(DefaultConstraint));
-        //        defaultConstraint.UserTable = this;
-        //        DefaultConstraints.Add(defaultConstraint.ObjectName, defaultConstraint);
-        //    }
-
-        //    // Deserialize Foreign Keys
-        //    var foreignKeys = info.GetInt32("ForeignKeys");
-        //    ForeignKeys = new Dictionary<string, ForeignKey>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < foreignKeys; i++)
-        //    {
-        //        var foreignKey = (ForeignKey)info.GetValue("ForeignKey" + i, typeof(ForeignKey));
-        //        foreignKey.UserTable = this;
-        //        ForeignKeys.Add(foreignKey.ObjectName, foreignKey);
-        //    }
-
-        //    // Deserialize Identity Columns
-        //    var identityColumns = info.GetInt32("IdentityColumns");
-        //    IdentityColumns = new Dictionary<string, IdentityColumn>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < identityColumns; i++)
-        //    {
-        //        var identityColumn = (IdentityColumn)info.GetValue("IdentityColumn" + i, typeof(IdentityColumn));
-        //        identityColumn.UserTable = this;
-        //        IdentityColumns.Add(identityColumn.ObjectName, identityColumn);
-        //    }
-
-        //    // Deserialize Indexes
-        //    var indexes = info.GetInt32("Indexes");
-        //    Indexes = new Dictionary<string, Index>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < indexes; i++)
-        //    {
-        //        var index = (Index)info.GetValue("Index" + i, typeof(Index));
-        //        index.UserTable = this;
-        //        Indexes.Add(index.ObjectName, index);
-        //    }
-
-        //    // Deserialize Primary Keys
-        //    var primaryKeys = info.GetInt32("PrimaryKeys");
-        //    PrimaryKeys = new Dictionary<string, PrimaryKey>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < primaryKeys; i++)
-        //    {
-        //        var primaryKey = (PrimaryKey)info.GetValue("PrimaryKey" + i, typeof(PrimaryKey));
-        //        primaryKey.UserTable = this;
-        //        PrimaryKeys.Add(primaryKey.ObjectName, primaryKey);
-        //    }
-
-        //    // Deserialize Unique Constraints
-        //    var uniqueConstraints = info.GetInt32("UniqueConstraints");
-        //    UniqueConstraints = new Dictionary<string, UniqueConstraint>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < uniqueConstraints; i++)
-        //    {
-        //        var uniqueConstraint = (UniqueConstraint)info.GetValue("UniqueConstraint" + i, typeof(UniqueConstraint));
-        //        uniqueConstraint.UserTable = this;
-        //        UniqueConstraints.Add(uniqueConstraint.ObjectName, uniqueConstraint);
-        //    }
-
-        //    // Deserialize User-Table Columns
-        //    var userTableColumns = info.GetInt32("UserTableColumns");
-        //    UserTableColumns = new Dictionary<string, UserTableColumn>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < userTableColumns; i++)
-        //    {
-        //        var userTableColumn = (UserTableColumn)info.GetValue("UserTableColumn" + i, typeof(UserTableColumn));
-        //        userTableColumn.UserTable = this;
-        //        UserTableColumns.Add(userTableColumn.ObjectName, userTableColumn);
         //    }
         //}
     }

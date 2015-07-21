@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,7 +47,7 @@
     <Compile Include="Abstract\BaseMetaObject.cs" />
     <Compile Include="Abstract\CatalogBasedObect.cs" />
     <Compile Include="Abstract\ForeignKeyBasedObject.cs" />
-    <Compile Include="Abstract\IndexBasedMetaObject.cs" />
+    <Compile Include="Abstract\IndexBasedObject.cs" />
     <Compile Include="Abstract\PrimaryKeyBasedObject.cs" />
     <Compile Include="Abstract\SchemaBasedObject.cs" />
     <Compile Include="Abstract\ServerBasedObject.cs" />
@@ -56,6 +57,8 @@
     <Compile Include="DataConnectionInfo.cs" />
     <Compile Include="DataConnectionManager.cs" />
     <Compile Include="DataContext.cs" />
+    <Compile Include="DataDictionary.cs" />
+    <Compile Include="SerializationExtensions.cs" />
     <Compile Include="DataMetadataScriptFactory.cs" />
     <Compile Include="DataObjectLookup.cs" />
     <Compile Include="DataProperties.cs" />

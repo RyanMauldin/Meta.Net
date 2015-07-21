@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class Index : UserTableBasedObject
     {
         public static readonly string DefaultDescription = "Index";
@@ -14,18 +15,18 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public string FileGroup { get; set; }
-        public int FillFactor { get; set; }
-        public bool IgnoreDupKey { get; set; }
-        public bool IsClustered { get; set; }
-        public bool IsDisabled { get; set; }
-        public bool IsPadded { get; set; }
-        public bool IsUnique { get; set; }
-        public bool AllowPageLocks { get; set; }
-        public bool AllowRowLocks { get; set; }
-        public string IndexType { get; set; }
+        [DataMember] public string FileGroup { get; set; }
+        [DataMember] public int FillFactor { get; set; }
+        [DataMember] public bool IgnoreDupKey { get; set; }
+        [DataMember] public bool IsClustered { get; set; }
+        [DataMember] public bool IsDisabled { get; set; }
+        [DataMember] public bool IsPadded { get; set; }
+        [DataMember] public bool IsUnique { get; set; }
+        [DataMember] public bool AllowPageLocks { get; set; }
+        [DataMember] public bool AllowRowLocks { get; set; }
+        [DataMember] public string IndexType { get; set; }
 
-        public DataObjectLookup<Index, IndexColumn> IndexColumns { get; private set; }
+        [DataMember] public DataObjectLookup<Index, IndexColumn> IndexColumns { get; private set; }
 
         public Index()
         {
@@ -40,46 +41,6 @@ namespace Meta.Net.Objects
             IsPadded = true;
             IsUnique = false;
             IndexColumns = new DataObjectLookup<Index, IndexColumn>(this);
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var index = new Index
-            {
-                ObjectName = ObjectName,
-                AllowPageLocks = AllowPageLocks,
-                AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup,
-                FillFactor = FillFactor,
-                IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType,
-                IsClustered = IsClustered,
-                IsDisabled = IsDisabled,
-                IsPadded = IsPadded,
-                IsUnique = IsUnique
-            };
-
-            index.IndexColumns.DeepClone(index);
-
-            return index;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new Index
-            {
-                ObjectName = ObjectName,
-                AllowPageLocks = AllowPageLocks,
-                AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup,
-                FillFactor = FillFactor,
-                IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType,
-                IsClustered = IsClustered,
-                IsDisabled = IsDisabled,
-                IsPadded = IsPadded,
-                IsUnique = IsUnique
-            };
         }
 
         public static void Clear(Index index)
@@ -318,77 +279,6 @@ namespace Meta.Net.Objects
 
         //        AddIndexColumn(sourceIndex, IndexColumn.Clone(targetIndexColumn));
         //    }
-        //}
-
-        //public Index(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    UserTable = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    AllowPageLocks = info.GetBoolean("AllowPageLocks");
-        //    AllowRowLocks = info.GetBoolean("AllowRowLocks");
-        //    FileGroup = info.GetString("FileGroup");
-        //    FillFactor = info.GetInt32("FillFactor");
-        //    IgnoreDupKey = info.GetBoolean("IgnoreDupKey");
-        //    IndexType = info.GetString("IndexType");
-        //    IsClustered = info.GetBoolean("IsClustered");
-        //    IsDisabled = info.GetBoolean("IsDisabled");
-        //    IsPadded = info.GetBoolean("IsPadded");
-        //    IsUnique = info.GetBoolean("IsUnique");
-
-        //    // Deserialize Unique-Constraint Columns
-        //    var indexColumns = info.GetInt32("IndexColumns");
-        //    IndexColumns = new Dictionary<string, IndexColumn>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < indexColumns; i++)
-        //    {
-        //        var indexColumn = (IndexColumn)info.GetValue("IndexColumn" + i, typeof(IndexColumn));
-        //        indexColumn.Index = this;
-        //        IndexColumns.Add(indexColumn.ObjectName, indexColumn);
-        //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("AllowPageLocks", AllowPageLocks);
-        //    info.AddValue("AllowRowLocks", AllowRowLocks);
-        //    info.AddValue("FileGroup", FileGroup);
-        //    info.AddValue("FillFactor", FillFactor);
-        //    info.AddValue("IgnoreDupKey", IgnoreDupKey);
-        //    info.AddValue("IndexType", IndexType);
-        //    info.AddValue("IsClustered", IsClustered);
-        //    info.AddValue("IsDisabled", IsDisabled);
-        //    info.AddValue("IsPadded", IsPadded);
-        //    info.AddValue("IsUnique", IsUnique);
-
-        //    // Serialize Index Columns
-        //    info.AddValue("IndexColumns", IndexColumns.Count);
-
-        //    var i = 0;
-        //    foreach (var indexColumn in IndexColumns.Values)
-        //        info.AddValue("IndexColumn" + i++, indexColumn);
-        //}
-
-        //public static Index FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<Index>(json);
-        //}
-
-        //public static string ToJson(Index index, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(index, formatting);
         //}
     }
 }

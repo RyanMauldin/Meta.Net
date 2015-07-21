@@ -1,9 +1,12 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization;
+using System.Text;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(PrimaryKeyColumn))]
     public abstract class PrimaryKeyBasedObject : UserTableBasedObject
     {
         public override UserTable UserTable
@@ -16,7 +19,7 @@ namespace Meta.Net.Abstract
             }
         }
 
-        public virtual PrimaryKey PrimaryKey { get; set; }
+        [DataMember] public virtual PrimaryKey PrimaryKey { get; set; }
 
         public override string Namespace
         {

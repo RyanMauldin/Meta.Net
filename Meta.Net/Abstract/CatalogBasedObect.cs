@@ -1,8 +1,11 @@
-﻿using Meta.Net.Interfaces;
+﻿using System.Runtime.Serialization;
+using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(Schema))]
     public abstract class CatalogBasedObect : ServerBasedObject
     {
         public override Server Server
@@ -15,7 +18,7 @@ namespace Meta.Net.Abstract
             }
         }
 
-        public virtual Catalog Catalog { get; set; }
+        [DataMember] public virtual Catalog Catalog { get; set; }
 
         /// <summary>
         /// This data object can only have a Catalog as a parent.

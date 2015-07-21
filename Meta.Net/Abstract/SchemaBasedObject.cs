@@ -1,9 +1,13 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization;
+using System.Text;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(UserDefinedDataType))]
+    [KnownType(typeof(UserTable))]
     public abstract class SchemaBasedObject : CatalogBasedObect
     {
         public override Catalog Catalog
@@ -16,7 +20,7 @@ namespace Meta.Net.Abstract
             }
         }
 
-        public virtual Schema Schema { get; set; }
+        [DataMember] public virtual Schema Schema { get; set; }
 
         public override string Namespace
         {

@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class ForeignKeyColumn : ForeignKeyBasedObject
     {
+        [DataMember(Name = "ReferencedColumn")]
         private IIndexColumn _referencedColumn;
 
         public static readonly string DefaultDescription = "Foreign Key Column";
@@ -16,9 +18,9 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public override UserTable ReferencedUserTable { get; set; }
+        [DataMember] public override UserTable ReferencedUserTable { get; set; }
 
-        public int KeyOrdinal { get; set; }
+        [DataMember] public int KeyOrdinal { get; set; }
 
         public IIndexColumn ReferencedColumn
         {
@@ -41,24 +43,6 @@ namespace Meta.Net.Objects
             }
         }
 
-        public override IMetaObject DeepClone()
-        {
-            return new ForeignKeyColumn
-            {
-                ObjectName = ObjectName,
-                KeyOrdinal = KeyOrdinal
-            };
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new ForeignKeyColumn
-            {
-                ObjectName = ObjectName,
-                KeyOrdinal = KeyOrdinal
-            };
-        }
-
         //public static bool CompareDefinitions(ForeignKeyColumn sourceForeignKeyColumn, ForeignKeyColumn targetForeignKeyColumn)
         //{
         //    if (!CompareObjectNames(sourceForeignKeyColumn, targetForeignKeyColumn))
@@ -77,43 +61,6 @@ namespace Meta.Net.Objects
         //        stringComparer = StringComparer.OrdinalIgnoreCase;
 
         //    return stringComparer.Compare(sourceForeignKeyColumn.ObjectName, targetForeignKeyColumn.ObjectName) == 0;
-        //}
-
-        //public static ForeignKeyColumn FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<ForeignKeyColumn>(json);
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("KeyOrdinal", KeyOrdinal);
-        //    //TODO: Serialize info.AddValue("ReferencedColumnName", ReferencedColumnName);
-        //}
-
-        //public static string ToJson(ForeignKeyColumn foreignKeyColumn, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(foreignKeyColumn, formatting);
-        //}
-
-        //public ForeignKeyColumn(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    ForeignKey = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    KeyOrdinal = info.GetInt32("KeyOrdinal");
-        //    // TODO: References need to be deserialized, with usertables in syc
         //}
     }
 }

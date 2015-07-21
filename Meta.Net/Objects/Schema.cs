@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class Schema : CatalogBasedObect, ICatalog
     {
         public static readonly string DefaultDescription = "Schema";
@@ -15,15 +16,15 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public DataObjectLookup<Schema, AggregateFunction> AggregateFunctions { get; private set; }
-        public DataObjectLookup<Schema, InlineTableValuedFunction> InlineTableValuedFunctions { get; private set; }
-        public DataObjectLookup<Schema, ScalarFunction> ScalarFunctions { get; private set; }
-        public DataObjectLookup<Schema, StoredProcedure> StoredProcedures { get; private set; }
-        public DataObjectLookup<Schema, TableValuedFunction> TableValuedFunctions { get; private set; }
-        public DataObjectLookup<Schema, Trigger> Triggers { get; private set; }
-        public DataObjectLookup<Schema, UserDefinedDataType> UserDefinedDataTypes { get; private set; }
-        public DataObjectLookup<Schema, UserTable> UserTables { get; private set; }
-        public DataObjectLookup<Schema, View> Views { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, AggregateFunction> AggregateFunctions { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, InlineTableValuedFunction> InlineTableValuedFunctions { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, ScalarFunction> ScalarFunctions { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, StoredProcedure> StoredProcedures { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, TableValuedFunction> TableValuedFunctions { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, Trigger> Triggers { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, UserDefinedDataType> UserDefinedDataTypes { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, UserTable> UserTables { get; private set; }
+        [DataMember] public DataObjectLookup<Schema, View> Views { get; private set; }
 
 		public Schema()
         {
@@ -36,34 +37,6 @@ namespace Meta.Net.Objects
             UserDefinedDataTypes = new DataObjectLookup<Schema, UserDefinedDataType>(this);
             UserTables = new DataObjectLookup<Schema, UserTable>(this);
             Views = new DataObjectLookup<Schema, View>(this);
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var schema = new Schema
-            {
-                ObjectName = ObjectName
-            };
-
-            schema.AggregateFunctions = AggregateFunctions.DeepClone(schema);
-            schema.InlineTableValuedFunctions = InlineTableValuedFunctions.DeepClone(schema);
-            schema.TableValuedFunctions = TableValuedFunctions.DeepClone(schema);
-            schema.ScalarFunctions = ScalarFunctions.DeepClone(schema);
-            schema.StoredProcedures = StoredProcedures.DeepClone(schema);
-            schema.Triggers = Triggers.DeepClone(schema);
-            schema.UserDefinedDataTypes = UserDefinedDataTypes.DeepClone(schema);
-            schema.UserTables = UserTables.DeepClone(schema);
-            schema.Views = Views.DeepClone(schema);
-
-            return schema;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new Schema
-            {
-                ObjectName = ObjectName
-            };
         }
 
         public static void AddAggregateFunction(Schema schema, AggregateFunction aggregateFunction)
@@ -645,11 +618,6 @@ namespace Meta.Net.Objects
         //    }
         //}
 
-        //public static Schema FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<Schema>(json);
-        //}
-
         //public static void GenerateAlterScripts(DataContext sourceDataContext, DataContext targetDataContext, Schema alteredSchema,
         //    Schema sourceSchema, Schema targetSchema, Schema droppedSchema, Schema createdSchema, Schema matchedSchema,
         //    DataSyncActionsCollection dataSyncActions, DataDependencyBuilder dataDependencyBuilder, DataProperties dataProperties)
@@ -1180,29 +1148,6 @@ namespace Meta.Net.Objects
         //    }
         //}
 
-        ///// <summary>
-        ///// This method is called automatically through a chain of calls after Catalog.Clone()
-        ///// method has been called and will simply return if the Catalog... schema.Catalog...
-        ///// is equal to null. This method has been added to assist in populating
-        ///// Catalog.ForeignKeyPool and Catalog.ReferencedUserTablePool in case anything custom
-        ///// has to be done for any reason to those lists. UserTable.AddForeignKey automatically
-        ///// calls ForeignKey.LinkForeignKey and this method only needs to be used if a custom
-        ///// cloning method is created or after a serialization operation has completed and the
-        ///// calls should only be channeled through the chain of objects originating from the
-        ///// Catalog object as no action will take place unless the object you are passing in
-        ///// has a Catalog and if the foreign keys do not already exist in those lists.
-        ///// </summary>
-        ///// <param name="schema">The schema with user-tables that have foreign keys to link.</param>
-        //public static void LinkForeignKeys(Schema schema)
-        //{
-        //    if (schema.Catalog == null)
-        //        return;
-
-        //    foreach (var userTable in schema.UserTables.Where(
-        //        userTable => userTable.ForeignKeys.Count > 0))
-        //        UserTable.LinkForeignKeys(userTable);
-        //}
-
         public static long ObjectCount(Schema schema, bool deepCount = false)
         {
             var count = (long)schema.AggregateFunctions.Count;
@@ -1402,25 +1347,6 @@ namespace Meta.Net.Objects
 
             schema.Views.Rename(view, newObjectName);
         }
-
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="schema">The schema to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static Schema ShallowClone(Schema schema)
-        {
-            return new Schema
-            {
-                ObjectName = schema.ObjectName
-            };
-        }
-
-        //public static string ToJson(Schema schema, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(schema, formatting);
-        //}
 
         ///// <summary>
         ///// Modifies the source Schema to contain all objects that are
@@ -1625,191 +1551,6 @@ namespace Meta.Net.Objects
 
         //        AddView(sourceSchema, View.Clone(targetView));
         //    }
-        //}
-
-        //public Schema(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    Catalog = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-
-        //    // Deserialize Aggregate Functions
-        //    var aggregateFunctions = info.GetInt32("AggregateFunctions");
-        //    AggregateFunctions = new DataObjectLookup<AggregateFunction>();
-
-        //    for (var i = 0; i < aggregateFunctions; i++)
-        //    {
-        //        var aggregateFunction = (AggregateFunction)info.GetValue("AggregateFunction" + i, typeof(AggregateFunction));
-        //        aggregateFunction.Schema = this;
-        //        AggregateFunctions.Add(aggregateFunction);
-        //    }
-
-        //    // Deserialize Inline Table-Valued Functions
-        //    var inlineTableValuedFunctions = info.GetInt32("InlineTableValuedFunctions");
-        //    InlineTableValuedFunctions = new Dictionary<string, InlineTableValuedFunction>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < inlineTableValuedFunctions; i++)
-        //    {
-        //        var inlineTableValuedFunction = (InlineTableValuedFunction)info.GetValue("InlineTableValuedFunction" + i, typeof(InlineTableValuedFunction));
-        //        inlineTableValuedFunction.Schema = this;
-        //        InlineTableValuedFunctions.Add(inlineTableValuedFunction.ObjectName, inlineTableValuedFunction);
-        //    }
-
-        //    // Deserialize Scalar Functions
-        //    var scalarFunctions = info.GetInt32("ScalarFunctions");
-        //    ScalarFunctions = new Dictionary<string, ScalarFunction>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < scalarFunctions; i++)
-        //    {
-        //        var scalarFunction = (ScalarFunction)info.GetValue("ScalarFunction" + i, typeof(ScalarFunction));
-        //        scalarFunction.Schema = this;
-        //        ScalarFunctions.Add(scalarFunction.ObjectName, scalarFunction);
-        //    }
-
-        //    // Deserialize Stored Procedures
-        //    var storedProcedures = info.GetInt32("StoredProcedures");
-        //    StoredProcedures = new Dictionary<string, StoredProcedure>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < storedProcedures; i++)
-        //    {
-        //        var storedProcedure = (StoredProcedure)info.GetValue("StoredProcedure" + i, typeof(StoredProcedure));
-        //        storedProcedure.Schema = this;
-        //        StoredProcedures.Add(storedProcedure.ObjectName, storedProcedure);
-        //    }
-
-        //    // Deserialize Table-Valued Functions
-        //    var tableValuedFunctions = info.GetInt32("TableValuedFunctions");
-        //    TableValuedFunctions = new Dictionary<string, TableValuedFunction>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < tableValuedFunctions; i++)
-        //    {
-        //        var tableValuedFunction = (TableValuedFunction)info.GetValue("TableValuedFunction" + i, typeof(TableValuedFunction));
-        //        tableValuedFunction.Schema = this;
-        //        TableValuedFunctions.Add(tableValuedFunction.ObjectName, tableValuedFunction);
-        //    }
-
-        //    // Deserialize Triggers
-        //    var triggers = info.GetInt32("Triggers");
-        //    Triggers = new Dictionary<string, Trigger>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < triggers; i++)
-        //    {
-        //        var trigger = (Trigger)info.GetValue("Trigger" + i, typeof(Trigger));
-        //        trigger.Schema = this;
-        //        Triggers.Add(trigger.ObjectName, trigger);
-        //    }
-
-        //    // Deserialize User-Defined Data Types
-        //    var userDefinedDataTypes = info.GetInt32("UserDefinedDataTypes");
-        //    UserDefinedDataTypes = new Dictionary<string, UserDefinedDataType>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < userDefinedDataTypes; i++)
-        //    {
-        //        var userDefinedDataType = (UserDefinedDataType)info.GetValue("UserDefinedDataType" + i, typeof(UserDefinedDataType));
-        //        userDefinedDataType.Schema = this;
-        //        UserDefinedDataTypes.Add(userDefinedDataType.ObjectName, userDefinedDataType);
-        //    }
-
-        //    // Deserialize User-Tables
-        //    var userTables = info.GetInt32("UserTables");
-        //    UserTables = new Dictionary<string, UserTable>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < userTables; i++)
-        //    {
-        //        var userTable = (UserTable)info.GetValue("UserTable" + i, typeof(UserTable));
-        //        userTable.Schema = this;
-        //        UserTables.Add(userTable.ObjectName, userTable);
-        //    }
-
-        //    // Deserialize Views
-        //    var views = info.GetInt32("Views");
-        //    Views = new Dictionary<string, View>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < views; i++)
-        //    {
-        //        var view = (View)info.GetValue("View" + i, typeof(View));
-        //        view.Schema = this;
-        //        Views.Add(view.ObjectName, view);
-        //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-
-        //    // Serialize Aggregate Functions
-        //    info.AddValue("AggregateFunctions", AggregateFunctions.Count);
-
-        //    var i = 0;
-        //    foreach (var aggregateFunction in AggregateFunctions)
-        //        info.AddValue("AggregateFunction" + i++, aggregateFunction);
-
-        //    // Serialize Inline Table-Valued Functions
-        //    info.AddValue("InlineTableValuedFunctions", InlineTableValuedFunctions.Count);
-
-        //    i = 0;
-        //    foreach (var inlineTableValuedFunction in InlineTableValuedFunctions.Values)
-        //        info.AddValue("InlineTableValuedFunction" + i++, inlineTableValuedFunction);
-
-        //    // Serialize Scalar Functions
-        //    info.AddValue("ScalarFunctions", ScalarFunctions.Count);
-
-        //    i = 0;
-        //    foreach (var scalarFunction in ScalarFunctions.Values)
-        //        info.AddValue("ScalarFunction" + i++, scalarFunction);
-
-        //    // Serialize Stored Procedures
-        //    info.AddValue("StoredProcedures", StoredProcedures.Count);
-
-        //    i = 0;
-        //    foreach (var storedProcedure in StoredProcedures.Values)
-        //        info.AddValue("StoredProcedure" + i++, storedProcedure);
-
-        //    // Serialize Table-Valued Functions
-        //    info.AddValue("TableValuedFunctions", TableValuedFunctions.Count);
-
-        //    i = 0;
-        //    foreach (var tableValuedFunction in TableValuedFunctions.Values)
-        //        info.AddValue("TableValuedFunction" + i++, tableValuedFunction);
-
-        //    // Serialize Triggers
-        //    info.AddValue("Triggers", Triggers.Count);
-
-        //    i = 0;
-        //    foreach (var trigger in Triggers.Values)
-        //        info.AddValue("Trigger" + i++, trigger);
-
-        //    // Serialize User-Defined Data Types
-        //    info.AddValue("UserDefinedDataTypes", UserDefinedDataTypes.Count);
-
-        //    i = 0;
-        //    foreach (var userDefinedDataType in UserDefinedDataTypes.Values)
-        //        info.AddValue("UserDefinedDataType" + i++, userDefinedDataType);
-
-        //    // Serialize User-Tables
-        //    info.AddValue("UserTables", UserTables.Count);
-
-        //    i = 0;
-        //    foreach (var userTable in UserTables.Values)
-        //        info.AddValue("UserTable" + i++, userTable);
-
-        //    // Serialize Views
-        //    info.AddValue("Views", Views.Count);
-
-        //    i = 0;
-        //    foreach (var view in Views.Values)
-        //        info.AddValue("View" + i++, view);
         //}
     }
 }

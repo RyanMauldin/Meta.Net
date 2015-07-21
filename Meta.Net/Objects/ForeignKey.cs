@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
-using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class ForeignKey : UserTableBasedObject
     {
         public static readonly string DefaultDescription = "Foreign Key";
@@ -15,7 +15,7 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public DataObjectLookup<ForeignKey, ForeignKeyColumn> ForeignKeyColumns { get; private set; }
+        [DataMember] public DataObjectLookup<ForeignKey, ForeignKeyColumn> ForeignKeyColumns { get; private set; }
 
         public UserTable ReferencedUserTable
         {
@@ -31,56 +31,20 @@ namespace Meta.Net.Objects
             }
         }
 
-        public bool IsDisabled { get; set; }
-        public bool IsNotForReplication { get; set; }
-        public bool IsNotTrusted { get; set; }
-        public bool IsSystemNamed { get; set; }
-        public int DeleteAction { get; set; }
-        public string DeleteActionDescription { get; set; }
-        public int UpdateAction { get; set; }
-        public string UpdateActionDescription { get; set; }
+        [DataMember] public bool IsDisabled { get; set; }
+        [DataMember] public bool IsNotForReplication { get; set; }
+        [DataMember] public bool IsNotTrusted { get; set; }
+        [DataMember] public bool IsSystemNamed { get; set; }
+        [DataMember] public int DeleteAction { get; set; }
+        [DataMember] public string DeleteActionDescription { get; set; }
+        [DataMember] public int UpdateAction { get; set; }
+        [DataMember] public string UpdateActionDescription { get; set; }
 
         public ForeignKey()
         {
             DeleteActionDescription = "NO_ACTION";
             UpdateActionDescription = "NO_ACTION";
             ForeignKeyColumns = new DataObjectLookup<ForeignKey, ForeignKeyColumn>(this);
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var foreignKey = new ForeignKey
-            {
-                ObjectName = ObjectName,
-                IsDisabled = IsDisabled,
-                IsNotForReplication = IsNotForReplication,
-                IsNotTrusted = IsNotTrusted,
-                IsSystemNamed = IsSystemNamed,
-                DeleteAction = DeleteAction,
-                DeleteActionDescription = DeleteActionDescription,
-                UpdateAction = UpdateAction,
-                UpdateActionDescription = UpdateActionDescription
-            };
-
-            foreignKey.ForeignKeyColumns.DeepClone(foreignKey);
-
-            return foreignKey;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new ForeignKey
-            {
-                ObjectName = ObjectName,
-                IsDisabled = IsDisabled,
-                IsNotForReplication = IsNotForReplication,
-                IsNotTrusted = IsNotTrusted,
-                IsSystemNamed = IsSystemNamed,
-                DeleteAction = DeleteAction,
-                DeleteActionDescription = DeleteActionDescription,
-                UpdateAction = UpdateAction,
-                UpdateActionDescription = UpdateActionDescription
-            };
         }
 
 		/// <summary>
@@ -319,75 +283,6 @@ namespace Meta.Net.Objects
 
         //        AddForeignKeyColumn(sourceForeignKey, ForeignKeyColumn.Clone(targetForeignKeyColumn));
         //    }
-        //}
-
-        //public ForeignKey(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    UserTable = null;
-        //    ReferencedUserTable = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    DeleteAction = info.GetInt32("DeleteAction");
-        //    DeleteActionDescription = info.GetString("DeleteActionDescription");
-        //    IsDisabled = info.GetBoolean("IsDisabled");
-        //    IsNotForReplication = info.GetBoolean("IsNotForReplication");
-        //    IsNotTrusted = info.GetBoolean("IsNotTrusted");
-        //    IsSystemNamed = info.GetBoolean("IsSystemNamed");
-        //    //ReferencedObjectName = info.GetString("ReferencedObjectName");
-        //    //ReferencedSchemaName = info.GetString("ReferencedSchemaName");
-        //    //ReferencedTableName = info.GetString("ReferencedTableName");
-        //    UpdateAction = info.GetInt32("UpdateAction");
-        //    UpdateActionDescription = info.GetString("UpdateActionDescription");
-
-        //    // Deserialize Foreign Key Columns
-        //    var foreignKeyColumns = info.GetInt32("ForeignKeyColumns");
-        //    ForeignKeyColumns = new Dictionary<string, ForeignKeyColumn>(StringComparer.OrdinalIgnoreCase);
-
-        //    for (var i = 0; i < foreignKeyColumns; i++)
-        //    {
-        //        var foreignKeyColumn = (ForeignKeyColumn)info.GetValue("ForeignKeyColumn" + i, typeof(ForeignKeyColumn));
-        //        foreignKeyColumn.ForeignKey = this;
-        //        ForeignKeyColumns.Add(foreignKeyColumn.ObjectName, foreignKeyColumn);
-        //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("DeleteAction", DeleteAction);
-        //    info.AddValue("DeleteActionDescription", DeleteActionDescription);
-        //    info.AddValue("IsDisabled", IsDisabled);
-        //    info.AddValue("IsNotForReplication", IsNotForReplication);
-        //    info.AddValue("IsNotTrusted", IsNotTrusted);
-        //    info.AddValue("IsSystemNamed", IsSystemNamed);
-        //    //info.AddValue("ReferencedObjectName", ReferencedObjectName);
-        //    //info.AddValue("ReferencedSchemaName", ReferencedSchemaName);
-        //    //info.AddValue("ReferencedTableName", ReferencedTableName);
-        //    //TODO: Serialization work
-        //    info.AddValue("UpdateAction", UpdateAction);
-        //    info.AddValue("UpdateActionDescription", UpdateActionDescription);
-        //    info.AddValue("ForeignKeyColumns", ForeignKeyColumns);
-        //}
-
-        //public static ForeignKey FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<ForeignKey>(json);
-        //}
-
-        //public static string ToJson(ForeignKey foreignKey, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(foreignKey, formatting);
         //}
     }
 }

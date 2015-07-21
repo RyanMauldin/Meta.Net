@@ -1,9 +1,10 @@
-﻿using Meta.Net.Abstract;
+﻿using System.Runtime.Serialization;
+using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class Trigger : BaseModule, ITrigger
     {
         public static readonly string DefaultDescription = "Trigger";
@@ -13,10 +14,10 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public bool IsDisabled { get; set; }
-        public bool IsNotForReplication { get; set; }
-        public string TriggerForObjectName { get; set; }
-        public string TriggerForSchema { get; set; }
+        [DataMember] public bool IsDisabled { get; set; }
+        [DataMember] public bool IsNotForReplication { get; set; }
+        [DataMember] public string TriggerForObjectName { get; set; }
+        [DataMember] public string TriggerForSchema { get; set; }
 
         public Trigger()
         {
@@ -24,36 +25,6 @@ namespace Meta.Net.Objects
             IsNotForReplication = false;
             TriggerForObjectName = string.Empty;
             TriggerForSchema = string.Empty;
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            return new Trigger
-            {
-                ObjectName = ObjectName,
-                Definition = Definition,
-                UsesAnsiNulls = UsesAnsiNulls,
-                UsesQuotedIdentifier = UsesQuotedIdentifier,
-                IsDisabled = IsDisabled,
-                IsNotForReplication = IsNotForReplication,
-                TriggerForObjectName = TriggerForObjectName,
-                TriggerForSchema = TriggerForSchema
-            };
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new Trigger
-            {
-                ObjectName = ObjectName,
-                Definition = Definition,
-                UsesAnsiNulls = UsesAnsiNulls,
-                UsesQuotedIdentifier = UsesQuotedIdentifier,
-                IsDisabled = IsDisabled,
-                IsNotForReplication = IsNotForReplication,
-                TriggerForObjectName = TriggerForObjectName,
-                TriggerForSchema = TriggerForSchema
-            };
         }
         
         //public static bool CompareDefinitions(Trigger sourceTrigger, Trigger targetTrigger)
@@ -111,45 +82,6 @@ namespace Meta.Net.Objects
         //    var dataSyncAction = DataActionFactory.DropTrigger(sourceDataContext, targetDataContext, trigger);
         //    if (dataSyncAction != null)
         //        dataSyncActions.Add(dataSyncAction);
-        //}
-
-        //public Trigger(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    Schema = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Definition = info.GetString("Definition");
-        //    Description = info.GetString("Description");
-        //    UsesAnsiNulls = info.GetBoolean("UsesAnsiNulls");
-        //    UsesQuotedIdentifier = info.GetBoolean("UsesQuotedIdentifier");
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Definition", Definition);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("UsesAnsiNulls", UsesAnsiNulls);
-        //    info.AddValue("UsesQuotedIdentifier", UsesQuotedIdentifier);
-        //}
-
-        //public static Trigger FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<Trigger>(json);
-        //}
-
-        //public static string ToJson(Trigger trigger, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(trigger, formatting);
         //}
     }
 }

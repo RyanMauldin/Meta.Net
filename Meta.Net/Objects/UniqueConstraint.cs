@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
 using Meta.Net.Interfaces;
 using Meta.Net.Types;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class UniqueConstraint : UserTableBasedObject
     {
         public static readonly string DefaultDescription = "Unique Constraint";
@@ -16,17 +17,17 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public string FileGroup { get; set; }
-        public int FillFactor { get; set; }
-        public bool IgnoreDupKey { get; set; }
-        public string IndexType { get; set; }
-        public bool IsClustered { get; set; }
-        public bool IsDisabled { get; set; }
-        public bool IsPadded { get; set; }
-        public bool AllowPageLocks { get; set; }
-        public bool AllowRowLocks { get; set; }
+        [DataMember] public string FileGroup { get; set; }
+        [DataMember] public int FillFactor { get; set; }
+        [DataMember] public bool IgnoreDupKey { get; set; }
+        [DataMember] public string IndexType { get; set; }
+        [DataMember] public bool IsClustered { get; set; }
+        [DataMember] public bool IsDisabled { get; set; }
+        [DataMember] public bool IsPadded { get; set; }
+        [DataMember] public bool AllowPageLocks { get; set; }
+        [DataMember] public bool AllowRowLocks { get; set; }
 
-        public DataObjectLookup<UniqueConstraint, UniqueConstraintColumn> UniqueConstraintColumns { get; private set; }
+        [DataMember] public DataObjectLookup<UniqueConstraint, UniqueConstraintColumn> UniqueConstraintColumns { get; private set; }
 
 		public UniqueConstraint()
         {
@@ -40,44 +41,6 @@ namespace Meta.Net.Objects
             IsDisabled = false;
             IsPadded = true;
             UniqueConstraintColumns = new DataObjectLookup<UniqueConstraint, UniqueConstraintColumn>(this);
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var uniqueConstraint = new UniqueConstraint
-            {
-                ObjectName = ObjectName,
-                AllowPageLocks = AllowPageLocks,
-                AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup,
-                FillFactor = FillFactor,
-                IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType,
-                IsClustered = IsClustered,
-                IsDisabled = IsDisabled,
-                IsPadded = IsPadded
-            };
-
-            uniqueConstraint.UniqueConstraintColumns.DeepClone(uniqueConstraint);
-
-            return uniqueConstraint;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new UniqueConstraint
-            {
-                ObjectName = ObjectName,
-                AllowPageLocks = AllowPageLocks,
-                AllowRowLocks = AllowRowLocks,
-                FileGroup = FileGroup,
-                FillFactor = FillFactor,
-                IgnoreDupKey = IgnoreDupKey,
-                IndexType = IndexType,
-                IsClustered = IsClustered,
-                IsDisabled = IsDisabled,
-                IsPadded = IsPadded
-            };
         }
 
 		public static void AddUniqueConstraintColumn(UniqueConstraint uniqueConstraint, UniqueConstraintColumn uniqueConstraintColumn)
@@ -214,11 +177,6 @@ namespace Meta.Net.Objects
         //    }
         //}
 
-        //public static UniqueConstraint FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<UniqueConstraint>(json);
-        //}
-
         //public static void GenerateCreateScripts(
         //    DataContext sourceDataContext, DataContext targetDataContext,
         //    UniqueConstraint uniqueConstraint, DataSyncActionsCollection dataSyncActions, DataProperties dataProperties)
@@ -317,126 +275,39 @@ namespace Meta.Net.Objects
             uniqueConstraint.UniqueConstraintColumns.Rename(uniqueConstraintColumn, newObjectName);
         }
 
-        /// <summary>
-        /// Shallow Clone...
-        /// A clone of this class's instance specific metadata.
-        /// </summary>
-        /// <param name="uniqueConstraint">The unique constraint to shallow clone.</param>
-        /// <returns>A clone of this class's instance specific metadata.</returns>
-        public static UniqueConstraint ShallowClone(UniqueConstraint uniqueConstraint)
-        {
-            return new UniqueConstraint
-            {
-                ObjectName = uniqueConstraint.ObjectName,
-                AllowPageLocks = uniqueConstraint.AllowPageLocks,
-                AllowRowLocks = uniqueConstraint.AllowRowLocks,
-                FileGroup = uniqueConstraint.FileGroup,
-                FillFactor = uniqueConstraint.FillFactor,
-                IgnoreDupKey = uniqueConstraint.IgnoreDupKey,
-                IndexType = uniqueConstraint.IndexType,
-                IsClustered = uniqueConstraint.IsClustered,
-                IsDisabled = uniqueConstraint.IsDisabled,
-                IsPadded = uniqueConstraint.IsPadded
-            };
-        }
-
-        /// <summary>
-        /// Modifies the source UniqueConstraint to contain all objects that are
-        /// present in both iteself and the target UniqueConstraint.
-        /// </summary>
-        /// <param name="sourceDataContext">The source DataContext.</param>
-        /// <param name="targetDataContext">The target DataContext.</param>
-        /// <param name="sourceUniqueConstraint">The source UniqueConstraint.</param>
-        /// <param name="targetUniqueConstraint">The target UniqueConstraint.</param>
-        /// <param name="dataComparisonType">
-        /// The completeness of comparisons between matching objects.
-        /// </param>
-        public static void UnionWith(
-            DataContext sourceDataContext, DataContext targetDataContext,
-            UniqueConstraint sourceUniqueConstraint, UniqueConstraint targetUniqueConstraint,
-            DataComparisonType dataComparisonType = DataComparisonType.SchemaLevelNamespaces)
-        {
-            var matchingUniqueConstraintColumns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var addableUniqueConstraintColumns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            matchingUniqueConstraintColumns.UnionWith(sourceUniqueConstraint.UniqueConstraintColumns.Keys);
-            matchingUniqueConstraintColumns.IntersectWith(targetUniqueConstraint.UniqueConstraintColumns.Keys);
-
-            addableUniqueConstraintColumns.UnionWith(targetUniqueConstraint.UniqueConstraintColumns.Keys);
-            addableUniqueConstraintColumns.ExceptWith(matchingUniqueConstraintColumns);
-
-            foreach (var uniqueConstraintColumn in addableUniqueConstraintColumns)
-            {
-                var targetUniqueConstraintColumn = targetUniqueConstraint.UniqueConstraintColumns[uniqueConstraintColumn];
-                if (targetUniqueConstraintColumn == null)
-                    continue;
-
-                AddUniqueConstraintColumn(sourceUniqueConstraint, UniqueConstraintColumn.Clone(targetUniqueConstraintColumn));
-            }
-        }
-
-		//public UniqueConstraint(SerializationInfo info, StreamingContext context)
+        ///// <summary>
+        ///// Modifies the source UniqueConstraint to contain all objects that are
+        ///// present in both iteself and the target UniqueConstraint.
+        ///// </summary>
+        ///// <param name="sourceDataContext">The source DataContext.</param>
+        ///// <param name="targetDataContext">The target DataContext.</param>
+        ///// <param name="sourceUniqueConstraint">The source UniqueConstraint.</param>
+        ///// <param name="targetUniqueConstraint">The target UniqueConstraint.</param>
+        ///// <param name="dataComparisonType">
+        ///// The completeness of comparisons between matching objects.
+        ///// </param>
+        //public static void UnionWith(
+        //    DataContext sourceDataContext, DataContext targetDataContext,
+        //    UniqueConstraint sourceUniqueConstraint, UniqueConstraint targetUniqueConstraint,
+        //    DataComparisonType dataComparisonType = DataComparisonType.SchemaLevelNamespaces)
         //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    UserTable = null;
+        //    var matchingUniqueConstraintColumns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        //    var addableUniqueConstraintColumns = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    AllowPageLocks = info.GetBoolean("AllowPageLocks");
-        //    AllowRowLocks = info.GetBoolean("AllowRowLocks");
-        //    FileGroup = info.GetString("FileGroup");
-        //    FillFactor = info.GetInt32("FillFactor");
-        //    IgnoreDupKey = info.GetBoolean("IgnoreDupKey");
-        //    IndexType = info.GetString("IndexType");
-        //    IsClustered = info.GetBoolean("IsClustered");
-        //    IsDisabled = info.GetBoolean("IsDisabled");
-        //    IsPadded = info.GetBoolean("IsPadded");
+        //    matchingUniqueConstraintColumns.UnionWith(sourceUniqueConstraint.UniqueConstraintColumns.Keys);
+        //    matchingUniqueConstraintColumns.IntersectWith(targetUniqueConstraint.UniqueConstraintColumns.Keys);
 
-        //    // Deserialize Unique-Constraint Columns
-        //    var uniqueConstraintColumns = info.GetInt32("UniqueConstraintColumns");
-        //    UniqueConstraintColumns = new Dictionary<string, UniqueConstraintColumn>(StringComparer.OrdinalIgnoreCase);
+        //    addableUniqueConstraintColumns.UnionWith(targetUniqueConstraint.UniqueConstraintColumns.Keys);
+        //    addableUniqueConstraintColumns.ExceptWith(matchingUniqueConstraintColumns);
 
-        //    for (var i = 0; i < uniqueConstraintColumns; i++)
+        //    foreach (var uniqueConstraintColumn in addableUniqueConstraintColumns)
         //    {
-        //        var uniqueConstraintColumn = (UniqueConstraintColumn)info.GetValue("UniqueConstraintColumn" + i, typeof(UniqueConstraintColumn));
-        //        uniqueConstraintColumn.UniqueConstraint = this;
-        //        UniqueConstraintColumns.Add(uniqueConstraintColumn.ObjectName, uniqueConstraintColumn);
+        //        var targetUniqueConstraintColumn = targetUniqueConstraint.UniqueConstraintColumns[uniqueConstraintColumn];
+        //        if (targetUniqueConstraintColumn == null)
+        //            continue;
+
+        //        AddUniqueConstraintColumn(sourceUniqueConstraint, UniqueConstraintColumn.Clone(targetUniqueConstraintColumn));
         //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("AllowPageLocks", AllowPageLocks);
-        //    info.AddValue("AllowRowLocks", AllowRowLocks);
-        //    info.AddValue("FileGroup", FileGroup);
-        //    info.AddValue("FillFactor", FillFactor);
-        //    info.AddValue("IgnoreDupKey", IgnoreDupKey);
-        //    info.AddValue("IndexType", IndexType);
-        //    info.AddValue("IsClustered", IsClustered);
-        //    info.AddValue("IsDisabled", IsDisabled);
-        //    info.AddValue("IsPadded", IsPadded);
-
-        //    // Serialize Unique Constraint Columns
-        //    info.AddValue("UniqueConstraintColumns", UniqueConstraintColumns.Count);
-
-        //    var i = 0;
-        //    foreach (var uniqueConstraintColumn in UniqueConstraintColumns.Values)
-        //        info.AddValue("UniqueConstraintColumn" + i++, uniqueConstraintColumn);
-        //}
-
-        //public static string ToJson(UniqueConstraint uniqueConstraint, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(uniqueConstraint, formatting);
         //}
     }
 }

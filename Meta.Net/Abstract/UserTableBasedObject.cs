@@ -1,9 +1,20 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization;
+using System.Text;
 using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(CheckConstraint))]
+    [KnownType(typeof(ComputedColumn))]
+    [KnownType(typeof(DefaultConstraint))]
+    [KnownType(typeof(ForeignKey))]
+    [KnownType(typeof(IdentityColumn))]
+    [KnownType(typeof(Index))]
+    [KnownType(typeof(PrimaryKey))]
+    [KnownType(typeof(UniqueConstraint))]
+    [KnownType(typeof(UserTableColumn))]
     public abstract class UserTableBasedObject : SchemaBasedObject
     {
         public override Schema Schema
@@ -16,7 +27,7 @@ namespace Meta.Net.Abstract
             }
         }
 
-        public virtual UserTable UserTable { get; set; }
+        [DataMember] public virtual UserTable UserTable { get; set; }
 
         public override string Namespace
         {

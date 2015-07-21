@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
 
 namespace Meta.Net
@@ -16,6 +16,7 @@ namespace Meta.Net
     /// </summary>
     /// <typeparam name="TP">The parent data object that implements IDataObject</typeparam>
     /// <typeparam name="TC">The child data object that implements IDataObject</typeparam>
+    [DataContract]
     public class DataObjectLookup<TP, TC>
         : IEnumerable<TC>
         where TP : BaseMetaObject
@@ -28,31 +29,28 @@ namespace Meta.Net
             "The {0} {1} already has the {2} {3}.";
 
         /// <summary>
-        /// The default string comparer for this library.
-        /// </summary>
-        public readonly StringComparer StringComparer = StringComparer.OrdinalIgnoreCase;
-
-        /// <summary>
         /// The last used data object requested from Lookup
         /// </summary>
+        [DataMember(Name = "LastUsedDataObject")]
         private TC _lastUsedDataObject;
 
         /// <summary>
         /// The underlying field for DataObjects.
         /// </summary>
-        private ConcurrentDictionary<string, TC> _childDataObjects;
+        [DataMember(Name = "ChildDataObjects")]
+        private DataDictionary<string, TC> _childDataObjects;
 
         /// <summary>
         /// The data object dictionary of type T
         /// </summary>
-        private ConcurrentDictionary<string, TC> ChildDataObjects
+        private DataDictionary<string, TC> ChildDataObjects
         {
             get { return _childDataObjects; }
             set
             {
                 if (value == null)
                 {
-                    _childDataObjects = new ConcurrentDictionary<string, TC>(StringComparer);
+                    _childDataObjects = new DataDictionary<string, TC>();
                     _lastUsedDataObject = null;
                     return;
                 }
@@ -64,7 +62,7 @@ namespace Meta.Net
             }
         }
 
-        public TP ParentDataObject { get; private set; }
+        [DataMember] public TP ParentDataObject { get; private set; }
 
         /// <summary>
         /// Initializer for all constructors.
@@ -77,7 +75,7 @@ namespace Meta.Net
                 throw new Exception("The parent dataobject should never be initialized as a null object.");
 
             ParentDataObject = parentDataObject;
-            ChildDataObjects = new ConcurrentDictionary<string, TC>(StringComparer);
+            ChildDataObjects = new DataDictionary<string, TC>();
 
             if (childDataObjects == null)
                 return;
@@ -139,7 +137,7 @@ namespace Meta.Net
             get
             {
                 if (_lastUsedDataObject != null
-                    && StringComparer.Compare(key, _lastUsedDataObject.Namespace) == 0)
+                    && Constants.StringComparer.Compare(key, _lastUsedDataObject.Namespace) == 0)
                     return _lastUsedDataObject;
 
                 _lastUsedDataObject = null;
@@ -292,7 +290,7 @@ namespace Meta.Net
             if (!ChildDataObjects.ContainsKey(key))
                 return;
 
-            if (StringComparer.Compare(_lastUsedDataObject.Namespace, key) == 0)
+            if (Constants.StringComparer.Compare(_lastUsedDataObject.Namespace, key) == 0)
                 _lastUsedDataObject = null;
 
             TC childDataObject;
@@ -309,7 +307,7 @@ namespace Meta.Net
             if (!ChildDataObjects.ContainsKey(childDataObject.Namespace))
                 return;
 
-            if (StringComparer.Compare(_lastUsedDataObject.Namespace, childDataObject.Namespace) == 0
+            if (Constants.StringComparer.Compare(_lastUsedDataObject.Namespace, childDataObject.Namespace) == 0
                 || _lastUsedDataObject.Equals(childDataObject))
                 _lastUsedDataObject = null;
 
@@ -334,22 +332,6 @@ namespace Meta.Net
                 _lastUsedDataObject = tempLastUsedDataObject;
             childDataObject.ObjectName = newObjectName;
             Add(childDataObject);
-        }
-
-        public DataObjectLookup<TP, TC> DeepClone(TP parentDataObject)
-        {
-            var dataObjectLookup = new DataObjectLookup<TP, TC>(parentDataObject);
-            foreach (var childDataObject in ChildDataObjects.Values.Select(p => p.DeepClone()))
-                dataObjectLookup.Add((TC)childDataObject);
-            return dataObjectLookup;
-        }
-
-        public DataObjectLookup<TP, TC> ShallowClone(TP parentDataObject)
-        {
-            var dataObjectLookup = new DataObjectLookup<TP, TC>(parentDataObject);
-            foreach (var childDataObject in ChildDataObjects.Values.Select(p => p.ShallowClone()))
-                dataObjectLookup.Add((TC)childDataObject);
-            return dataObjectLookup;
         }
     }
 }

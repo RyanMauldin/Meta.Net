@@ -1,12 +1,22 @@
-﻿using Meta.Net.Interfaces;
+﻿using System.Runtime.Serialization;
+using Meta.Net.Interfaces;
+using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(AggregateFunction))]
+    [KnownType(typeof(InlineTableValuedFunction))]
+    [KnownType(typeof(ScalarFunction))]
+    [KnownType(typeof(StoredProcedure))]
+    [KnownType(typeof(TableValuedFunction))]
+    [KnownType(typeof(Trigger))]
+    [KnownType(typeof(View))]
     public abstract class BaseModule : SchemaBasedObject, IModule
     {
-        public string Definition { get; set; }
-        public bool UsesAnsiNulls { get; set; }
-        public bool UsesQuotedIdentifier { get; set; }
+        [DataMember] public string Definition { get; set; }
+        [DataMember] public bool UsesAnsiNulls { get; set; }
+        [DataMember] public bool UsesQuotedIdentifier { get; set; }
 
         protected BaseModule()
         {

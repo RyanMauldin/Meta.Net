@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Serialization;
 using Meta.Net.Abstract;
-using Meta.Net.Interfaces;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class Catalog : ServerBasedObject
     {
         public static readonly string DefaultDescription = "Catalog";
@@ -14,46 +14,46 @@ namespace Meta.Net.Objects
         {
             get { return DefaultDescription; }
         }
+        
+        [DataMember] public string CollationName { get; set; }
+        [DataMember] public int CompatibilityLevel { get; set; }
+        [DataMember] public string CreateDate { get; set; }
+        [DataMember] public bool IsAnsiNullDefaultOn { get; set; }
+        [DataMember] public bool IsAnsiNullsOn { get; set; }
+        [DataMember] public bool IsAnsiPaddingOn { get; set; }
+        [DataMember] public bool IsAnsiWarningsOn { get; set; }
+        [DataMember] public bool IsArithabortOn { get; set; }
+        [DataMember] public bool IsAutoCloseOn { get; set; }
+        [DataMember] public bool IsAutoCreateStatsOn { get; set; }
+        [DataMember] public bool IsAutoShrinkOn { get; set; }
+        [DataMember] public bool IsAutoUpdateStatsAsyncOn { get; set; }
+        [DataMember] public bool IsAutoUpdateStatsOn { get; set; }
+        [DataMember] public bool IsCleanlyShutdown { get; set; }
+        [DataMember] public bool IsConcatNullYieldsNullOn { get; set; }
+        [DataMember] public bool IsCursorCloseOnCommitOn { get; set; }
+        [DataMember] public bool IsDateCorrelationOn { get; set; }
+        [DataMember] public bool IsDbChainingOn { get; set; }
+        [DataMember] public bool IsFulltextEnabled { get; set; }
+        [DataMember] public bool IsInStandby { get; set; }
+        [DataMember] public bool IsLocalCursorDefault { get; set; }
+        [DataMember] public bool IsMasterKeyEncryptedByServer { get; set; }
+        [DataMember] public bool IsNumericRoundabortOn { get; set; }
+        [DataMember] public bool IsParameterizationForced { get; set; }
+        [DataMember] public bool IsQuotedIdentifierOn { get; set; }
+        [DataMember] public bool IsReadOnly { get; set; }
+        [DataMember] public bool IsRecursiveTriggersOn { get; set; }
+        [DataMember] public bool IsSupplementalLoggingEnabled { get; set; }
+        [DataMember] public bool IsTrustworthyOn { get; set; }
+        [DataMember] public int PageVerifyOption { get; set; }
+        [DataMember] public string PageVerifyOptionDescription { get; set; }
+        [DataMember] public int RecoveryModel { get; set; }
+        [DataMember] public string RecoveryModelDescription { get; set; }
+        [DataMember] public int State { get; set; }
+        [DataMember] public string StateDescription { get; set; }
+        [DataMember] public int UserAccess { get; set; }
+        [DataMember] public string UserAccessDescription { get; set; }
 
-        public string CollationName { get; set; }
-        public int CompatibilityLevel { get; set; }
-        public string CreateDate { get; set; }
-        public bool IsAnsiNullDefaultOn { get; set; }
-        public bool IsAnsiNullsOn { get; set; }
-        public bool IsAnsiPaddingOn { get; set; }
-        public bool IsAnsiWarningsOn { get; set; }
-        public bool IsArithabortOn { get; set; }
-        public bool IsAutoCloseOn { get; set; }
-        public bool IsAutoCreateStatsOn { get; set; }
-        public bool IsAutoShrinkOn { get; set; }
-        public bool IsAutoUpdateStatsAsyncOn { get; set; }
-        public bool IsAutoUpdateStatsOn { get; set; }
-        public bool IsCleanlyShutdown { get; set; }
-        public bool IsConcatNullYieldsNullOn { get; set; }
-        public bool IsCursorCloseOnCommitOn { get; set; }
-        public bool IsDateCorrelationOn { get; set; }
-        public bool IsDbChainingOn { get; set; }
-        public bool IsFulltextEnabled { get; set; }
-        public bool IsInStandby { get; set; }
-        public bool IsLocalCursorDefault { get; set; }
-        public bool IsMasterKeyEncryptedByServer { get; set; }
-        public bool IsNumericRoundabortOn { get; set; }
-        public bool IsParameterizationForced { get; set; }
-        public bool IsQuotedIdentifierOn { get; set; }
-        public bool IsReadOnly { get; set; }
-        public bool IsRecursiveTriggersOn { get; set; }
-        public bool IsSupplementalLoggingEnabled { get; set; }
-        public bool IsTrustworthyOn { get; set; }
-        public int PageVerifyOption { get; set; }
-        public string PageVerifyOptionDescription { get; set; }
-        public int RecoveryModel { get; set; }
-        public string RecoveryModelDescription { get; set; }
-        public int State { get; set; }
-        public string StateDescription { get; set; }
-        public int UserAccess { get; set; }
-        public string UserAccessDescription { get; set; }
-
-        public DataObjectLookup<Catalog, Schema> Schemas { get; private set; }
+        [DataMember] public DataObjectLookup<Catalog, Schema> Schemas { get; private set; }
 
         public Catalog()
         {
@@ -95,100 +95,6 @@ namespace Meta.Net.Objects
             StateDescription = "ONLINE";
             UserAccess = 0;
             UserAccessDescription = "MULTI_USER";
-        }
-
-        public override IMetaObject DeepClone()
-        {
-            var catalog = new Catalog
-            {
-                ObjectName = ObjectName,
-                CollationName = CollationName,
-                CompatibilityLevel = CompatibilityLevel,
-                CreateDate = CreateDate,
-                IsAnsiNullDefaultOn = IsAnsiNullDefaultOn,
-                IsAnsiNullsOn = IsAnsiNullsOn,
-                IsAnsiPaddingOn = IsAnsiPaddingOn,
-                IsAnsiWarningsOn = IsAnsiWarningsOn,
-                IsArithabortOn = IsArithabortOn,
-                IsAutoCloseOn = IsAutoCloseOn,
-                IsAutoCreateStatsOn = IsAutoCreateStatsOn,
-                IsAutoShrinkOn = IsAutoShrinkOn,
-                IsAutoUpdateStatsAsyncOn = IsAutoUpdateStatsAsyncOn,
-                IsAutoUpdateStatsOn = IsAutoUpdateStatsOn,
-                IsCleanlyShutdown = IsCleanlyShutdown,
-                IsConcatNullYieldsNullOn = IsConcatNullYieldsNullOn,
-                IsCursorCloseOnCommitOn = IsCursorCloseOnCommitOn,
-                IsDateCorrelationOn = IsDateCorrelationOn,
-                IsDbChainingOn = IsDbChainingOn,
-                IsFulltextEnabled = IsFulltextEnabled,
-                IsInStandby = IsInStandby,
-                IsLocalCursorDefault = IsLocalCursorDefault,
-                IsMasterKeyEncryptedByServer = IsMasterKeyEncryptedByServer,
-                IsNumericRoundabortOn = IsNumericRoundabortOn,
-                IsParameterizationForced = IsParameterizationForced,
-                IsQuotedIdentifierOn = IsQuotedIdentifierOn,
-                IsReadOnly = IsReadOnly,
-                IsRecursiveTriggersOn = IsRecursiveTriggersOn,
-                IsSupplementalLoggingEnabled = IsSupplementalLoggingEnabled,
-                IsTrustworthyOn = IsTrustworthyOn,
-                PageVerifyOption = PageVerifyOption,
-                PageVerifyOptionDescription = PageVerifyOptionDescription,
-                RecoveryModel = RecoveryModel,
-                RecoveryModelDescription = RecoveryModelDescription,
-                State = State,
-                StateDescription = StateDescription,
-                UserAccess = UserAccess,
-                UserAccessDescription = UserAccessDescription
-            };
-
-            catalog.Schemas.DeepClone(catalog);
-
-            return catalog;
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new Catalog
-            {
-                ObjectName = ObjectName,
-                CollationName = CollationName,
-                CompatibilityLevel = CompatibilityLevel,
-                CreateDate = CreateDate,
-                IsAnsiNullDefaultOn = IsAnsiNullDefaultOn,
-                IsAnsiNullsOn = IsAnsiNullsOn,
-                IsAnsiPaddingOn = IsAnsiPaddingOn,
-                IsAnsiWarningsOn = IsAnsiWarningsOn,
-                IsArithabortOn = IsArithabortOn,
-                IsAutoCloseOn = IsAutoCloseOn,
-                IsAutoCreateStatsOn = IsAutoCreateStatsOn,
-                IsAutoShrinkOn = IsAutoShrinkOn,
-                IsAutoUpdateStatsAsyncOn = IsAutoUpdateStatsAsyncOn,
-                IsAutoUpdateStatsOn = IsAutoUpdateStatsOn,
-                IsCleanlyShutdown = IsCleanlyShutdown,
-                IsConcatNullYieldsNullOn = IsConcatNullYieldsNullOn,
-                IsCursorCloseOnCommitOn = IsCursorCloseOnCommitOn,
-                IsDateCorrelationOn = IsDateCorrelationOn,
-                IsDbChainingOn = IsDbChainingOn,
-                IsFulltextEnabled = IsFulltextEnabled,
-                IsInStandby = IsInStandby,
-                IsLocalCursorDefault = IsLocalCursorDefault,
-                IsMasterKeyEncryptedByServer = IsMasterKeyEncryptedByServer,
-                IsNumericRoundabortOn = IsNumericRoundabortOn,
-                IsParameterizationForced = IsParameterizationForced,
-                IsQuotedIdentifierOn = IsQuotedIdentifierOn,
-                IsReadOnly = IsReadOnly,
-                IsRecursiveTriggersOn = IsRecursiveTriggersOn,
-                IsSupplementalLoggingEnabled = IsSupplementalLoggingEnabled,
-                IsTrustworthyOn = IsTrustworthyOn,
-                PageVerifyOption = PageVerifyOption,
-                PageVerifyOptionDescription = PageVerifyOptionDescription,
-                RecoveryModel = RecoveryModel,
-                RecoveryModelDescription = RecoveryModelDescription,
-                State = State,
-                StateDescription = StateDescription,
-                UserAccess = UserAccess,
-                UserAccessDescription = UserAccessDescription
-            };
         }
 
         /// <summary>
@@ -536,140 +442,6 @@ namespace Meta.Net.Objects
         //                break;
         //        }
         //    }
-        //}
-
-        ///// <summary>
-        ///// Deserialization Constructor.
-        ///// Makes a call to Schema.LinkForeignKeys(schema) internally after each schema
-        ///// in the catalog being deserialized has deserialized underlying schemas to
-        ///// and automatically restores the catalog properties Catalog.ForeignKeyPool
-        ///// and Catalog.ReferencedUserTablePool.
-        ///// </summary>
-        ///// <param name="info">The serialization information.</param>
-        ///// <param name="context">The streaming context.</param>
-        //public Catalog(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    Server = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    CollationName = info.GetString("CollationName");
-        //    CompatibilityLevel = info.GetInt32("CompatibilityLevel");
-        //    CreateDate = info.GetString("CreateDate");
-        //    IsAnsiNullDefaultOn = info.GetBoolean("IsAnsiNullDefaultOn");
-        //    IsAnsiNullsOn = info.GetBoolean("IsAnsiNullsOn");
-        //    IsAnsiPaddingOn = info.GetBoolean("IsAnsiPaddingOn");
-        //    IsAnsiWarningsOn = info.GetBoolean("IsAnsiWarningsOn");
-        //    IsArithabortOn = info.GetBoolean("IsArithabortOn");
-        //    IsAutoCloseOn = info.GetBoolean("IsAutoCloseOn");
-        //    IsAutoCreateStatsOn = info.GetBoolean("IsAutoCreateStatsOn");
-        //    IsAutoShrinkOn = info.GetBoolean("IsAutoShrinkOn");
-        //    IsAutoUpdateStatsAsyncOn = info.GetBoolean("IsAutoUpdateStatsAsyncOn");
-        //    IsAutoUpdateStatsOn = info.GetBoolean("IsAutoUpdateStatsOn");
-        //    IsCleanlyShutdown = info.GetBoolean("IsCleanlyShutdown");
-        //    IsConcatNullYieldsNullOn = info.GetBoolean("IsConcatNullYieldsNullOn");
-        //    IsCursorCloseOnCommitOn = info.GetBoolean("IsCursorCloseOnCommitOn");
-        //    IsDateCorrelationOn = info.GetBoolean("IsDateCorrelationOn");
-        //    IsDbChainingOn = info.GetBoolean("IsDbChainingOn");
-        //    IsFulltextEnabled = info.GetBoolean("IsFulltextEnabled");
-        //    IsInStandby = info.GetBoolean("IsInStandby");
-        //    IsLocalCursorDefault = info.GetBoolean("IsLocalCursorDefault");
-        //    IsMasterKeyEncryptedByServer = info.GetBoolean("IsMasterKeyEncryptedByServer");
-        //    IsNumericRoundabortOn = info.GetBoolean("IsNumericRoundabortOn");
-        //    IsParameterizationForced = info.GetBoolean("IsParameterizationForced");
-        //    IsQuotedIdentifierOn = info.GetBoolean("IsQuotedIdentifierOn");
-        //    IsReadOnly = info.GetBoolean("IsReadOnly");
-        //    IsRecursiveTriggersOn = info.GetBoolean("IsRecursiveTriggersOn");
-        //    IsSupplementalLoggingEnabled = info.GetBoolean("IsSupplementalLoggingEnabled");
-        //    IsTrustworthyOn = info.GetBoolean("IsTrustworthyOn");
-        //    PageVerifyOption = info.GetInt32("PageVerifyOption");
-        //    PageVerifyOptionDescription = info.GetString("PageVerifyOptionDescription");
-        //    RecoveryModel = info.GetInt32("RecoveryModel");
-        //    RecoveryModelDescription = info.GetString("RecoveryModelDescription");
-        //    State = info.GetInt32("State");
-        //    StateDescription = info.GetString("StateDescription");
-        //    UserAccess = info.GetInt32("UserAccess");
-        //    UserAccessDescription = info.GetString("UserAccessDescription");
-
-        //    // Deserialize Schemas
-        //    var schemas = info.GetInt32("Schemas");
-        //    Schemas = new DataObjectLookup<Schema>();
-
-        //    for (var i = 0; i < schemas; i++)
-        //    {
-        //        var schema = (Schema)info.GetValue("Schema" + i, typeof(Schema));
-        //        schema.Catalog = this;
-        //        Schemas.Add(schema);
-        //    }
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("CollationName", CollationName);
-        //    info.AddValue("CompatibilityLevel", CompatibilityLevel);
-        //    info.AddValue("CreateDate", CreateDate);
-        //    info.AddValue("IsAnsiNullDefaultOn", IsAnsiNullDefaultOn);
-        //    info.AddValue("IsAnsiNullsOn", IsAnsiNullsOn);
-        //    info.AddValue("IsAnsiPaddingOn", IsAnsiPaddingOn);
-        //    info.AddValue("IsAnsiWarningsOn", IsAnsiWarningsOn);
-        //    info.AddValue("IsArithabortOn", IsArithabortOn);
-        //    info.AddValue("IsAutoCloseOn", IsAutoCloseOn);
-        //    info.AddValue("IsAutoCreateStatsOn", IsAutoCreateStatsOn);
-        //    info.AddValue("IsAutoShrinkOn", IsAutoShrinkOn);
-        //    info.AddValue("IsAutoUpdateStatsAsyncOn", IsAutoUpdateStatsAsyncOn);
-        //    info.AddValue("IsAutoUpdateStatsOn", IsAutoUpdateStatsOn);
-        //    info.AddValue("IsCleanlyShutdown", IsCleanlyShutdown);
-        //    info.AddValue("IsConcatNullYieldsNullOn", IsConcatNullYieldsNullOn);
-        //    info.AddValue("IsCursorCloseOnCommitOn", IsCursorCloseOnCommitOn);
-        //    info.AddValue("IsDateCorrelationOn", IsDateCorrelationOn);
-        //    info.AddValue("IsDbChainingOn", IsDbChainingOn);
-        //    info.AddValue("IsFulltextEnabled", IsFulltextEnabled);
-        //    info.AddValue("IsInStandby", IsInStandby);
-        //    info.AddValue("IsLocalCursorDefault", IsLocalCursorDefault);
-        //    info.AddValue("IsMasterKeyEncryptedByServer", IsMasterKeyEncryptedByServer);
-        //    info.AddValue("IsNumericRoundabortOn", IsNumericRoundabortOn);
-        //    info.AddValue("IsParameterizationForced", IsParameterizationForced);
-        //    info.AddValue("IsQuotedIdentifierOn", IsQuotedIdentifierOn);
-        //    info.AddValue("IsReadOnly", IsReadOnly);
-        //    info.AddValue("IsRecursiveTriggersOn", IsRecursiveTriggersOn);
-        //    info.AddValue("IsSupplementalLoggingEnabled", IsSupplementalLoggingEnabled);
-        //    info.AddValue("IsTrustworthyOn", IsTrustworthyOn);
-        //    info.AddValue("PageVerifyOption", PageVerifyOption);
-        //    info.AddValue("PageVerifyOptionDescription", PageVerifyOptionDescription);
-        //    info.AddValue("RecoveryModel", RecoveryModel);
-        //    info.AddValue("RecoveryModelDescription", RecoveryModelDescription);
-        //    info.AddValue("State", State);
-        //    info.AddValue("StateDescription", StateDescription);
-        //    info.AddValue("UserAccess", UserAccess);
-        //    info.AddValue("UserAccessDescription", UserAccessDescription);
-
-        //    // Serialize Schemas
-        //    info.AddValue("Schemas", Schemas.Count);
-
-        //    var i = 0;
-        //    foreach (var schema in Schemas)
-        //        info.AddValue("Schema" + i++, schema);
-        //}
-
-        //public static Catalog FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<Catalog>(json);
-        //}
-
-        //public static string ToJson(Catalog catalog, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(catalog, formatting);
         //}
     }
 }

@@ -1,9 +1,9 @@
-﻿using Meta.Net.Abstract;
-using Meta.Net.Interfaces;
+﻿using System.Runtime.Serialization;
+using Meta.Net.Abstract;
 
 namespace Meta.Net.Objects
 {
-    //[Serializable]
+    [DataContract]
     public class UserDefinedDataType : SchemaBasedObject
     {
         public static readonly string DefaultDescription = "User-Defined Data Type";
@@ -13,15 +13,15 @@ namespace Meta.Net.Objects
             get { return DefaultDescription; }
         }
 
-        public string DataType { get; set; }
-        public long MaxLength { get; set; }
-        public int Precision { get; set; }
-        public int Scale { get; set; }
-        public string Collation { get; set; }
-        public bool HasDefault { get; set; }
-        public bool IsUserDefined { get; set; }
-        public bool IsAssemblyType { get; set; }
-        public bool IsNullable { get; set; }
+        [DataMember] public string DataType { get; set; }
+        [DataMember] public long MaxLength { get; set; }
+        [DataMember] public int Precision { get; set; }
+        [DataMember] public int Scale { get; set; }
+        [DataMember] public string Collation { get; set; }
+        [DataMember] public bool HasDefault { get; set; }
+        [DataMember] public bool IsUserDefined { get; set; }
+        [DataMember] public bool IsAssemblyType { get; set; }
+        [DataMember] public bool IsNullable { get; set; }
 
         public UserDefinedDataType()
         {
@@ -34,40 +34,6 @@ namespace Meta.Net.Objects
             MaxLength = 0;
             Precision = 0;
             Scale = 0;
-        }
-        
-        public override IMetaObject DeepClone()
-        {
-            return new UserDefinedDataType
-            {
-                ObjectName = ObjectName,
-                Collation = Collation,
-                DataType = DataType,
-                HasDefault = HasDefault,
-                IsAssemblyType = IsAssemblyType,
-                IsNullable = IsNullable,
-                IsUserDefined = IsUserDefined,
-                MaxLength = MaxLength,
-                Precision = Precision,
-                Scale = Scale
-            };
-        }
-
-        public override IMetaObject ShallowClone()
-        {
-            return new UserDefinedDataType
-            {
-                ObjectName = ObjectName,
-                Collation = Collation,
-                DataType = DataType,
-                HasDefault = HasDefault,
-                IsAssemblyType = IsAssemblyType,
-                IsNullable = IsNullable,
-                IsUserDefined = IsUserDefined,
-                MaxLength = MaxLength,
-                Precision = Precision,
-                Scale = Scale
-            };
         }
 
         //public static bool CompareDefinitions(UserDefinedDataType sourceUserDefinedDataType, UserDefinedDataType targetUserDefinedDataType)
@@ -130,59 +96,6 @@ namespace Meta.Net.Objects
         //    var dataSyncAction = DataActionFactory.DropUserDefinedDataType(sourceDataContext, targetDataContext, userDefinedDataType);
         //    if (dataSyncAction != null)
         //        dataSyncActions.Add(dataSyncAction);
-        //}
-        
-        //public UserDefinedDataType(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Set Null Members
-        //    Schema = null;
-
-        //    // Deserialize Members
-        //    ObjectName = info.GetString("ObjectName");
-        //    Description = info.GetString("Description");
-        //    Collation = info.GetString("Collation");
-        //    DataType = info.GetString("DataType");
-        //    Description = info.GetString("Description");
-        //    HasDefault = info.GetBoolean("HasDefault");
-        //    IsAssemblyType = info.GetBoolean("IsAssemblyType");
-        //    IsNullable = info.GetBoolean("IsNullable");
-        //    IsUserDefined = info.GetBoolean("IsUserDefined");
-        //    MaxLength = info.GetInt32("MaxLength");
-        //    Precision = info.GetInt32("Precision");
-        //    Scale = info.GetInt32("Scale");
-        //}
-
-        //public void GetObjectData(SerializationInfo info, StreamingContext context)
-        //{
-        //    // Holding off on the serialzation in this manner because, this is
-        //    // extremely complicated to do in this manner do to data object
-        //    // associations, especially
-        //    // Serialize Members
-        //    info.AddValue("ObjectName", ObjectName);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("Collation", Collation);
-        //    info.AddValue("DataType", DataType);
-        //    info.AddValue("Description", Description);
-        //    info.AddValue("HasDefault", HasDefault);
-        //    info.AddValue("IsAssemblyType", IsAssemblyType);
-        //    info.AddValue("IsNullable", IsNullable);
-        //    info.AddValue("IsUserDefined", IsUserDefined);
-        //    info.AddValue("MaxLength", MaxLength);
-        //    info.AddValue("Precision", Precision);
-        //    info.AddValue("Scale", Scale);
-        //}
-
-        //public static string ToJson(UserDefinedDataType userDefinedDataType, Formatting formatting = Formatting.Indented)
-        //{
-        //    return JsonConvert.SerializeObject(userDefinedDataType, formatting);
-        //}
-
-        //public static UserDefinedDataType FromJson(string json)
-        //{
-        //    return JsonConvert.DeserializeObject<UserDefinedDataType>(json);
         //}
     }
 }

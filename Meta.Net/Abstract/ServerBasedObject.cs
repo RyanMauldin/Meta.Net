@@ -1,11 +1,14 @@
-﻿using Meta.Net.Interfaces;
+﻿using System.Runtime.Serialization;
+using Meta.Net.Interfaces;
 using Meta.Net.Objects;
 
 namespace Meta.Net.Abstract
 {
+    [DataContract]
+    [KnownType(typeof(Catalog))]
     public abstract class ServerBasedObject : BaseMetaObject
     {
-        public virtual Server Server { get; set; }
+        [DataMember] public virtual Server Server { get; set; }
 
         public override string Namespace
         {
