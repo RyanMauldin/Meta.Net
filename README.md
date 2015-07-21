@@ -7,7 +7,11 @@ Look at Meta.Net.TestConsole project, Program.cs - GetCatalogs() method for curr
 
 For now do not use anything from Meta.Net.Sync library. I broke the Sync library on purpose during a major re-write as I do not want anyone synchronizing databases with it yet.
 
-Currently, I am working on serialization and deserialization to and from json first, before re-writing the synchronization libraries. Contact me if you are interested. I am also considering ripping the Clone and Deep clone methods out and doing more of that work in the Meta.Net.Metadata Adapters. It is difficult to DeepClone when it comes to foreign keys... unless I serialize and deserialize like the adapters to do object dependencies within the relational model. There is no real use for the ShallowClone in my mind. So I will probably need to rip out the Clone methods and simply use the adapters to copy the model into json and then deserialize it back out to keep the relational structures intact.
+I just finished a big refactor with serialization and deserialization decorating all Meta objects and base objects with DataContract and DataMember attributes for use with the DataContractSerializer. This helped me keep object references for use with Deep Cloning and WCF. Look at the extension methods provided in the SerializationExtensions class, which also has some Json.NET extension methods so I could rip them out of the Meta object classes. The adapters have been overhauled with TAP pattern (async/await) and can accept CancellationToken.
+
+Contact me if you are interested in helping me finish this.
+
+My next steps are to uncomment the HashSet like functionality (IntersectWith, ExceptWith, UnionWith) into the Meta objects like Server, Catalog, ForeignKey, etc. to be able to make change sets between two Servers/Catalogs again. This will allow me to then pull back in, scripting out the change sets into SQL scripts.
 
 
 I noticed the following link:
